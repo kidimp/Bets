@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fixtures</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
+</head>
+
+<body>
+
+<header th:insert="fragments/header :: header"></header>
+
+    <h4>
+        Following fixtures
+    </h4>
+
+    <br>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Stage</th>
+        <th scope="col">Home team</th>
+        <th scope="col">Away team</th>
+        <th scope="col">Bet</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row" style="margin-left: 40px">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+    </tr>
+    <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+    </tr>
+    <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>@twitter</td>
+    </tr>
+    </tbody>
+</table>
+
+<footer th:insert="fragments/footer :: footer"></footer>
+
+</body>
+
+</html>
+
+
+
+
+

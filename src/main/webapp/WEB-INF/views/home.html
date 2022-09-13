@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+
+<header th:insert="fragments/header :: header"></header>
+
+<a>
+    Link to the official site of the tournament or link to the site
+    with the tournament grid.
+</a>
+
+<br>
+
+<a>
+    Fixtures - games to be played.
+    You can make or change your bet until the game has started.
+    Results - results of finished matches.
+</a>
+
+<br>
+
+<a>
+    Tables of players - points scored by players and other statistics.
+</a>
+
+<br>
+
+<a>
+    Betting rules.
+</a>
+
+<br>
+
+<a>
+    Player name
+    Sign in
+    Log in
+</a>
+
+<footer th:insert="fragments/footer :: footer"></footer>
+
+</body>
+</html>
