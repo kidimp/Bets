@@ -1,8 +1,16 @@
 package org.chous.bets.models;
 
+import javax.validation.constraints.*;
+
 public class Team {
     private int id;
+
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 3, max = 30, message = "Name should be between 3 and 30 characters")
     private String name;
+
+    @Min(value = 1, message = "Basket should be from 1 to 4")
+    @Max(value = 4, message = "Basket should be from 1 to 4")
     private int basket;
 
     public Team(int id, String name, int basket) {
