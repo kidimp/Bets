@@ -9,12 +9,32 @@
 
 <header th:insert="fragments/header :: header"></header>
 
+
+
 <a>
-    Link to the official site of the tournament or link to the site
-    with the tournament grid.
+    <a href="/registration" style="margin-left: 30px">Registration</a>
 </a>
 
-<br>
+<br><br>
+
+<a>
+    <a href="/login" style="margin-left: 30px">Log in</a>
+</a>
+
+<br><br>
+
+<form th:action="@{/logout}" th:method="POST" style="margin-left: 30px">
+    <input type="submit" value="Logout" />
+</form>
+
+<br><br>
+
+<a>
+    Link to the official site of the tournament or link to the site with the tournament grid.
+    <a href="https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup/qatar2022" style="margin-left: 30px">Link</a>
+</a>
+
+<br><br>
 
 <a>
     Fixtures - games to be played.
@@ -22,19 +42,19 @@
     Results - results of finished matches.
 </a>
 
-<br>
+<br><br>
 
 <a>
     Tables of players - points scored by players and other statistics.
 </a>
 
-<br>
+<br><br>
 
 <a>
     Betting rules.
 </a>
 
-<br>
+<br><br>
 
 <a>
     Player name

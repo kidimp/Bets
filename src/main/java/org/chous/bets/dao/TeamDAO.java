@@ -4,6 +4,7 @@ import org.chous.bets.models.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,17 +33,18 @@ public class TeamDAO {
 
 
     public void save(Team team) {
-        jdbcTemplate.update("INSERT INTO teams (name, basket) VALUES (?, ?)", team.getName(), team.getBasket());
+        jdbcTemplate.update("INSERT INTO teams (name, pot) VALUES (?, ?)", team.getName(), team.getPot());
     }
 
 
     public void update(int id, Team updatedTeam) {
-        jdbcTemplate.update("UPDATE teams SET name=?, basket=? WHERE id=?",
-                updatedTeam.getName(), updatedTeam.getBasket(), id);
+        jdbcTemplate.update("UPDATE teams SET name=?, pot=? WHERE id=?",
+                updatedTeam.getName(), updatedTeam.getPot(), id);
     }
 
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM teams WHERE id=?", id);
     }
+
 }

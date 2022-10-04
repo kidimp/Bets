@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Matches</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
+</head>
+
+<body>
+
+<header th:insert="fragments/header :: header"></header>
+
+<h4 style="margin-left: 100px">
+    Matches
+</h4>
+
+<br>
+
+<a href="/matches/new" style="margin-left: 100px">Add new match</a>
+
+<br>
+<br>
+
+<table class="table table-hover" style="width:100%">
+    <thead>
+    <tr>
+        <th scope="col" style="text-align:center">Date</th>
+        <th scope="col" style="text-align:center">Stage</th>
+        <th scope="col"></th>
+        <th scope="col" style="text-align:center">Teams</th>
+        <th scope="col"></th>
+        <th scope="col" style="text-align:center">Score</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <div th:each="match : ${matches}">
+
+        <tr>
+            <td style="text-align:center; width:17%"><a th:text="${match.getDateInStr()}">match</a></td>
+
+            <td style="text-align:center; width:17%">
+                <div th:each="stage : ${stages}">
+                    <a th:if="${(match.getStageId() == stage.getId())}" th:text="${stage.getName()}">match</a>
+                </div>
+            </td>
+
+            <td style="text-align:right; width:10%">
+            <div th:each="team : ${teamsList}">
+            <a th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
+            </div>
+            </td>
+
+            <td style="text-align:center; width:1%"><a th:text="':'">match</a></td>
+
+            <td style="text-align:left; width:10%">
+            <div th:each="team : ${teamsList}">
+            <a th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
+            </div>
+            </td>
+
+
+            <td style="text-align:center; width:10%" >
+                <a th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</a>
+                <a th:if="${(match.isFinished() == true)}" th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
+            </td>
+
+            <td style="text-align:right; width:20%"><a th:href="@{/matches/{id}/edit(id=${match.getId()})}">Edit</a></td>
+            <td style="text-align:left; width:15%"><a th:href="@{/matches/{id}/delete(id=${match.getId()})}">Delete</a></td>
+        </tr>
+
+    </div>
+
+    </tbody>
+</table>
+
+<footer th:insert="fragments/footer :: footer"></footer>
+
+</body>
+
+</html>
+
+
+
+
+

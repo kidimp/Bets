@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Teams</title>
+    <title>Stages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
 </head>
@@ -13,12 +13,12 @@
 <header th:insert="fragments/header :: header"></header>
 
 <h4 style="margin-left: 100px">
-    Teams
+    Stages
 </h4>
 
 <br>
 
-<a href="/teams/new" style="margin-left: 100px">Add new team</a>
+<a href="/stages/new" style="margin-left: 100px">Add new stage</a>
 
 <br>
 <br>
@@ -27,20 +27,20 @@
     <thead>
     <tr>
         <th scope="col" style="text-align:center">Name</th>
-        <th scope="col" style="text-align:center">Pot</th>
+        <th scope="col" style="text-align:center">Is knockout</th>
         <th scope="col"></th>
         <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
 
-    <div th:each="team : ${teams}">
+    <div th:each="stage : ${stages}">
 
         <tr>
-            <td style="text-align:center; width:20%"><a th:text="${team.getName()}">team</a></td>
-            <td style="text-align:center; width:20%"><a th:text="${team.getPot()}">team</a></td>
-            <td style="text-align:right; width:30%"><a th:href="@{/teams/{id}/edit(id=${team.getId()})}">Edit</a></td>
-            <td style="text-align:left; width:30%"><a th:href="@{/teams/{id}/delete(id=${team.getId()})}">Delete</a></td>
+            <td style="text-align:center; width:20%"><a th:text="${stage.getName()}">stage</a></td>
+            <td style="text-align:center; width:20%"><a th:text="${stage.isKnockoutStage}">stage</a></td>
+            <td style="text-align:right; width:30%"><a th:href="@{/stages/{id}/edit(id=${stage.getId()})}">Edit</a></td>
+            <td style="text-align:left; width:30%"><a th:href="@{/stages/{id}/delete(id=${stage.getId()})}">Delete</a></td>
         </tr>
 
     </div>
@@ -57,3 +57,9 @@
 
 
 
+</title>
+</head>
+<body>
+
+</body>
+</html>

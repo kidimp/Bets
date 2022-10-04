@@ -19,12 +19,14 @@
         <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
 
         <br>
+        <br>
 
-        <label for="basket">Enter basket: </label>
-        <input type="text" th:field="*{basket}" id="basket"/>
-        <div style="color:red" th:if="${#fields.hasErrors('basket')}" th:errors="*{basket}">Basket Error</div>
+        <label for="pot">Enter pot: </label>
+        <input type="text" th:field="*{pot}" id="pot"/>
+        <div style="color:red" th:if="${#fields.hasErrors('pot')}" th:errors="*{pot}">Pot Error</div>
 
-        <br/>
+        <br>
+        <br>
 
         <input type="submit" value="Create!"/>
 

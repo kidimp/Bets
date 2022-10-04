@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Delete stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
+</head>
+
+<body>
+
+<header th:insert="fragments/header :: header"></header>
+
+<form th:method="POST" th:action="@{/stages/{id}/delete(id=${stage.getId()})}">
+
+  <p th:text="${'Name: ' + stage.getName()}">VALUE</p>
+  <p th:text="${'Is knockout stage: ' + stage.isKnockoutStage()}">VALUE</p>
+
+  <input type="submit" value="Delete!"/>
+
+</form>
+
+
+<footer th:insert="fragments/footer :: footer"></footer>
+
+
+</body>
+
+</html>

@@ -4,6 +4,7 @@ import org.chous.bets.dao.TeamDAO;
 import org.chous.bets.models.Team;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class TeamsController {
 
     private final TeamDAO teamDAO;
-
 
     @Autowired
     public TeamsController(TeamDAO teamDAO) {
@@ -55,7 +56,7 @@ public class TeamsController {
     }
 
 
-    @PatchMapping("teams/{id}")
+    @PostMapping("teams/{id}/edit")
     public String update(@ModelAttribute("team") @Valid Team team, BindingResult bindingResult,
                          @PathVariable("id") int id) {
 
@@ -64,6 +65,7 @@ public class TeamsController {
         }
 
         teamDAO.update(id, team);
+
         return "redirect:/teams/all";
     }
 
@@ -74,7 +76,7 @@ public class TeamsController {
         return "teams/delete";
     }
 
-    @DeleteMapping("teams/{id}")
+    @PostMapping("teams/{id}/delete")
     public String deleteTeam(@PathVariable("id") int id) {
         teamDAO.delete(id);
         return "redirect:/teams/all";
