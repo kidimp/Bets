@@ -11,14 +11,14 @@ import java.util.Collections;
 public class UsrDetails implements UserDetails {
     private final User user;
 
+
     public UsrDetails(User user) {
         this.user = user;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // SHOW_ACCOUNT, WITHDRAW_MONEY, SEND_MONEY
-        // ROLE_ADMIN, ROLE_USER - это роли
         return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
     }
 
@@ -31,6 +31,7 @@ public class UsrDetails implements UserDetails {
     public String getUsername() {
         return this.user.getUsername();
     }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -49,11 +50,6 @@ public class UsrDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
-    }
-
-    // Нужно, чтобы получать данные аутентифицированного пользователя
-    public User getPerson() {
-        return this.user;
+        return this.user.isActive();
     }
 }

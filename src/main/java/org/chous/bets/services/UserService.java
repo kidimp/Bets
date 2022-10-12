@@ -12,22 +12,24 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UsrDetailsService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     private final UsersRepository usersRepository;
 
     @Autowired
-    public UsrDetailsService(UsersRepository usersRepository) {
+    public UserService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = usersRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = usersRepository.findByEmail(email);
 
-        if (user.isEmpty())
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
+        }
 
         return new UsrDetails(user.get());
     }
+
 }

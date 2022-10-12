@@ -80,6 +80,7 @@ public class MatchesController {
 
     @GetMapping("/matches/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
+
         model.addAttribute("match", matchDAO.show(id));
         return "matches/edit";
     }
@@ -93,24 +94,21 @@ public class MatchesController {
             return "/matches/edit";
         }
 
-        try {
-            matchDAO.update(id, match);
-        } catch (Exception e) {
-            matchDAO.delete(id);
-        }
-
+        matchDAO.update(id, match);
         return "redirect:/matches/all";
     }
 
 
     @GetMapping("/matches/{id}/delete")
     public String delete(Model model, @PathVariable("id") int id) {
+
         model.addAttribute("match", matchDAO.show(id));
         return "matches/delete";
     }
 
     @PostMapping("matches/{id}/delete")
     public String deleteMatch(@PathVariable("id") int id) {
+
         matchDAO.delete(id);
         return "redirect:/matches/all";
     }

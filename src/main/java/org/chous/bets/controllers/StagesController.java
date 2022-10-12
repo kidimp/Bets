@@ -27,6 +27,7 @@ public class StagesController {
 
     @GetMapping("stages/all")
     public String stages(Model model) {
+
         model.addAttribute("stages", stageDAO.stages());
         return "stages/all";
     }
@@ -52,6 +53,7 @@ public class StagesController {
 
     @GetMapping("/stages/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
+
         model.addAttribute("stage", stageDAO.show(id));
         return "stages/edit";
     }
@@ -65,18 +67,14 @@ public class StagesController {
             return "/stages/edit";
         }
 
-        try {
-            stageDAO.update(id, stage);
-        } catch (Exception e) {
-            stageDAO.delete(id);
-        }
-
+        stageDAO.update(id, stage);
         return "redirect:/stages/all";
     }
 
 
     @GetMapping("/stages/{id}/delete")
     public String delete(Model model, @PathVariable("id") int id) {
+
         model.addAttribute("stage", stageDAO.show(id));
         return "stages/delete";
     }
@@ -84,6 +82,7 @@ public class StagesController {
 
     @PostMapping("stages/{id}/delete")
     public String deleteStage(@PathVariable("id") int id) {
+
         stageDAO.delete(id);
         return "redirect:/stages/all";
     }

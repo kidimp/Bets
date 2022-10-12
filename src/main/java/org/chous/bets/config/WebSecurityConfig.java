@@ -1,40 +1,39 @@
 package org.chous.bets.config;
 
-import org.chous.bets.services.UsrDetailsService;
+import org.chous.bets.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UsrDetailsService usrDetailsService;
+    private final UserService userService;
 
     @Autowired
-    public WebSecurityConfig(UsrDetailsService usrDetailsService) {
-        this.usrDetailsService = usrDetailsService;
+    public WebSecurityConfig(UserService userService) {
+        this.userService = userService;
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                  .antMatchers("/users/all", "/teams/all").hasRole("ADMIN")
-                    .antMatchers("/", "/registration", "/login", "/fixtures", "/tables", "/error").permitAll()
-                    .anyRequest().hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/", "/registration", "/login", "/fixtures", "/tables", "/rules",
+                            "/activate/*", "/reset/*", "/reset-password", "/reset-form/*", "/static/**").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                    .formLogin().loginPage("/login")
+                    .formLogin()
+                    .loginPage("/login")
                     .loginProcessingUrl("/process_login")
                     .defaultSuccessUrl("/", true)
                     .failureUrl("/login?error")
+                    .usernameParameter("email")
                 .and()
                     .logout()
                     .logoutUrl("/logout")
@@ -43,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(usrDetailsService)
+        auth.userDetailsService(userService)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }

@@ -1,30 +1,31 @@
 package org.chous.bets.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 
 @Entity
-@Table(name = "User")
 public class User {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @NotEmpty(message = "Имя не должно быть пустым")
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
-    @Column(name = "username")
+    @NotEmpty(message = "Name must not be empty")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long")
     private String username;
-
-    @Column(name = "password")
+    @Size(min = 3, message = "Password must be at least three characters long")
     private String password;
-
-    @Column(name = "role")
     private String role;
+    @NotEmpty(message = "Email must not be empty")
+    @Email(message = "Email must be valid")
+    private String email;
+    private boolean isActive;
+    private String activationCode;
+    private String resetPasswordToken;
 
-    // Конструктор по умолчанию нужен для Spring
+
+
     public User() {
     }
 
@@ -32,6 +33,7 @@ public class User {
         this.id = id;
         this.username = username;
     }
+
 
 
     public int getId() {
@@ -70,12 +72,38 @@ public class User {
     }
 
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
     }
 }

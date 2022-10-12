@@ -7,6 +7,8 @@ import org.chous.bets.models.*;
 
 import org.chous.bets.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.Collections;
 import java.util.List;
+
 
 @Controller
 public class HomeController {
@@ -45,20 +48,41 @@ public class HomeController {
         return stageDAO.stages();
     }
 
+
+    public void getUserRoleForHeaderVisualization(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (usersRepository.findByUsername(username).isPresent()) {
+            model.addAttribute("role", usersRepository.findByUsername(username).get().getRole());
+        }
+        else {
+            model.addAttribute("role", "ROLE_USER");
+        }
+    }
+
+
     @GetMapping("/")
-    public String home(/*@PathVariable User user, Model model*/) {
-//        model.addAttribute("user", user);
-//        model.addAttribute("roles", Role.values());
+    public String home(Model model) {
+        getUserRoleForHeaderVisualization(model);
         return "home";
     }
 
     @GetMapping("/fixtures")
-    public String fixtures( Model model) {
+    public String fixtures(Model model) {
+        getUserRoleForHeaderVisualization(model);
+
         List<Match> matchesList = matchDAO.matches();
-        Collections.sort(matchesList, Match.COMPARE_BY_DATE);
+        matchesList.sort(Match.COMPARE_BY_DATE);
 
         List<Match> matchesListReversed = matchDAO.matches();
-        Collections.sort(matchesListReversed, Collections.reverseOrder(Match.COMPARE_BY_DATE));
+        matchesListReversed.sort(Collections.reverseOrder(Match.COMPARE_BY_DATE));
 
         model.addAttribute("matches", matchesList);
         model.addAttribute("matchesReversed", matchesListReversed);
@@ -69,14 +93,23 @@ public class HomeController {
     }
 
     @GetMapping("/tables")
-    public String tables() {
+    public String tables(Model model) {
+        getUserRoleForHeaderVisualization(model);
         return "tables";
     }
 
 
     @GetMapping("/bet")
-    public String bet() {
+    public String bet(Model model) {
+        getUserRoleForHeaderVisualization(model);
         return "bet";
+    }
+
+
+    @GetMapping("/rules")
+    public String rules(Model model) {
+        getUserRoleForHeaderVisualization(model);
+        return "rules";
     }
 
 }

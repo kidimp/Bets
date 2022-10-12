@@ -1,5 +1,6 @@
 package org.chous.bets.controllers;
 
+import org.chous.bets.models.Role;
 import org.chous.bets.models.User;
 import org.chous.bets.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -24,26 +27,36 @@ public class UsersController {
 
 
     @GetMapping("users/all")
-    public String users(Model model) {
+    public String users(Model model, @ModelAttribute("user") @Valid User user) {
         model.addAttribute("users", usersRepository.findAll());
-
         return "users/all";
     }
 
 
     @GetMapping("/users/{username}/edit")
     public String edit(Model model, @PathVariable String username) {
+
         if (usersRepository.findByUsername(username).isPresent()) {
             model.addAttribute("user", usersRepository.findByUsername(username).get());
         }
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.ROLE_ADMIN);
+        roles.add(Role.ROLE_USER);
+
+        model.addAttribute("allRoles", roles);
 
         return "users/edit";
     }
 
 
     @PostMapping("users/{username}/edit")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+    public String update(Model model, @ModelAttribute("user") @Valid User user, BindingResult bindingResult,
                          @PathVariable("username") String username) {
+
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.ROLE_ADMIN);
+        roles.add(Role.ROLE_USER);
 
         User userToChange = null;
 
@@ -54,6 +67,9 @@ public class UsersController {
         assert userToChange != null;
         userToChange.setUsername(user.getUsername());
 
+        model.addAttribute("allRoles", roles);
+        userToChange.setRole(user.getRole());
+
         if (bindingResult.hasErrors()) {
             return "/users/edit";
         }
@@ -63,38 +79,4 @@ public class UsersController {
         return "redirect:/users/all";
     }
 
-
-//    @GetMapping("{user}")
-//    public String userEditForm(@PathVariable User user, Model model) {
-//        model.addAttribute("user", user);
-//        model.addAttribute("roles", Role.values());
-//
-//        return "userEdit";
-//    }
-
-
-//    @PostMapping
-//    public String userSave(
-//            @RequestParam String username,
-//            @RequestParam Map<String, String> form,
-//            @RequestParam("userId") User user
-//    ) {
-//        user.setUsername(username);
-//
-//        Set<String> roles = Arrays.stream(Role.values())
-//                .map(Role::name)
-//                .collect(Collectors.toSet());
-//
-//        user.getRoles().clear();
-//
-//        for (String key : form.keySet()) {
-//            if (roles.contains(key)) {
-//                user.getRoles().add(Role.valueOf(key));
-//            }
-//        }
-//
-//        usersRepository.save(user);
-//
-//        return "redirect:users/all";
-//    }
 }

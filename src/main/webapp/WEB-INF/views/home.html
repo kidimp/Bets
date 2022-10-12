@@ -1,66 +1,72 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <style> .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }</style>
 </head>
 <body>
 
-<header th:insert="fragments/header :: header"></header>
+
+<header>
+    <div sec:authorize="!isAuthenticated()" th:insert="fragments/headerAnonimus :: header"></div>
+
+    <div sec:authorize="hasRole('ROLE_USER')" th:insert="fragments/headerUser :: header"></div>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/headerAdmin :: header"></div>
+</header>
 
 
+<div class="container mt-5">
 
-<a>
-    <a href="/registration" style="margin-left: 30px">Registration</a>
-</a>
+    <a>
+        Official site of the tournament.
+        <a href="https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup/qatar2022"
+           style="margin-left: 30px">Link</a>
+    </a>
 
-<br><br>
+    <br><br>
 
-<a>
-    <a href="/login" style="margin-left: 30px">Log in</a>
-</a>
+    <a>
+        Tournament grid.
+        <a href="https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup/qatar2022"
+           style="margin-left: 30px">Link</a>
+    </a>
 
-<br><br>
+    <br><br>
 
-<form th:action="@{/logout}" th:method="POST" style="margin-left: 30px">
-    <input type="submit" value="Logout" />
-</form>
+    <a>
+        Betting rules. <a href="/rules"
+                          style="margin-left: 30px">Link</a>
+    </a>
 
-<br><br>
+    <br><br>
 
-<a>
-    Link to the official site of the tournament or link to the site with the tournament grid.
-    <a href="https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup/qatar2022" style="margin-left: 30px">Link</a>
-</a>
+    <a>
+        Teams seeding. <a href="https://en.wikipedia.org/wiki/2022_FIFA_World_Cup_seeding"
+                          style="margin-left: 30px">Link</a>
+    </a>
 
-<br><br>
-
-<a>
-    Fixtures - games to be played.
-    You can make or change your bet until the game has started.
-    Results - results of finished matches.
-</a>
-
-<br><br>
-
-<a>
-    Tables of players - points scored by players and other statistics.
-</a>
-
-<br><br>
-
-<a>
-    Betting rules.
-</a>
-
-<br><br>
-
-<a>
-    Player name
-    Sign in
-    Log in
-</a>
+</div>
 
 <footer th:insert="fragments/footer :: footer"></footer>
 

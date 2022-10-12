@@ -1,7 +1,7 @@
 package org.chous.bets.util;
 
 import org.chous.bets.models.User;
-import org.chous.bets.services.UsrDetailsService;
+import org.chous.bets.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,11 @@ import org.springframework.validation.Validator;
 @Component
 public class UserValidator implements Validator {
 
-    private final UsrDetailsService usrDetailsService;
+    private final UserService userService;
 
     @Autowired
-    public UserValidator(UsrDetailsService usrDetailsService) {
-        this.usrDetailsService = usrDetailsService;
+    public UserValidator(UserService userService) {
+        this.userService = userService;
     }
 
 
@@ -29,11 +29,12 @@ public class UserValidator implements Validator {
         User user = (User) o;
 
         try {
-            usrDetailsService.loadUserByUsername(user.getUsername());
+            userService.loadUserByUsername(user.getEmail());
         } catch (UsernameNotFoundException ignored) {
             return; // все ок, пользователь не найден
         }
 
-        errors.rejectValue("username", "", "Человек с таким именем пользователя уже существует");
+        errors.rejectValue("username", "", "This user already exists");
     }
+
 }
