@@ -33,18 +33,20 @@ public class MatchDAO {
 
 
     public void save(Match match) {
-        jdbcTemplate.update("INSERT INTO matches (dateAndTime, stageId, homeTeamId, awayTeamId," +
-                        "isInProgress, isFinished, scoreHomeTeam, scoreAwayTeam) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO matches(dateAndTime, stageId, homeTeamId, awayTeamId, " +
+                        "isFinished, scoreHomeTeam, scoreAwayTeam) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 match.getDateAndTime(), match.getStageId(), match.getHomeTeamId(), match.getAwayTeamId(),
-                match.isInProgress(), match.isFinished(), match.getScoreHomeTeam(), match.getScoreAwayTeam());
+                match.isFinished(), match.getScoreHomeTeam(), match.getScoreAwayTeam());
     }
 
 
     public void update(int id, Match updatedMatch) {
-        jdbcTemplate.update("UPDATE matches SET dateAndTime=?, stageId=?, homeTeamId=?, awayTeamId=?," +
-                        "isInProgress=?, isFinished=?, scoreHomeTeam=?, scoreAwayTeam=? WHERE id=?",
-                updatedMatch.getDateAndTime(), updatedMatch.getStageId(), updatedMatch.getHomeTeamId(), updatedMatch.getAwayTeamId(),
-                updatedMatch.isInProgress(), updatedMatch.isFinished(), updatedMatch.getScoreHomeTeam(), updatedMatch.getScoreAwayTeam(), id);
+        jdbcTemplate.update("UPDATE matches SET dateAndTime=?, stageId=?, homeTeamId=?, awayTeamId=?, " +
+                        "isFinished=?, scoreHomeTeam=?, scoreAwayTeam=? WHERE id=?",
+                updatedMatch.getDateAndTime(), updatedMatch.getStageId(),
+                updatedMatch.getHomeTeamId(), updatedMatch.getAwayTeamId(),
+                updatedMatch.isFinished(),
+                updatedMatch.getScoreHomeTeam(), updatedMatch.getScoreAwayTeam(), id);
     }
 
 

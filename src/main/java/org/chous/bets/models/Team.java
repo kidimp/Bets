@@ -1,6 +1,10 @@
 package org.chous.bets.models;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 
 public class Team {
     private int id;
@@ -12,14 +16,13 @@ public class Team {
     private int pot;
 
 
-    public Team(int id, String name, int pot) {
-        this.id = id;
-        this.name = name;
-        this.pot = pot;
-    }
+//    public Team(int id, String name, int pot) {
+//        this.id = id;
+//        this.name = name;
+//        this.pot = pot;
+//    }
 
     public Team() {
-
     }
 
 

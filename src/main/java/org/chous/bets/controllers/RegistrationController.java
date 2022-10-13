@@ -47,12 +47,7 @@ public class RegistrationController {
                           String password, String passwordConfirm) {
 
         userValidator.validate(user, bindingResult);
-
-        if (!password.equals(passwordConfirm)) {
-            bindingResult.addError(new ObjectError("error", "Passwords do not match"));
-            System.out.println("Passwords do not match");
-            return "/auth/registration";
-        }
+        userValidator.checkEquality(password, passwordConfirm, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "/auth/registration";
@@ -87,7 +82,11 @@ public class RegistrationController {
 
 
     @PostMapping("/reset-password")
-    public String processEmailFormForResetPassword(@ModelAttribute("user") @Valid User user) {
+    public String processEmailFormForResetPassword(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "/auth/reset-password";
+        }
 
         String email = user.getEmail();
 
@@ -105,13 +104,21 @@ public class RegistrationController {
 
 
     @PostMapping("/reset-form/{token}")
-    public String processResetPasswordForm(Model model, @PathVariable String token, String password, String passwordConfirm) {
+    public String processResetPasswordForm(Model model, @PathVariable String token,
+                                           String password, String passwordConfirm) {
 
         User user = registrationService.getByResetPasswordToken(token);
+        model.addAttribute("user", user);
 
         if (!password.equals(passwordConfirm)) {
-            System.out.println("Passwords do not match");
+            return "auth/reset-form";
         }
+
+//        userValidator.checkEquality(password, passwordConfirm, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "auth/reset-form";
+//        }
 
         registrationService.updatePassword(user, password);
 

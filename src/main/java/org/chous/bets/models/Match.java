@@ -15,29 +15,15 @@ public class Match {
     private int stageId;
     private int homeTeamId;
     private int awayTeamId;
-    private boolean isInProgress;
     private boolean isFinished;
-    @Min(value = 0, message = "Score must not be negative")
+    @Min(value = 0, message = "Value cannot be negative")
     private int scoreHomeTeam;
-    @Min(value = 0, message = "Score must not be negative")
+    @Min(value = 0, message = "Value cannot be negative")
     private int scoreAwayTeam;
 
-
-    public Match(int id, Date dateAndTime, int stageId, int homeTeamId, int awayTeamId, boolean isInProgress, boolean isFinished, int scoreHomeTeam, int scoreAwayTeam) {
-        this.id = id;
-        this.dateAndTime = dateAndTime;
-        this.stageId = stageId;
-        this.homeTeamId = homeTeamId;
-        this.awayTeamId = awayTeamId;
-        this.isInProgress = isInProgress;
-        this.isFinished = isFinished;
-        this.scoreHomeTeam = scoreHomeTeam;
-        this.scoreAwayTeam = scoreAwayTeam;
-    }
-
     public Match() {
-
     }
+
 
 
     public int getId() {
@@ -96,15 +82,6 @@ public class Match {
 
     public void setAwayTeamId(int awayTeamId) {
         this.awayTeamId = awayTeamId;
-    }
-
-
-    public boolean isInProgress() {
-        return isInProgress;
-    }
-
-    public void setIsInProgress(boolean isInProgress) {
-        this.isInProgress = isInProgress;
     }
 
 

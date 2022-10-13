@@ -1,30 +1,41 @@
 package org.chous.bets.models;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 public class Bet {
-    private int playerId;
+    private int id;
+    private int userId;
     private int matchId;
-    private int homeTeamScore;
-    private int awayTeamScore;
+    @Min(value = 0, message = "Value cannot be negative")
+    @NotBlank(message = "Value cannot be empty")
+    private int scoreHomeTeam;
+    @Min(value = 0, message = "Value cannot be negative")
+    @NotBlank(message = "Value cannot be empty")
+    private int scoreAwayTeam;
     private boolean isExtraTime;
     private boolean isPenalty;
 
-
-    public Bet(int playerId, int matchId, int homeTeamScore, int awayTeamScore, boolean isExtraTime, boolean isPenalty) {
-        this.playerId = playerId;
-        this.matchId = matchId;
-        this.homeTeamScore = homeTeamScore;
-        this.awayTeamScore = awayTeamScore;
-        this.isExtraTime = isExtraTime;
-        this.isPenalty = isPenalty;
+    public Bet() {
     }
 
 
-    public int getPlayerId() {
-        return playerId;
+
+    public int getId() {
+        return id;
     }
 
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
 
@@ -37,21 +48,21 @@ public class Bet {
     }
 
 
-    public int getHomeTeamScore() {
-        return homeTeamScore;
+    public int getScoreHomeTeam() {
+        return scoreHomeTeam;
     }
 
-    public void setHomeTeamScore(int homeTeamScore) {
-        this.homeTeamScore = homeTeamScore;
+    public void setScoreHomeTeam(int scoreHomeTeam) {
+        this.scoreHomeTeam = scoreHomeTeam;
     }
 
 
-    public int getAwayTeamScore() {
-        return awayTeamScore;
+    public int getScoreAwayTeam() {
+        return scoreAwayTeam;
     }
 
-    public void setAwayTeamScore(int awayTeamScore) {
-        this.awayTeamScore = awayTeamScore;
+    public void setScoreAwayTeam(int scoreAwayTeam) {
+        this.scoreAwayTeam = scoreAwayTeam;
     }
 
 

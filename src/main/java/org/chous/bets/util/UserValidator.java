@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
 @Component
@@ -25,7 +26,7 @@ public class UserValidator implements Validator {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(Object o, Errors error) {
         User user = (User) o;
 
         try {
@@ -34,7 +35,15 @@ public class UserValidator implements Validator {
             return; // все ок, пользователь не найден
         }
 
-        errors.rejectValue("username", "", "This user already exists");
+        error.rejectValue("email", "", "This user already exists");
     }
+
+
+    public void checkEquality(String password, String passwordConfirm, Errors error) {
+        if (!password.equals(passwordConfirm)) {
+            error.rejectValue("password", "", "Passwords do not match");
+        }
+    }
+
 
 }

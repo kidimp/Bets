@@ -3,6 +3,7 @@ package org.chous.bets.models;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+
 public class Stage {
     private int id;
     @NotEmpty(message = "Name must not be empty")
@@ -11,15 +12,14 @@ public class Stage {
     private boolean isKnockoutStage;
 
 
-    public Stage(int id, String name, boolean isKnockoutStage) {
-        this.id = id;
-        this.name = name;
-        this.isKnockoutStage = isKnockoutStage;
-    }
+//    public Stage(int id, String name, boolean isKnockoutStage) {
+//        this.id = id;
+//        this.name = name;
+//        this.isKnockoutStage = isKnockoutStage;
+//    }
 
 
     public Stage() {
-
     }
 
 

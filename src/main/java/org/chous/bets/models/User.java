@@ -1,39 +1,37 @@
 package org.chous.bets.models;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotEmpty(message = "Name must not be empty")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long")
     private String username;
+    @Size(min = 1, message = "Email must not be empty")
+    @Email(message = "Email must be valid")
+    private String email;
     @Size(min = 3, message = "Password must be at least three characters long")
     private String password;
     private String role;
-    @NotEmpty(message = "Email must not be empty")
-    @Email(message = "Email must be valid")
-    private String email;
     private boolean isActive;
     private String activationCode;
     private String resetPasswordToken;
 
 
-
     public User() {
     }
 
-    public User(int id, String username) {
-        this.id = id;
-        this.username = username;
-    }
-
+//    public User(int id, String username) {
+//        this.id = id;
+//        this.username = username;
+//    }
 
 
     public int getId() {
