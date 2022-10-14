@@ -117,36 +117,19 @@ public class HomeController {
     public String bet(Model model, @PathVariable("matchId") int matchId) {
         getUserRoleForHeaderVisualization(model);
 
-        model.addAttribute("matches", matchDAO.matches());
-        model.addAttribute("teams", teamDAO.teams());
-        model.addAttribute("stages", stageDAO.stages());
+        Match match = matchDAO.show(matchId);
+        //.addAttribute("match", match);
+        model.addAttribute("date", match.getDateInStr());
+        model.addAttribute("stageName", stageDAO.show(match.getStageId()).getName());
+        model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
+        model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
 
-        List<Match> matchesList = matchDAO.matches();
-        List<Team> teamsList = teamDAO.teams();
 
-        int homeTeamId = 0;
-        int awayTeamId = 0;
-        String homeTeam = "";
-        String awayTeam = "";
+        Bet bet = new Bet();
+        bet.setMatchId(matchId);
 
-        for (Match match : matchesList) {
-            if (match.getId() == matchId) {
-                homeTeamId = match.getHomeTeamId();
-                awayTeamId = match.getAwayTeamId();
-            }
-        }
 
-        for (Team team : teamsList) {
-            if (team.getId() == homeTeamId) {
-                homeTeam = team.getName();
-            }
-            if (team.getId() == awayTeamId) {
-                awayTeam = team.getName();
-            }
-        }
-
-        model.addAttribute("homeTeam", homeTeam);
-        model.addAttribute("awayTeam", awayTeam);
+        model.addAttribute("bet", bet);
 
         return "bet";
     }
