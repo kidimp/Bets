@@ -29,25 +29,31 @@
 
         <!--    <a sec:authentication="name"></a>-->
 
+<!--        <div th:each="user : ${users}">-->
+<!--            <div sec:authorize="user.getUsername()" id="user.getId"></div>-->
+<!--        </div>-->
+
         <br><br>
 
-        <table style="width:200pt">
-            <tr>
+        <table style="width:220pt;">
+            <tr style="height:30pt;">
                 <td colspan="5" style="text-align:center;">
                     <h5>Bet</h5>
                 </td>
             </tr>
-            <tr>
+
+            <tr style="height:70pt;">
                 <td colspan="2" style="text-align:center;" th:text="${date}"></td>
                 <td></td>
                 <td colspan="2" style="text-align:center;" th:text="${stageName}"></td>
             </tr>
+
             <tr>
                 <td style="width:33%; text-align:left; vertical-align: bottom;" th:text="${homeTeamName}"></td>
 
                 <td style="width:15%; text-align:center;">
                     <label for="scoreHomeTeam"></label>
-                    <input type="text" size="1" style="text-align:center;" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
+                    <input type="text" size="3" style="text-align:center;" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
                     <div style="color:red" th:if="${#fields.hasErrors('scoreHomeTeam')}" th:errors="*{scoreHomeTeam}">ScoreHomeTeam Error</div>
                 </td>
 
@@ -55,21 +61,29 @@
 
                 <td style="width:15%; text-align:center;">
                     <label for="scoreAwayTeam"></label>
-                    <input type="text" size="1" style="text-align:center;" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
+                    <input type="text" size="3" style="text-align:center;" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
                     <div style="color:red" th:if="${#fields.hasErrors('scoreAwayTeam')}" th:errors="*{scoreAwayTeam}">ScoreAwayTeam Error</div>
                 </td>
 
                 <td style="width:33%; text-align:right; vertical-align: bottom;" th:text="${awayTeamName}"></td>
             </tr>
-            <tr></tr>
-            <tr>
-                <td colspan="2" style="text-align:center;">Extra</td>
+
+            <tr style="height:90pt;">
+                <td colspan="2" style="text-align:center;">
+                    <div class="form-group required-control">
+                        <label for="isExtraTime">Is extra time</label>
+                        <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
+                    </div>
+                </td>
                 <td></td>
-                <td colspan="2" style="text-align:center;">Penalties</td>
+                <td colspan="2" style="text-align:center;">
+                    <div class="form-group required-control">
+                        <label for="isPenalty">Is penalty</label>
+                        <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
+                    </div>
+                </td>
             </tr>
         </table>
-
-        <br><br>
 
         <input type="submit" value="Make bet!"/>
 

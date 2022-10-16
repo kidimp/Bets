@@ -8,6 +8,7 @@ import org.chous.bets.models.*;
 
 import org.chous.bets.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -96,6 +98,21 @@ public class HomeController {
         model.addAttribute("teams", teamDAO.teams());
         model.addAttribute("stages", stageDAO.stages());
 
+        // Getting assume bet
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() != "anonymousUser") {
+            int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
+                    .orElse(null)).getId();
+            List<Bet> allBets = betDAO.bets();
+            List<Bet> betsOfUser = new ArrayList<>();
+            for (Bet bet : allBets) {
+                if (bet.getUserId() == currentPrincipalUserId) {
+                    betsOfUser.add(bet);
+                }
+            }
+            model.addAttribute("betsOfUser", betsOfUser);
+        }
+
         return "fixtures";
     }
 
@@ -118,16 +135,14 @@ public class HomeController {
         getUserRoleForHeaderVisualization(model);
 
         Match match = matchDAO.show(matchId);
-        //.addAttribute("match", match);
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("stageName", stageDAO.show(match.getStageId()).getName());
         model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
         model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
 
-
         Bet bet = new Bet();
-        bet.setMatchId(matchId);
 
+        bet.setMatchId(matchId);
 
         model.addAttribute("bet", bet);
 
@@ -142,6 +157,21 @@ public class HomeController {
 
         if (bindingResult.hasErrors()) {
             return "/bet";
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
+                .orElse(null)).getId();
+
+        bet.setUserId(currentPrincipalUserId);
+
+        List<Bet> allBets = betDAO.bets();
+        for (Bet b : allBets) {
+            if ((b.getUserId() == currentPrincipalUserId) && (b.getMatchId() == matchId)) {
+                int id = b.getId();
+                betDAO.update(id, bet);
+                return "redirect:/fixtures";
+            }
         }
 
         betDAO.save(bet);

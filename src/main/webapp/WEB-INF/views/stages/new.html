@@ -13,6 +13,8 @@
 
 <header th:insert="fragments/headerAdmin :: header"></header>
 
+<div class="container mt-5">
+
 <form th:method="POST" th:action="@{/stages}" th:object="${stage}">
 
   <label for="name">Enter name: </label>
@@ -33,6 +35,8 @@
   <input type="submit" value="Create!"/>
 
 </form>
+
+</div>
 
 <footer th:insert="fragments/footer :: footer"></footer>
 

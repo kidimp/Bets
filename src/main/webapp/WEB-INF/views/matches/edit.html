@@ -13,6 +13,8 @@
 
 <header th:insert="fragments/headerAdmin :: header"></header>
 
+<div class="container mt-5">
+
 <form th:method="POST" th:action="@{/matches/{id}/edit(id=${match.getId()})}" th:object="${match}">
 
   <label for="dateAndTime" >Enter date and time: </label>
@@ -22,7 +24,6 @@
   <br>
 
   <label for="stageId">Enter stage: </label>
-  <td>
     <select id="stageId" name="stageId">
       <option value = "NONE" label="Select stage"></option>
       <option
@@ -37,7 +38,6 @@
           th:text="${stage.getName()}">
     </a>
     </a>
-  </td>
 
   <br>
   <br>
@@ -108,6 +108,8 @@
   <input type="submit" value="Save changes!"/>
 
 </form>
+
+</div>
 
 <footer th:insert="fragments/footer :: footer"></footer>
 

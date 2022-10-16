@@ -7,7 +7,7 @@
     <title>Fixtures</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/static/style.css">
-<!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
+    <!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
 
 </head>
 
@@ -31,14 +31,12 @@
 <table class="table table-hover" style="width:100%">
     <thead>
     <tr>
-        <th scope="col" style="text-align:center">Date</th>
-        <th scope="col" style="text-align:center">Stage</th>
-        <th scope="col"></th>
-        <th scope="col" style="text-align:center">Teams</th>
-        <th scope="col"></th>
-        <th scope="col" style="text-align:center">Score</th>
-        <th scope="col" style="text-align:center">Bet</th>
-        <th scope="col"></th>
+        <th scope="col" style="text-align:center; width:17%">Date</th>
+        <th scope="col" style="text-align:center; width:17%">Stage</th>
+        <th colspan="3" style="text-align:center; width:21%">Teams</th>
+        <th scope="col" style="text-align:center; width:10%">Score</th>
+        <th scope="col" style="text-align:center; width:20%">Bet (extra) (pen)</th>
+        <th scope="col" style="width:15%"></th>
     </tr>
     </thead>
     <tbody>
@@ -46,39 +44,67 @@
     <div th:each="match : ${matches}">
 
         <tr th:if="${(match.isFinished() == false)}">
-            <td style="text-align:center; width:17%"><a th:text="${match.getDateInStr()}">match</a></td>
 
-            <td style="text-align:center; width:17%">
+            <td style="text-align:center;"><a th:text="${match.getDateInStr()}">match</a></td>
+
+
+            <td style="text-align:center;">
                 <div th:each="stage : ${stages}">
                     <a th:if="${(match.getStageId() == stage.getId())}" th:text="${stage.getName()}">match</a>
                 </div>
             </td>
 
-            <td style="text-align:right; width:10%">
+
+            <td style="text-align:right;">
                 <div th:each="team : ${teamsList}">
                     <a th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
                 </div>
             </td>
 
-            <td style="text-align:center; width:1%"><a th:text="':'">match</a></td>
+            <td style="text-align:center;"><a th:text="':'">match</a></td>
 
-            <td style="text-align:left; width:10%">
+            <td style="text-align:left;">
                 <div th:each="team : ${teamsList}">
                     <a th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
                 </div>
             </td>
 
 
-            <td style="text-align:center; width:10%" >
+            <td style="text-align:center;">
                 <a th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</a>
-                <a th:if="${(match.isFinished() == true)}" th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
+                <a th:if="${(match.isFinished() == true)}"
+                   th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
             </td>
 
-            <td style="text-align:center; width:20%"><a>My assume bet</a></td>
 
-            <td style="text-align:left; width:15%"><a th:href="@{/bet/{matchId}(matchId=${match.getId()})}">Make/Change bet</a></td>
+            <!--            <td style="text-align:center;">-->
+            <!--                <div sec:authorize="isAuthenticated()">-->
+            <!--                    <div th:each="bet : ${betsOfUser}">-->
+            <!--                        <div th:if="${(bet.getMatchId() == match.getId())}"-->
+            <!--                             th:text="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam()}">-->
+            <!--                            <a th:if="${(bet.isExtraTime() == true)}" th:text="extra"></a>-->
+            <!--                            <a th:if="${(bet.isPenalty() == true)}" th:text="pen"></a>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </td>-->
+            <td style="text-align:center;">
+                <div sec:authorize="isAuthenticated()">
+                    <div th:each="bet : ${betsOfUser}">
+                        <a th:if="${(bet.getMatchId() == match.getId())}"
+                           th:text="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() + ' ('
+                                    + bet.isExtraTime() + ') (' + bet.isPenalty() + ')'}"></a>
+                        </a>
+                    </div>
+                </div>
+            </td>
+
+
+            <td style="text-align:left; width:15%"><a th:href="@{/bet/{matchId}(matchId=${match.getId()})}">Make/Change
+                bet</a></td>
 
         </tr>
+
 
     </div>
 
@@ -96,14 +122,12 @@
 <table class="table table-hover" style="width:100%">
     <thead>
     <tr>
-        <th scope="col" style="text-align:center">Date</th>
-        <th scope="col" style="text-align:center">Stage</th>
-        <th scope="col"></th>
-        <th scope="col" style="text-align:center">Teams</th>
-        <th scope="col"></th>
-        <th scope="col" style="text-align:center">Score</th>
-        <th scope="col" style="text-align:center">Bet</th>
-        <th scope="col"></th>
+        <th scope="col" style="text-align:center; width:17%">Date</th>
+        <th scope="col" style="text-align:center; width:17%">Stage</th>
+        <th colspan="3" style="text-align:center; width:21%">Teams</th>
+        <th scope="col" style="text-align:center; width:10%">Score</th>
+        <th scope="col" style="text-align:center; width:20%">Bet (extra) (pen)</th>
+        <th scope="col" style="width:15%"></th>
     </tr>
     </thead>
     <tbody>
@@ -111,37 +135,46 @@
     <div th:each="match : ${matchesReversed}">
 
         <tr th:if="${(match.isFinished() == true)}">
-            <td style="text-align:center; width:17%"><a th:text="${match.getDateInStr()}">match</a></td>
+            <td style="text-align:center;"><a th:text="${match.getDateInStr()}">match</a></td>
 
-            <td style="text-align:center; width:17%">
+            <td style="text-align:center;">
                 <div th:each="stage : ${stages}">
                     <a th:if="${(match.getStageId() == stage.getId())}" th:text="${stage.getName()}">match</a>
                 </div>
             </td>
 
-            <td style="text-align:right; width:10%">
+            <td style="text-align:right;">
                 <div th:each="team : ${teamsList}">
                     <a th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
                 </div>
             </td>
 
-            <td style="text-align:center; width:1%"><a th:text="':'">match</a></td>
+            <td style="text-align:center;"><a th:text="':'">match</a></td>
 
-            <td style="text-align:left; width:10%">
+            <td style="text-align:left;">
                 <div th:each="team : ${teamsList}">
                     <a th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
                 </div>
             </td>
 
 
-            <td style="text-align:center; width:10%" >
+            <td style="text-align:center;">
                 <a th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</a>
-                <a th:if="${(match.isFinished() == true)}" th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
+                <a th:if="${(match.isFinished() == true)}"
+                   th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
             </td>
 
-            <td style="text-align:center; width:20%"><a>My assume bet</a></td>
+            <td style="text-align:center;">
+                <div sec:authorize="isAuthenticated()">
+                    <div th:each="bet : ${betsOfUser}">
+                        <a th:if="${(bet.getMatchId() == match.getId())}"
+                           th:text="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() + ' ('
+                                    + bet.isExtraTime() + ') (' + bet.isPenalty() + ')'}"></a>
+                    </div>
+                </div>
+            </td>
 
-            <td style="text-align:left; width:15%"><a></a></td>
+            <td style="text-align:left;"><a></a></td>
 
         </tr>
 
@@ -149,8 +182,6 @@
 
     </tbody>
 </table>
-
-<!--</div>-->
 
 <footer th:insert="fragments/footer :: footer"></footer>
 

@@ -2,12 +2,16 @@ package org.chous.bets.dao;
 
 import org.chous.bets.models.Bet;
 import org.chous.bets.models.Match;
+import org.chous.bets.models.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class BetDAO {
@@ -37,6 +41,12 @@ public class BetDAO {
                         "isExtraTime, isPenalty) VALUES (?, ?, ?, ?, ?, ?)",
                 bet.getUserId(), bet.getMatchId(), bet.getScoreHomeTeam(), bet.getScoreAwayTeam(),
                 bet.isExtraTime(), bet.isPenalty());
+    }
+
+
+    public void update(int id, Bet updatedBet) {
+        jdbcTemplate.update("UPDATE bets SET scoreHomeTeam=?, scoreAwayTeam=?, isExtraTime=?, isPenalty=? WHERE id=?",
+                updatedBet.getScoreHomeTeam(), updatedBet.getScoreAwayTeam(), updatedBet.isExtraTime(), updatedBet.isPenalty(), id);
     }
 
 }

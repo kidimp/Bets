@@ -14,7 +14,6 @@ public class TeamDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-
     @Autowired
     public TeamDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

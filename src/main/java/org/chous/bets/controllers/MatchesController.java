@@ -51,7 +51,9 @@ public class MatchesController {
     @GetMapping("matches/all")
     public String matches(Model model) {
         List<Match> matchesList = matchDAO.matches();
-        Collections.sort(matchesList, Match.COMPARE_BY_DATE);
+//        Collections.sort(matchesList, Match.COMPARE_BY_DATE);
+        matchesList.sort(Collections.reverseOrder(Match.COMPARE_BY_DATE));
+
 
         model.addAttribute("matches", matchesList);
         model.addAttribute("teams", teamDAO.teams());
