@@ -1,12 +1,15 @@
 package org.chous.bets.models;
 
+import org.chous.bets.dao.TeamDAO;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.validation.constraints.Min;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 public class Match {
     private int id;
@@ -22,6 +25,12 @@ public class Match {
     private int scoreAwayTeam;
 
     public Match() {
+    }
+
+    private TeamDAO teamDAO;
+
+    public Match(TeamDAO teamDAO) {
+        this.teamDAO = teamDAO;
     }
 
 
@@ -83,6 +92,17 @@ public class Match {
     public void setAwayTeamId(int awayTeamId) {
         this.awayTeamId = awayTeamId;
     }
+
+
+//    public String getTeamName(int teamId) {
+//        List<Team> teams = teamDAO.teams();
+//        for (Team team : teams) {
+//            if (team.getId() == teamId) {
+//                return team.getName();
+//            }
+//        }
+//        return "Team name not found!";
+//    }
 
 
     public boolean isFinished() {

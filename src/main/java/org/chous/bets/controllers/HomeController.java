@@ -58,6 +58,11 @@ public class HomeController {
     }
 
 
+    public String getTeamName(int teamId) {
+        return teamDAO.show(teamId).getName();
+    }
+
+
     public void getUserRoleForHeaderVisualization(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -119,6 +124,13 @@ public class HomeController {
     @GetMapping("/tables")
     public String tables(Model model) {
         getUserRoleForHeaderVisualization(model);
+//        List<Bet> bets = betDAO.bets();
+//        bets.sort();
+
+        //model.addAttribute("homeTeamName", teamDAO.show(homeTeamId).getName());
+        model.addAttribute("matches", matchDAO.matches());
+        model.addAttribute("users", usersRepository.findAll());
+        model.addAttribute("bets", betDAO.bets());
         return "tables";
     }
 
