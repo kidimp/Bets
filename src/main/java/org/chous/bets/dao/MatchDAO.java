@@ -53,4 +53,25 @@ public class MatchDAO {
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM matches WHERE id=?", id);
     }
+
+
+//    public String getHomeTeamName(int homeTeamId) {
+//        return jdbcTemplate.query("SELECT matches.homeTeamId, teams.name FROM matches INNER JOIN teams ON homeTeamId=? = teams.id",
+//                        new Object[]{homeTeamId}, new BeanPropertyRowMapper<>(String.class))
+//                .stream().findAny().orElse(null);
+//    }
+
+//    public String getHomeTeamName(int homeTeamId) {
+//        return jdbcTemplate.query("SELECT homeTeamId FROM matches WHERE homeTeamId in " +
+//                                "(SELECT teams.id INNER JOIN teams ON matches.homeTeamId = teams.id WHERE homeTeamId=?)",
+//                        new Object[]{homeTeamId}, new BeanPropertyRowMapper<>(String.class))
+//                .stream().findAny().orElse(null);
+//    }
+
+    public String getHomeTeamName(int homeTeamId) {
+        return jdbcTemplate.query("SELECT matches.homeTeamId, teams.name FROM matches " +
+                                "INNER JOIN teams ON matches.homeTeamId = teams.id WHERE homeTeamId = ?;",
+                        new Object[]{homeTeamId}, new BeanPropertyRowMapper<>(String.class))
+                .stream().findAny().orElse(null);
+    }
 }
