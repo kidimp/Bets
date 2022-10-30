@@ -30,8 +30,9 @@ public class BetDAO {
     }
 
 
-    public Bet show(int id) {
-        return jdbcTemplate.query("SELECT * FROM bets WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Bet.class))
+    public Bet show(int userId, int matchId) {
+        return jdbcTemplate.query("SELECT * FROM bets WHERE userId=? AND matchId=?;", new Object[]{userId, matchId},
+                        new BeanPropertyRowMapper<>(Bet.class))
                 .stream().findAny().orElse(null);
     }
 

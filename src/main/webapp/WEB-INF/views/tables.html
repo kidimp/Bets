@@ -89,10 +89,27 @@
 
 <!--        </div>-->
 
-        <div th:each="tableView : ${tablesViews}">
+<!--        <div th:each="tableView : ${tablesViews}">-->
+<!--            <tr>-->
+<!--                <div th:each="cell : ${tableView.getRowContent()}">-->
+<!--                    <td th:text="${cell}"></td>-->
+<!--                </div>-->
+<!--            </tr>-->
+<!--        </div>-->
+
+        <div th:each="playerBets : ${listPlayerBets}">
             <tr>
-                <div th:each="cell : ${tableView.getRowContent()}">
-                    <td th:text="${cell}"></td>
+                <td th:text="${playerBets.user.getUsername()}"></td>
+                <td th:text="${playerBets.getSum()}"></td>
+                <div th:each="bet : ${playerBets.bets}">
+                    <div th:if="${(bet != null)}">
+                        <td th:text="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() + ' ' +
+                                              bet.isExtraTime() + ' ' + bet.isPenalty()}"/>
+                    </div>
+                    <div th:if="${(bet == null)}">
+                        <td>LOX</td>
+                    </div>
+                    <td>??</td>
                 </div>
             </tr>
         </div>

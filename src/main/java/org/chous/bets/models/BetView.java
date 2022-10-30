@@ -9,6 +9,9 @@ public class BetView {
         this.bet = bet;
     }
 
+    public int getId() {
+        return bet.getId();
+    }
 
     public int getMatchId() {
         return bet.getMatchId();

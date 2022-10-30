@@ -42,10 +42,10 @@ public class TableView {
 
             if (betView != null) {
                 rowContent.add(betView.getScoreHomeTeam() + " : " + betView.getScoreAwayTeam() + " " + betView.isExtraTime() + " " + betView.isPenalty());
-                rowContent.add("???");
+                rowContent.add("??");
             } else {
                 rowContent.add("no bet");
-                rowContent.add("???");
+                rowContent.add("??");
             }
 
         }

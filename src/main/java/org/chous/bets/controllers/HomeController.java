@@ -76,6 +76,13 @@ public class HomeController {
     }
 
 
+    public int getCurrentPrincipalUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
+                .orElse(null)).getId();
+    }
+
+
     public List<BetView> getAssumeBetsViewsForCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() != "anonymousUser") {
@@ -153,15 +160,28 @@ public class HomeController {
     public String tables(Model model) {
         getUserRoleForHeaderVisualization(model);
 
+        List<PlayerBets> playerBets = new ArrayList<>();
+
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
+
+        for (User user : usersRepository.findAll()) {
+            playerBets.add(new PlayerBets(user, getAllUserBetsViews(user), matchesList));
+        }
 
         ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
         for (Match match : matchesList) {
             matchViewArrayList.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
         }
 
+        model.addAttribute("listPlayerBets", playerBets);
+        model.addAttribute("matchViews", matchViewArrayList);
 
+
+        /*ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
+        for (Match match : matchesList) {
+            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
+        }
 
         List<User> usersList = usersRepository.findAll();
 
@@ -171,12 +191,9 @@ public class HomeController {
             tableViewArrayList.add(new TableView(user, matchesList, getAllUserBetsViews(user)));
         }
 
-        model.addAttribute("tablesViews", tableViewArrayList);
+        model.addAttribute("tablesViews", tableViewArrayList);*/
 
-
-
-
-        model.addAttribute("matchViews", matchViewArrayList);
+        //model.addAttribute("matchViews", matchViewArrayList);
 //        model.addAttribute("betsViews", getAllBetsViews());
 //        model.addAttribute("matches", matchesList);
 //        model.addAttribute("users", usersRepository.findAll());
@@ -202,8 +219,10 @@ public class HomeController {
         model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
         model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
 
-        Bet bet = new Bet();
-
+        Bet bet = betDAO.show(getCurrentPrincipalUserId(), matchId);
+        if (bet == null) {
+            bet = new Bet();
+        }
         bet.setMatchId(matchId);
 
         model.addAttribute("bet", bet);

@@ -2,11 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Edit match</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="/static/style.css">
-  <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
+    <meta charset="UTF-8">
+    <title>Edit match</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/style.css">
+    <style> .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }</style>
 </head>
 
 <body>
@@ -15,99 +21,95 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/matches/{id}/edit(id=${match.getId()})}" th:object="${match}">
+    <form th:method="POST" th:action="@{/matches/{id}/edit(id=${match.getId()})}" th:object="${match}">
 
-  <label for="dateAndTime" >Enter date and time: </label>
-  <input type="text" th:field="*{dateAndTime}" id="dateAndTime"/>
-
-  <br>
-  <br>
-
-  <label for="stageId">Enter stage: </label>
-    <select id="stageId" name="stageId">
-      <option value = "NONE" label="Select stage"></option>
-      <option
-              th:each="stage : ${stagesList}"
-              th:value="${stage.getId()}"
-              th:text="${stage.getName()}">
-      </option>
-    </select>
-    <a> Current choice:
-    <a  th:each="stage : ${stagesList}"
-          th:if="${(match.getStageId() == stage.getId())}"
-          th:text="${stage.getName()}">
-    </a>
-    </a>
-
-  <br>
-  <br>
-
-  <label for="homeTeamId">Enter home team:</label>
-  <td>
-    <select id="homeTeamId" name="homeTeamId">
-      <option value = "NONE" label = "Select team"></option>
-      <option
-              th:each="team : ${teamsList}"
-              th:value="${team.getId()}"
-              th:text="${team.getName()}">
-      </option>
-    </select>
-    <a> Current choice:
-      <a  th:each="team : ${teamsList}"
-          th:if="${(match.getHomeTeamId() == team.getId())}"
-          th:text="${team.getName()}">
-      </a>
-    </a>
-  </td>
-
-  <br>
-  <br>
-
-  <label for="awayTeamId">Enter away team: </label>
-  <td>
-    <select id="awayTeamId" name="awayTeamId">
-      <option value = "NONE" label = "Select team"></option>
-      <option
-              th:each="team : ${teamsList}"
-              th:value="${team.getId()}"
-              th:text="${team.getName()}">
-      </option>
-    </select>
-    <a> Current choice:
-      <a  th:each="team : ${teamsList}"
-          th:if="${(match.getAwayTeamId() == team.getId())}"
-          th:text="${team.getName()}">
-      </a>
-    </a>
-  </td>
-
-  <br>
-  <br>
+        <label for="dateAndTime">Enter date and time: </label>
+        <input type="text" th:field="*{dateAndTime}" id="dateAndTime"/>
 
 
-  <div class="form-group required-control">
-    <label for="isFinished">Is match finished: </label>
-    <input id="isFinished" type="checkbox" name="isFinished" th:checked="*{isFinished}" />
-  </div>
+        <br>
+        <br>
 
 
-  <label for="scoreHomeTeam">Enter score of home team: </label>
-  <input type="text" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
-  <div style="color:red" th:if="${#fields.hasErrors('scoreHomeTeam')}" th:errors="*{scoreHomeTeam}">ScoreHomeTeam Error</div>
+        <label for="stageId">Enter stage: </label>
+        <select id="stageId" name="stageId">
+            <option value="NONE" label="Select stage"></option>
+            <option
+                    th:each="stage : ${stagesList}"
+                    th:value="${stage.getId()}"
+                    th:text="${stage.getName()}"
+                    th:selected="${stage.getId() == match.getStageId()}">
+            </option>
+        </select>
 
-  <br>
-  <br>
 
-  <label for="scoreAwayTeam">Enter score of away team: </label>
-  <input type="text" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
-  <div style="color:red" th:if="${#fields.hasErrors('scoreAwayTeam')}" th:errors="*{scoreAwayTeam}">ScoreAwayTeam Error</div>
+        <br>
+        <br>
 
-  <br>
-  <br>
 
-  <input type="submit" value="Save changes!"/>
+        <label for="homeTeamId">Enter home team:</label>
+        <td>
+            <select id="homeTeamId" name="homeTeamId">
+                <option value="NONE" label="Select team"></option>
+                <option
+                        th:each="team : ${teamsList}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getName()}"
+                        th:selected="${team.getId() == match.getHomeTeamId()}">
+                </option>
+            </select>
+        </td>
 
-</form>
+
+        <br>
+        <br>
+
+
+        <label for="awayTeamId">Enter away team: </label>
+        <td>
+            <select id="awayTeamId" name="awayTeamId">
+                <option value="NONE" label="Select team"></option>
+                <option
+                        th:each="team : ${teamsList}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getName()}"
+                        th:selected="${team.getId() == match.getAwayTeamId()}">
+                </option>
+            </select>
+        </td>
+
+
+        <br>
+        <br>
+
+
+        <div class="form-group required-control">
+            <label for="isFinished">Is match finished: </label>
+            <input id="isFinished" type="checkbox" name="isFinished" th:checked="*{isFinished}"/>
+        </div>
+
+
+        <label for="scoreHomeTeam">Enter score of home team: </label>
+        <input type="text" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
+        <div style="color:red" th:if="${#fields.hasErrors('scoreHomeTeam')}" th:errors="*{scoreHomeTeam}">ScoreHomeTeam
+            Error
+        </div>
+
+        <br>
+        <br>
+
+        <label for="scoreAwayTeam">Enter score of away team: </label>
+        <input type="text" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
+        <div style="color:red" th:if="${#fields.hasErrors('scoreAwayTeam')}" th:errors="*{scoreAwayTeam}">ScoreAwayTeam
+            Error
+        </div>
+
+        <br>
+        <br>
+
+        <input type="submit" value="Save changes!"/>
+
+    </form>
 
 </div>
 
