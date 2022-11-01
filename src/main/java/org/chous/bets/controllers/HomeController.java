@@ -58,7 +58,7 @@ public class HomeController {
     }
 
 
-    public void getUserRoleForHeaderVisualization(Model model) {
+    public void getCurrentPrincipalUserUserRole(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username;
@@ -83,6 +83,7 @@ public class HomeController {
     }
 
 
+    // Получаем список всех ставок для аутентифицированного пользователя.
     public List<BetView> getAssumeBetsViewsForCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() != "anonymousUser") {
@@ -101,37 +102,38 @@ public class HomeController {
     }
 
 
-    public List<BetView> getAllUserBetsViews(User user) {
+    // Получаем для каждого пользователя список его ставок не зависимо от аутентификации.
+    public List<BetView> getAllUserBetsViews(User user, List<Match> matches) {
         List<Bet> allBets = betDAO.bets();
-        List<BetView> usersBetsViewsArrayList = new ArrayList<>();
+        List<BetView> usersBetsViews = new ArrayList<>();
         for (Bet bet : allBets) {
             if (bet.getUserId() == user.getId()) {
-                usersBetsViewsArrayList.add(new BetView(bet));
+                usersBetsViews.add(new BetView(bet, matches));
             }
         }
-        return usersBetsViewsArrayList;
+        return usersBetsViews;
     }
 
 
-    public List<BetView> getAllBetsViews() {
-        List<Bet> allBets = betDAO.bets();
-        List<BetView> allBetsViewsArrayList = new ArrayList<>();
-        for (Bet bet : allBets) {
-            allBetsViewsArrayList.add(new BetView(bet));
-        }
-        return allBetsViewsArrayList;
-    }
+//    public List<BetView> getAllBetsViews() {
+//        List<Bet> allBets = betDAO.bets();
+//        List<BetView> allBetsViewsArrayList = new ArrayList<>();
+//        for (Bet bet : allBets) {
+//            allBetsViewsArrayList.add(new BetView(bet));
+//        }
+//        return allBetsViewsArrayList;
+//    }
 
 
     @GetMapping("/")
     public String home(Model model) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
         return "home";
     }
 
     @GetMapping("/fixtures")
     public String fixtures(Model model) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
 
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
@@ -158,60 +160,39 @@ public class HomeController {
 
     @GetMapping("/tables")
     public String tables(Model model) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
 
-        List<PlayerBets> playerBets = new ArrayList<>();
+        List<UserBet> userBets = new ArrayList<>();
 
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
 
         for (User user : usersRepository.findAll()) {
-            playerBets.add(new PlayerBets(user, getAllUserBetsViews(user), matchesList));
+            userBets.add(new UserBet(user, getAllUserBetsViews(user, matchesList), matchesList));
         }
 
-        ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
+        ArrayList<MatchView> matchViews = new ArrayList<>();
         for (Match match : matchesList) {
-            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
+            matchViews.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
         }
 
-        model.addAttribute("listPlayerBets", playerBets);
-        model.addAttribute("matchViews", matchViewArrayList);
+        model.addAttribute("userBetsList", userBets);
+        model.addAttribute("matchViews", matchViews);
 
-
-        /*ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
-        for (Match match : matchesList) {
-            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
-        }
-
-        List<User> usersList = usersRepository.findAll();
-
-        ArrayList<TableView> tableViewArrayList = new ArrayList<>();
-
-        for (User user : usersList) {
-            tableViewArrayList.add(new TableView(user, matchesList, getAllUserBetsViews(user)));
-        }
-
-        model.addAttribute("tablesViews", tableViewArrayList);*/
-
-        //model.addAttribute("matchViews", matchViewArrayList);
-//        model.addAttribute("betsViews", getAllBetsViews());
-//        model.addAttribute("matches", matchesList);
-//        model.addAttribute("users", usersRepository.findAll());
-//        model.addAttribute("bets", betDAO.bets());
         return "tables";
     }
 
 
     @GetMapping("/rules")
     public String rules(Model model) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
         return "rules";
     }
 
 
     @GetMapping("/bet/{matchId}")
     public String bet(Model model, @PathVariable("matchId") int matchId) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
 
         Match match = matchDAO.show(matchId);
         model.addAttribute("date", match.getDateInStr());
@@ -234,7 +215,7 @@ public class HomeController {
     @PostMapping("/bet/{matchId}")
     public String makeBet(Model model, @ModelAttribute("bet") @Valid Bet bet, BindingResult bindingResult,
                           @PathVariable("matchId") int matchId) {
-        getUserRoleForHeaderVisualization(model);
+        getCurrentPrincipalUserUserRole(model);
 
         if (bindingResult.hasErrors()) {
             return "/bet";

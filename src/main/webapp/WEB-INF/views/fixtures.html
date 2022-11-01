@@ -43,8 +43,8 @@
     <tbody>
 
     <div th:each="matchView : ${matchViews}">
-        <tr th:if="${(matchView.isFinished() == false)}">
-            <td style="text-align:center;"><a th:text="${matchView.getDateAndTime()}"></a></td>
+        <tr th:if="${(matchView.getMatch().isFinished() == false)}">
+            <td style="text-align:center;"><a th:text="${matchView.getMatch().getDateInStr()}"></a></td>
             <td style="text-align:center;"><a th:text="${matchView.getStage()}"></a></td>
             <td style="text-align:right;"><a th:text="${matchView.getHomeTeam()}"></a></td>
             <td style="text-align:center;"><a th:text="' : '"></a></td>
@@ -53,13 +53,13 @@
             <td style="text-align:center;">
                 <div sec:authorize="isAuthenticated()">
                     <div th:each="betView : ${betsViews}">
-                        <a th:if="${(betView.getMatchId() == matchView.getId())}"
-                           th:text="${betView.getScoreHomeTeam() + ' : ' + betView.getScoreAwayTeam() + ' ' +
+                        <a th:if="${(betView.getBet().getMatchId() == matchView.getMatch().getId())}"
+                           th:text="${betView.getBet().getScoreHomeTeam() + ' : ' + betView.getBet().getScoreAwayTeam() + ' ' +
                                       betView.isExtraTime() + ' ' + betView.isPenalty()}"></a>
                     </div>
                 </div>
             </td>
-            <td style="text-align:left; width:15%"><a th:href="@{/bet/{matchId}(matchId=${matchView.getId()})}">Make/Change bet</a></td>
+            <td style="text-align:left; width:15%"><a th:href="@{/bet/{matchId}(matchId=${matchView.getMatch().getId()})}">Make/Change bet</a></td>
         </tr>
     </div>
 
@@ -91,19 +91,19 @@
     <tbody>
 
     <div th:each="matchView : ${matchViewsReversed}">
-        <tr th:if="${(matchView.isFinished() == true)}">
-            <td style="text-align:center;"><a th:text="${matchView.getDateAndTime()}"></a></td>
+        <tr th:if="${(matchView.getMatch().isFinished() == true)}">
+            <td style="text-align:center;"><a th:text="${matchView.getMatch().getDateInStr()}"></a></td>
             <td style="text-align:center;"><a th:text="${matchView.getStage()}"></a></td>
             <td style="text-align:right;"><a th:text="${matchView.getHomeTeam()}"></a></td>
             <td style="text-align:center;"><a th:text="' : '"></a></td>
             <td style="text-align:left;"><a th:text="${matchView.getAwayTeam()}"></a></td>
             <td style="text-align:center;"><a
-                    th:text="${matchView.getScoreHomeTeam() + ' : ' + matchView.getScoreAwayTeam()}"></a></td>
+                    th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam()}"></a></td>
             <td style="text-align:center;">
                 <div sec:authorize="isAuthenticated()">
                     <div th:each="betView : ${betsViews}">
-                        <a th:if="${(betView.getMatchId() == matchView.getId())}"
-                           th:text="${betView.getScoreHomeTeam() + ' : ' + betView.getScoreAwayTeam() + ' ' +
+                        <a th:if="${(betView.getBet().getMatchId() == matchView.getMatch().getId())}"
+                           th:text="${betView.getBet().getScoreHomeTeam() + ' : ' + betView.getBet().getScoreAwayTeam() + ' ' +
                                       betView.isExtraTime() + ' ' + betView.isPenalty()}"></a>
                     </div>
                 </div>

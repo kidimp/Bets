@@ -1,33 +1,39 @@
 package org.chous.bets.models;
 
+import java.util.Date;
 import java.util.List;
 
 public class BetView {
     private final Bet bet;
 
+    private List<Match> matches;
+
+    public BetView(Bet bet, List<Match> matches) {
+        this.bet = bet;
+        this.matches = matches;
+    }
+
     public BetView(Bet bet) {
         this.bet = bet;
     }
 
-    public int getId() {
-        return bet.getId();
+
+    public boolean isMatchStarted() {
+        for (Match match : matches) {
+            if (bet.getMatchId() == match.getId()) {
+                if (match.getDateAndTime().after(new Date())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    public int getMatchId() {
-        return bet.getMatchId();
+
+    public Bet getBet() {
+        return bet;
     }
 
-    public int getUserId() {
-        return bet.getUserId();
-    }
-
-    public int getScoreHomeTeam() {
-        return bet.getScoreHomeTeam();
-    }
-
-    public int getScoreAwayTeam() {
-        return bet.getScoreAwayTeam();
-    }
 
     public String isExtraTime() {
         if (bet.isExtraTime()) {
@@ -37,6 +43,7 @@ public class BetView {
         }
     }
 
+
     public String isPenalty() {
         if (bet.isPenalty()) {
             return "pen";
@@ -44,5 +51,9 @@ public class BetView {
             return "";
         }
     }
+
+
+
+
 
 }

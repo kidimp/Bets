@@ -34,23 +34,26 @@
 
         <tr role="row">
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label=": сортировать по возрастанию" style="width: 0px;text-align: center;">Players</th>
+                aria-label=": сортировать по возрастанию" style="width: 0;text-align: center;">Players</th>
             <th rowspan="2" class="sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label="Total points: сортировать по возрастанию" aria-sort="descending" style="width: 0px;text-align: center;">Total points</th>
+                aria-label="Total points: сортировать по возрастанию" aria-sort="descending" style="width: 0;text-align: center;">Total points</th>
 
             <div th:each="matchView : ${matchViews}">
                 <th colspan="2" rowspan="1" style="text-align: center;">
                     <a th:text="${matchView.getHomeTeam() + ' : ' + matchView.getAwayTeam()}"></a>
                     <br>
-                    <a th:if="${(matchView.isFinished() == true)}"
-                       th:text="${matchView.getScoreHomeTeam() + ' : ' + matchView.getScoreAwayTeam()}"></a>
-                    <a th:if="${(matchView.isFinished() == false)}"
+                    <a th:if="${(matchView.getMatch().isFinished() == true)}"
+                       th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam()}"></a>
+                    <a th:if="${(matchView.getMatch().isFinished() == false)}"
                        th:text="${' TBA '}"></a>
                 </th>
             </div>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
                 aria-label="Total points: сортировать по возрастанию" style="width: 0px;text-align: center;">Total points</th>
+
+            <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
+                aria-label=": сортировать по возрастанию" style="width: 0px;text-align: center;">Players</th>
         </tr>
 
         <tr role="row">
@@ -66,51 +69,27 @@
 
         <tbody>
 
-<!--        <div th:each="user : ${users}">-->
-
-<!--        <tr role="row" class="odd">-->
-<!--            <td class="" style=""><a th:text="${user.getUsername()}"></a></td>-->
-<!--            <td data-order="38" class="sorting_1">??</td>-->
-
-<!--            <div th:each="match : ${matches}">-->
-<!--                <div th:each="betView : ${betsViews}">-->
-<!--                    <div th:if="${betView.getUserId() == user.getId()}">-->
-<!--                        <div th:if="${(betView.getMatchId() == match.getId())}">-->
-<!--                            <td th:text="${betView.getScoreHomeTeam() + ' : ' + betView.getScoreAwayTeam() + ' ' +-->
-<!--                                          betView.isExtraTime() + ' ' + betView.isPenalty()}"/>-->
-<!--                            <td data-order="3">??</td>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <td data-order="38" class="sorting_1">??</td>-->
-<!--        </tr>-->
-
-<!--        </div>-->
-
-<!--        <div th:each="tableView : ${tablesViews}">-->
-<!--            <tr>-->
-<!--                <div th:each="cell : ${tableView.getRowContent()}">-->
-<!--                    <td th:text="${cell}"></td>-->
-<!--                </div>-->
-<!--            </tr>-->
-<!--        </div>-->
-
-        <div th:each="playerBets : ${listPlayerBets}">
+        <div th:each="userBets : ${userBetsList}">
             <tr>
-                <td th:text="${playerBets.user.getUsername()}"></td>
-                <td th:text="${playerBets.getSum()}"></td>
-                <div th:each="bet : ${playerBets.bets}">
-                    <div th:if="${(bet != null)}">
-                        <td th:text="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() + ' ' +
-                                              bet.isExtraTime() + ' ' + bet.isPenalty()}"/>
+                <td th:text="${userBets.getUser().getUsername()}"></td>
+                <td th:text="${userBets.getSum()}"></td>
+
+                <div th:each="betView : ${userBets.getBets()}">
+                    <div th:if="${(betView != null)}">
+                        <td th:if="${betView.isMatchStarted() == true}"
+                            th:text="${betView.getBet().getScoreHomeTeam() + ' : ' + betView.getBet().getScoreAwayTeam() + ' ' +
+                                              betView.isExtraTime() + ' ' + betView.isPenalty()}"/>
+                        <td th:if="${betView.isMatchStarted() == false}"
+                            th:text="${''}"/>
                     </div>
-                    <div th:if="${(bet == null)}">
-                        <td>LOX</td>
+                    <div th:if="${(betView == null)}">
+                        <td></td>
                     </div>
-                    <td>??</td>
+                    <td>0</td>
                 </div>
+
+                <td th:text="${userBets.getSum()}"></td>
+                <td th:text="${userBets.getUser().getUsername()}"></td>
             </tr>
         </div>
 

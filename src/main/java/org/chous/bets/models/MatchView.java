@@ -1,6 +1,5 @@
 package org.chous.bets.models;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MatchView {
@@ -15,14 +14,8 @@ public class MatchView {
     }
 
 
-    public int getId() {
-        return match.getId();
-    }
-
-
-    public String getDateAndTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        return formatter.format(match.getDateAndTime());
+    public Match getMatch() {
+        return match;
     }
 
 
@@ -54,20 +47,4 @@ public class MatchView {
         }
         return "team not found";
     }
-
-
-    public boolean isFinished() {
-        return match.isFinished();
-    }
-
-
-    public int getScoreHomeTeam() {
-        return match.getScoreHomeTeam();
-    }
-
-
-    public int getScoreAwayTeam() {
-        return match.getScoreAwayTeam();
-    }
-
 }
