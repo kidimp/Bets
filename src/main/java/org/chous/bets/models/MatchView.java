@@ -47,4 +47,23 @@ public class MatchView {
         }
         return "team not found";
     }
+
+
+    public String isExtraTime() {
+        if (match.isExtraTime()) {
+            return "extra";
+        } else {
+            return "";
+        }
+    }
+
+
+    public String isPenalty() {
+        if (match.isPenalty()) {
+            return "pen";
+        } else {
+            return "";
+        }
+    }
+
 }

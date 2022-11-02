@@ -5,11 +5,12 @@ import java.util.*;
 public class UserBet {
     private final User user;
     private final List<BetView> betViews;
-    private int sum;
+    private int totalPoints;
 
 
     public UserBet(User user, List<BetView> allBetViews, List<Match> matches) {
         this.user = user;
+
         betViews = new ArrayList<>();
         for (BetView betView : allBetViews) {
             if (betView.getBet().getUserId() == user.getId()) {
@@ -50,7 +51,7 @@ public class UserBet {
     }
 
 
-    public int getSum() {
-        return sum;
+    public int getTotalPoints() {
+        return totalPoints;
     }
 }

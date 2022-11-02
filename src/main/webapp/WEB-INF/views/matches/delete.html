@@ -31,7 +31,8 @@
         <p th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${'Away team: ' + team.getName()}">match</p>
     </div>
 
-    <td><p th:text="${'Score: ' + match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</p></td>
+    <td><p th:text="${'Score: ' + match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
+                                    ' ' + match.isExtraTime() + ' ' + match.isPenalty()}">match</p></td>
 
     <p th:text="${'Is match finished: ' + match.isFinished()}">VALUE</p>
 

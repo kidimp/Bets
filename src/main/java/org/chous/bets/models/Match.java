@@ -22,6 +22,8 @@ public class Match {
     private int scoreHomeTeam;
     @Min(value = 0, message = "Value cannot be negative")
     private int scoreAwayTeam;
+    private boolean isExtraTime;
+    private boolean isPenalty;
 
     public Match() {
     }
@@ -93,17 +95,6 @@ public class Match {
     }
 
 
-//    public String getHomeTeamName(int homeTeamId) {
-//        List<Team> teams = teamDAO.teams();
-//        for (Team team : teams) {
-//            if (team.getId() == homeTeamId) {
-//                return team.getName();
-//            }
-//        }
-//        return "Team name not found!";
-//        return matchDAO.getHomeTeamName(homeTeamId);
-//    }
-
     public String getHomeTeamName() {
         return matchDAO.getHomeTeamName(this.homeTeamId);
     }
@@ -133,6 +124,24 @@ public class Match {
 
     public void setScoreAwayTeam(int scoreAwayTeam) {
         this.scoreAwayTeam = scoreAwayTeam;
+    }
+
+
+    public boolean isExtraTime() {
+        return isExtraTime;
+    }
+
+    public void setIsExtraTime(boolean isExtraTime) {
+        this.isExtraTime = isExtraTime;
+    }
+
+
+    public boolean isPenalty() {
+        return isPenalty;
+    }
+
+    public void setIsPenalty(boolean isPenalty) {
+        this.isPenalty = isPenalty;
     }
 
 

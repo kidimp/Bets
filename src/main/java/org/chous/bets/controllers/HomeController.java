@@ -7,6 +7,7 @@ import org.chous.bets.dao.TeamDAO;
 import org.chous.bets.models.*;
 
 import org.chous.bets.repositories.UsersRepository;
+import org.chous.bets.services.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,7 +59,7 @@ public class HomeController {
     }
 
 
-    public void getCurrentPrincipalUserUserRole(Model model) {
+    public void getCurrentPrincipalUserRole(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username;
@@ -115,25 +116,16 @@ public class HomeController {
     }
 
 
-//    public List<BetView> getAllBetsViews() {
-//        List<Bet> allBets = betDAO.bets();
-//        List<BetView> allBetsViewsArrayList = new ArrayList<>();
-//        for (Bet bet : allBets) {
-//            allBetsViewsArrayList.add(new BetView(bet));
-//        }
-//        return allBetsViewsArrayList;
-//    }
-
-
     @GetMapping("/")
     public String home(Model model) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
         return "home";
     }
 
+
     @GetMapping("/fixtures")
     public String fixtures(Model model) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
 
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
@@ -158,17 +150,23 @@ public class HomeController {
         return "fixtures";
     }
 
+
     @GetMapping("/tables")
     public String tables(Model model) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
 
         List<UserBet> userBets = new ArrayList<>();
 
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
 
+//        List<Integer> pointsList = new ArrayList<>();
+
         for (User user : usersRepository.findAll()) {
-            userBets.add(new UserBet(user, getAllUserBetsViews(user, matchesList), matchesList));
+            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matchesList);
+            userBets.add(new UserBet(user, allUserBetsViews, matchesList));
+//            PointsService pointsService = new PointsService(allUserBetsViews, matchesList);
+//            pointsList.add(pointsService.getPointsForMatch());
         }
 
         ArrayList<MatchView> matchViews = new ArrayList<>();
@@ -178,6 +176,7 @@ public class HomeController {
 
         model.addAttribute("userBetsList", userBets);
         model.addAttribute("matchViews", matchViews);
+//        model.addAttribute("pointsList", pointsList);
 
         return "tables";
     }
@@ -185,18 +184,19 @@ public class HomeController {
 
     @GetMapping("/rules")
     public String rules(Model model) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
         return "rules";
     }
 
 
     @GetMapping("/bet/{matchId}")
     public String bet(Model model, @PathVariable("matchId") int matchId) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
 
         Match match = matchDAO.show(matchId);
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("stageName", stageDAO.show(match.getStageId()).getName());
+        model.addAttribute("isKnockoutStage", stageDAO.show(match.getStageId()).isKnockoutStage());
         model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
         model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
 
@@ -215,7 +215,7 @@ public class HomeController {
     @PostMapping("/bet/{matchId}")
     public String makeBet(Model model, @ModelAttribute("bet") @Valid Bet bet, BindingResult bindingResult,
                           @PathVariable("matchId") int matchId) {
-        getCurrentPrincipalUserUserRole(model);
+        getCurrentPrincipalUserRole(model);
 
         if (bindingResult.hasErrors()) {
             return "/bet";

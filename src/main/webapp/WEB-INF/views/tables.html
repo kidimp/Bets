@@ -43,7 +43,8 @@
                     <a th:text="${matchView.getHomeTeam() + ' : ' + matchView.getAwayTeam()}"></a>
                     <br>
                     <a th:if="${(matchView.getMatch().isFinished() == true)}"
-                       th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam()}"></a>
+                       th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam() +
+                                    ' ' + matchView.isExtraTime() + ' ' + matchView.isPenalty()}"></a>
                     <a th:if="${(matchView.getMatch().isFinished() == false)}"
                        th:text="${' TBA '}"></a>
                 </th>
@@ -59,7 +60,7 @@
         <tr role="row">
             <div th:each="matchView : ${matchViews}">
                 <td data-orderable="false" class="sorting_disabled" rowspan="1" colspan="1" aria-label="Bet"
-                    style="width: 85px;text-align: center;">Bet (extra) (pen)</td>
+                    style="width: 85px;text-align: center;">Bet</td>
                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                     aria-label="Points: сортировать по возрастанию" style="width: 50px;text-align: center;">Points</th>
             </div>
@@ -72,7 +73,7 @@
         <div th:each="userBets : ${userBetsList}">
             <tr>
                 <td th:text="${userBets.getUser().getUsername()}"></td>
-                <td th:text="${userBets.getSum()}"></td>
+                <td th:text="${userBets.getTotalPoints()}"></td>
 
                 <div th:each="betView : ${userBets.getBets()}">
                     <div th:if="${(betView != null)}">
@@ -85,10 +86,12 @@
                     <div th:if="${(betView == null)}">
                         <td></td>
                     </div>
-                    <td>0</td>
+
+                    <td th:text="${betView.getPoints()}"></td>
+
                 </div>
 
-                <td th:text="${userBets.getSum()}"></td>
+                <td th:text="${userBets.getTotalPoints()}"></td>
                 <td th:text="${userBets.getUser().getUsername()}"></td>
             </tr>
         </div>

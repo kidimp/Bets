@@ -11,17 +11,8 @@ public class Stage {
     private String name;
     private boolean isKnockoutStage;
 
-
-//    public Stage(int id, String name, boolean isKnockoutStage) {
-//        this.id = id;
-//        this.name = name;
-//        this.isKnockoutStage = isKnockoutStage;
-//    }
-
-
     public Stage() {
     }
-
 
     public int getId() {
         return id;

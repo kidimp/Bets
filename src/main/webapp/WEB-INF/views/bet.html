@@ -27,12 +27,6 @@
 
     <form th:method="POST" th:action="@{/bet/{id}(id=${bet.getMatchId()})}" th:object="${bet}">
 
-        <!--    <a sec:authentication="name"></a>-->
-
-<!--        <div th:each="user : ${users}">-->
-<!--            <div sec:authorize="user.getUsername()" id="user.getId"></div>-->
-<!--        </div>-->
-
         <br><br>
 
         <table style="width:220pt;">
@@ -69,19 +63,21 @@
             </tr>
 
             <tr style="height:90pt;">
-                <td colspan="2" style="text-align:center;">
-                    <div class="form-group required-control">
-                        <label for="isExtraTime">Is extra time</label>
-                        <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
-                    </div>
-                </td>
-                <td></td>
-                <td colspan="2" style="text-align:center;">
-                    <div class="form-group required-control">
-                        <label for="isPenalty">Is penalty</label>
-                        <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
-                    </div>
-                </td>
+                <div th:if="${isKnockoutStage == true}">
+                    <td colspan="2" style="text-align:center;">
+                        <div class="form-group required-control">
+                            <label for="isExtraTime">Is extra time</label>
+                            <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
+                        </div>
+                    </td>
+                    <td></td>
+                    <td colspan="2" style="text-align:center;">
+                        <div class="form-group required-control">
+                            <label for="isPenalty">Is penalty</label>
+                            <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
+                        </div>
+                    </td>
+                </div>
             </tr>
         </table>
 

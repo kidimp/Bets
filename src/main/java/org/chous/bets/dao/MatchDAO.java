@@ -34,19 +34,20 @@ public class MatchDAO {
 
     public void save(Match match) {
         jdbcTemplate.update("INSERT INTO matches(dateAndTime, stageId, homeTeamId, awayTeamId, " +
-                        "isFinished, scoreHomeTeam, scoreAwayTeam) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        "isFinished, scoreHomeTeam, scoreAwayTeam, isExtraTime, isPenalty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 match.getDateAndTime(), match.getStageId(), match.getHomeTeamId(), match.getAwayTeamId(),
-                match.isFinished(), match.getScoreHomeTeam(), match.getScoreAwayTeam());
+                match.isFinished(), match.getScoreHomeTeam(), match.getScoreAwayTeam(), match.isExtraTime(), match.isPenalty());
     }
 
 
     public void update(int id, Match updatedMatch) {
         jdbcTemplate.update("UPDATE matches SET dateAndTime=?, stageId=?, homeTeamId=?, awayTeamId=?, " +
-                        "isFinished=?, scoreHomeTeam=?, scoreAwayTeam=? WHERE id=?",
+                        "isFinished=?, scoreHomeTeam=?, scoreAwayTeam=?, isExtraTime=?, isPenalty=? WHERE id=?",
                 updatedMatch.getDateAndTime(), updatedMatch.getStageId(),
                 updatedMatch.getHomeTeamId(), updatedMatch.getAwayTeamId(),
                 updatedMatch.isFinished(),
-                updatedMatch.getScoreHomeTeam(), updatedMatch.getScoreAwayTeam(), id);
+                updatedMatch.getScoreHomeTeam(), updatedMatch.getScoreAwayTeam(),
+                updatedMatch.isExtraTime(), updatedMatch.isPenalty(), id);
     }
 
 
@@ -54,19 +55,6 @@ public class MatchDAO {
         jdbcTemplate.update("DELETE FROM matches WHERE id=?", id);
     }
 
-
-//    public String getHomeTeamName(int homeTeamId) {
-//        return jdbcTemplate.query("SELECT matches.homeTeamId, teams.name FROM matches INNER JOIN teams ON homeTeamId=? = teams.id",
-//                        new Object[]{homeTeamId}, new BeanPropertyRowMapper<>(String.class))
-//                .stream().findAny().orElse(null);
-//    }
-
-//    public String getHomeTeamName(int homeTeamId) {
-//        return jdbcTemplate.query("SELECT homeTeamId FROM matches WHERE homeTeamId in " +
-//                                "(SELECT teams.id INNER JOIN teams ON matches.homeTeamId = teams.id WHERE homeTeamId=?)",
-//                        new Object[]{homeTeamId}, new BeanPropertyRowMapper<>(String.class))
-//                .stream().findAny().orElse(null);
-//    }
 
     public String getHomeTeamName(int homeTeamId) {
         return jdbcTemplate.query("SELECT matches.homeTeamId, teams.name FROM matches " +

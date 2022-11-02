@@ -1,5 +1,7 @@
 package org.chous.bets.models;
 
+import org.chous.bets.services.PointsService;
+
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,12 @@ public class BetView {
 
     public BetView(Bet bet) {
         this.bet = bet;
+    }
+
+
+    public int getPoints() {
+        PointsService pointsService = new PointsService(this.bet, matches);
+        return pointsService.getPointsForMatch();
     }
 
 
@@ -51,9 +59,5 @@ public class BetView {
             return "";
         }
     }
-
-
-
-
 
 }

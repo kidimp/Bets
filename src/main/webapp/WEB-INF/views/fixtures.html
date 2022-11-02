@@ -35,7 +35,7 @@
         <th scope="col" style="text-align:center; width:17%">Stage</th>
         <th colspan="3" style="text-align:center; width:21%">Teams</th>
         <th scope="col" style="text-align:center; width:10%">Score</th>
-        <th scope="col" style="text-align:center; width:20%">Bet (extra) (pen)</th>
+        <th scope="col" style="text-align:center; width:20%">Bet</th>
         <th scope="col" style="width:15%"></th>
     </tr>
     </thead>
@@ -83,7 +83,7 @@
         <th scope="col" style="text-align:center; width:17%">Stage</th>
         <th colspan="3" style="text-align:center; width:21%">Teams</th>
         <th scope="col" style="text-align:center; width:10%">Score</th>
-        <th scope="col" style="text-align:center; width:20%">Bet (extra) (pen)</th>
+        <th scope="col" style="text-align:center; width:20%">Bet</th>
         <th scope="col" style="width:15%"></th>
     </tr>
     </thead>
@@ -97,8 +97,8 @@
             <td style="text-align:right;"><a th:text="${matchView.getHomeTeam()}"></a></td>
             <td style="text-align:center;"><a th:text="' : '"></a></td>
             <td style="text-align:left;"><a th:text="${matchView.getAwayTeam()}"></a></td>
-            <td style="text-align:center;"><a
-                    th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam()}"></a></td>
+            <td style="text-align:center;"><a th:text="${matchView.getMatch().getScoreHomeTeam() + ' : ' + matchView.getMatch().getScoreAwayTeam() +
+                                    ' ' + matchView.isExtraTime() + ' ' + matchView.isPenalty()}"></a></td>
             <td style="text-align:center;">
                 <div sec:authorize="isAuthenticated()">
                     <div th:each="betView : ${betsViews}">

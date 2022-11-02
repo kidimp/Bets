@@ -65,12 +65,13 @@
             </td>
 
 
-            <td style="text-align:center; width:10%" >
+            <td style="text-align:center; width:15%" >
                 <a th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</a>
-                <a th:if="${(match.isFinished() == true)}" th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}">match</a>
+                <a th:if="${(match.isFinished() == true)}" th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
+                                    ' ' + match.isExtraTime() + ' ' + match.isPenalty()}">match</a>
             </td>
 
-            <td style="text-align:right; width:20%"><a th:href="@{/matches/{id}/edit(id=${match.getId()})}">Edit</a></td>
+            <td style="text-align:right; width:15%"><a th:href="@{/matches/{id}/edit(id=${match.getId()})}">Edit</a></td>
             <td style="text-align:left; width:15%"><a th:href="@{/matches/{id}/delete(id=${match.getId()})}">Delete</a></td>
         </tr>
 

@@ -19,7 +19,6 @@ public class Bet {
     }
 
 
-
     public int getId() {
         return id;
     }
