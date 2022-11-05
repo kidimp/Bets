@@ -41,7 +41,7 @@ public class UserBet {
     }
 
 
-    public List<BetView> getBets() {
+    public List<BetView> getBetsViews() {
         return betViews;
     }
 

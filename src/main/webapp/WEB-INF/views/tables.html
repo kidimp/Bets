@@ -75,20 +75,18 @@
                 <td th:text="${userBets.getUser().getUsername()}"></td>
                 <td th:text="${userBets.getTotalPoints()}"></td>
 
-                <div th:each="betView : ${userBets.getBets()}">
+                <div th:each="betView : ${userBets.getBetsViews()}">
                     <div th:if="${(betView != null)}">
                         <td th:if="${betView.isMatchStarted() == true}"
                             th:text="${betView.getBet().getScoreHomeTeam() + ' : ' + betView.getBet().getScoreAwayTeam() + ' ' +
                                               betView.isExtraTime() + ' ' + betView.isPenalty()}"/>
-                        <td th:if="${betView.isMatchStarted() == false}"
-                            th:text="${''}"/>
+                        <td th:if="${betView.isMatchStarted() == false}"></td>
+                        <td th:text="${betView.getPoints()}"></td>
                     </div>
                     <div th:if="${(betView == null)}">
                         <td></td>
+                        <td></td>
                     </div>
-
-                    <td th:text="${betView.getPoints()}"></td>
-
                 </div>
 
                 <td th:text="${userBets.getTotalPoints()}"></td>

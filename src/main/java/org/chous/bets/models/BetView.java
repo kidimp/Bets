@@ -7,13 +7,30 @@ import java.util.List;
 
 public class BetView {
     private final Bet bet;
+    private Match match;
+    private Team homeTeam;
+    private Team awayTeam;
 
-    private List<Match> matches;
-
-    public BetView(Bet bet, List<Match> matches) {
+    public BetView(Bet bet, List<Match> matches, List<Team> teams) {
         this.bet = bet;
-        this.matches = matches;
+
+        for (Match match : matches) {
+            if (bet.getMatchId() == match.getId()) {
+                this.match = match;
+            }
+        }
+
+        for (Team team : teams) {
+            assert match != null;
+            if (match.getHomeTeamId() == team.getId()) {
+                this.homeTeam = team;
+            }
+            if (match.getAwayTeamId() == team.getId()) {
+                this.awayTeam = team;
+            }
+        }
     }
+
 
     public BetView(Bet bet) {
         this.bet = bet;
@@ -21,20 +38,13 @@ public class BetView {
 
 
     public int getPoints() {
-        PointsService pointsService = new PointsService(this.bet, matches);
+        PointsService pointsService = new PointsService(this.bet, match, homeTeam, awayTeam);
         return pointsService.getPointsForMatch();
     }
 
 
     public boolean isMatchStarted() {
-        for (Match match : matches) {
-            if (bet.getMatchId() == match.getId()) {
-                if (match.getDateAndTime().after(new Date())) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return !match.getDateAndTime().after(new Date());
     }
 
 

@@ -84,7 +84,7 @@ public class HomeController {
     }
 
 
-    // Получаем список всех ставок для аутентифицированного пользователя.
+    // Атрымліваем спіс усіх ставак для аўтэнтыфікаванага карыстальніка.
     public List<BetView> getAssumeBetsViewsForCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() != "anonymousUser") {
@@ -103,13 +103,13 @@ public class HomeController {
     }
 
 
-    // Получаем для каждого пользователя список его ставок не зависимо от аутентификации.
-    public List<BetView> getAllUserBetsViews(User user, List<Match> matches) {
+    // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі.
+    public List<BetView> getAllUserBetsViews(User user, List<Match> matches, List<Team> teams) {
         List<Bet> allBets = betDAO.bets();
         List<BetView> usersBetsViews = new ArrayList<>();
         for (Bet bet : allBets) {
             if (bet.getUserId() == user.getId()) {
-                usersBetsViews.add(new BetView(bet, matches));
+                usersBetsViews.add(new BetView(bet, matches, teams));
             }
         }
         return usersBetsViews;
@@ -157,26 +157,23 @@ public class HomeController {
 
         List<UserBet> userBets = new ArrayList<>();
 
-        List<Match> matchesList = matchDAO.matches();
-        matchesList.sort(Match.COMPARE_BY_DATE);
-
-//        List<Integer> pointsList = new ArrayList<>();
+        List<Stage> stages = stageDAO.stages();
+        List<Team> teams = teamDAO.teams();
+        List<Match> matches = matchDAO.matches();
+        matches.sort(Match.COMPARE_BY_DATE);
 
         for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matchesList);
-            userBets.add(new UserBet(user, allUserBetsViews, matchesList));
-//            PointsService pointsService = new PointsService(allUserBetsViews, matchesList);
-//            pointsList.add(pointsService.getPointsForMatch());
+            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
+            userBets.add(new UserBet(user, allUserBetsViews, matches));
         }
 
         ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matchesList) {
-            matchViews.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
+        for (Match match : matches) {
+            matchViews.add(new MatchView(match, stages, teams));
         }
 
         model.addAttribute("userBetsList", userBets);
         model.addAttribute("matchViews", matchViews);
-//        model.addAttribute("pointsList", pointsList);
 
         return "tables";
     }
