@@ -15,6 +15,7 @@ public class Match {
     @DateTimeFormat(pattern = "dd.MM.yyy HH:mm")
     private Date dateAndTime;
     private int stageId;
+    private int round;
     private int homeTeamId;
     private int awayTeamId;
     private boolean isFinished;
@@ -24,6 +25,7 @@ public class Match {
     private int scoreAwayTeam;
     private boolean isExtraTime;
     private boolean isPenalty;
+
 
     public Match() {
     }
@@ -74,6 +76,15 @@ public class Match {
 
     public void setStageId(int stageId) {
         this.stageId = stageId;
+    }
+
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
     }
 
 

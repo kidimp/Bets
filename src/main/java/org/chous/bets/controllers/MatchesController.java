@@ -1,12 +1,12 @@
 package org.chous.bets.controllers;
 
 import org.chous.bets.dao.MatchDAO;
+import org.chous.bets.dao.RoundDAO;
 import org.chous.bets.dao.StageDAO;
 import org.chous.bets.dao.TeamDAO;
-import org.chous.bets.models.Match;
-import org.chous.bets.models.Team;
-import org.chous.bets.models.Stage;
+import org.chous.bets.models.*;
 
+import org.chous.bets.services.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,12 +26,14 @@ public class MatchesController {
     private final MatchDAO matchDAO;
     private final TeamDAO teamDAO;
     private final StageDAO stageDAO;
+    private final RoundDAO roundDAO;
 
     @Autowired
-    public MatchesController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO) {
+    public MatchesController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO) {
         this.matchDAO = matchDAO;
         this.teamDAO = teamDAO;
         this.stageDAO = stageDAO;
+        this.roundDAO = roundDAO;
     }
 
 
@@ -48,6 +51,13 @@ public class MatchesController {
     }
 
 
+    @ModelAttribute("roundsList")
+    public List<Round> getRoundsList(Model model) {
+        model.addAttribute("round", roundDAO.rounds());
+        return roundDAO.rounds();
+    }
+
+
     @GetMapping("matches/all")
     public String matches(Model model) {
         List<Match> matchesList = matchDAO.matches();
@@ -56,6 +66,7 @@ public class MatchesController {
         model.addAttribute("matches", matchesList);
         model.addAttribute("teams", teamDAO.teams());
         model.addAttribute("stages", stageDAO.stages());
+        model.addAttribute("rounds", roundDAO.rounds());
         return "matches/all";
     }
 

@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Stages</title>
+    <title>Rounds</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/static/style.css">
-<!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
+    <!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
 </head>
 
 <body>
@@ -14,12 +14,12 @@
 <header th:insert="fragments/headerAdmin :: header"></header>
 
 <h4 style="margin-left: 100px">
-    Stages
+    Rounds
 </h4>
 
 <br>
 
-<a href="/stages/new" style="margin-left: 100px">Add new stage</a>
+<a href="/rounds/new" style="margin-left: 100px">Add new round</a>
 
 <br>
 <br>
@@ -28,18 +28,21 @@
     <thead>
     <tr>
         <th scope="col" style="text-align:center">Name</th>
+        <th scope="col" style="text-align:center">Round</th>
         <th scope="col"></th>
         <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
 
-    <div th:each="stage : ${stages}">
+    <div th:each="round : ${rounds}">
 
         <tr>
-            <td style="text-align:center; width:40%"><a th:text="${stage.getName()}">stage</a></td>
-            <td style="text-align:right; width:30%"><a th:href="@{/stages/{id}/edit(id=${stage.getId()})}">Edit</a></td>
-            <td style="text-align:left; width:30%"><a th:href="@{/stages/{id}/delete(id=${stage.getId()})}">Delete</a></td>
+            <td style="text-align:center; width:20%"><a th:text="${round.getName() + ' round'}">round name</a></td>
+            <td style="text-align:center; width:20%"><a th:text="${round.getRound()}">round</a></td>
+            <td style="text-align:right; width:30%"><a th:href="@{/rounds/{id}/edit(id=${round.getId()})}">Edit</a></td>
+            <td style="text-align:left; width:30%"><a th:href="@{/rounds/{id}/delete(id=${round.getId()})}">Delete</a>
+            </td>
         </tr>
 
     </div>
@@ -52,8 +55,6 @@
 </body>
 
 </html>
-
-
 
 
 </title>

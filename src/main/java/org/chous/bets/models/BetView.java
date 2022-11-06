@@ -10,6 +10,10 @@ public class BetView {
     private Match match;
     private Team homeTeam;
     private Team awayTeam;
+    private PointsService pointsService;
+    private int round;
+
+    public double points;
 
     public BetView(Bet bet, List<Match> matches, List<Team> teams) {
         this.bet = bet;
@@ -17,6 +21,7 @@ public class BetView {
         for (Match match : matches) {
             if (bet.getMatchId() == match.getId()) {
                 this.match = match;
+                round = match.getRound();
             }
         }
 
@@ -29,6 +34,8 @@ public class BetView {
                 this.awayTeam = team;
             }
         }
+
+        pointsService = new PointsService(this.bet, match, homeTeam, awayTeam);
     }
 
 
@@ -37,9 +44,17 @@ public class BetView {
     }
 
 
-    public int getPoints() {
-        PointsService pointsService = new PointsService(this.bet, match, homeTeam, awayTeam);
-        return pointsService.getPointsForMatch();
+    public String getPoints() {
+        String pointsInStr = String.valueOf(points);
+        if (points % 1 == 0) {
+            return pointsInStr.substring(0, pointsInStr.length() - 2);
+        }
+        return pointsInStr;
+    }
+
+
+    public void calculatePoints() {
+        this.points = pointsService.getPointsForMatch();
     }
 
 
@@ -52,6 +67,10 @@ public class BetView {
         return bet;
     }
 
+
+    public int getRound() {
+        return round;
+    }
 
     public String isExtraTime() {
         if (bet.isExtraTime()) {

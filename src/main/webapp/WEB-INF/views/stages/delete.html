@@ -18,7 +18,6 @@
 <form th:method="POST" th:action="@{/stages/{id}/delete(id=${stage.getId()})}">
 
   <p th:text="${'Name: ' + stage.getName()}">VALUE</p>
-  <p th:text="${'Is knockout stage: ' + stage.isKnockoutStage()}">VALUE</p>
 
   <input type="submit" value="Delete!"/>
 

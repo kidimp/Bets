@@ -4,10 +4,12 @@ import org.chous.bets.models.User;
 import org.chous.bets.repositories.UsersRepository;
 import org.chous.bets.security.UsrDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -31,5 +33,4 @@ public class UserService implements UserDetailsService {
 
         return new UsrDetails(user.get());
     }
-
 }

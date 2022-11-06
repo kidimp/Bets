@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit stage</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Delete round</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/static/style.css">
     <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
@@ -16,18 +15,15 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/stages/{id}/edit(id=${stage.getId()})}" th:object="${stage}">
+    <form th:method="POST" th:action="@{/rounds/{id}/delete(id=${round.getId()})}">
 
-    <label for="name">Enter name: </label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+        <p th:text="${'Name: ' + round.getName()}">VALUE</p>
 
-    <br>
-    <br>
+        <p th:text="${'Round: ' + round.getRound()}">VALUE</p>
 
-    <input type="submit" value="Save changes!"/>
+        <input type="submit" value="Delete!"/>
 
-</form>
+    </form>
 
 </div>
 
@@ -36,7 +32,3 @@
 </body>
 
 </html>
-
-
-
-

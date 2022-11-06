@@ -11,8 +11,10 @@ public class Stage {
     private String name;
     private boolean isKnockoutStage;
 
+
     public Stage() {
     }
+
 
     public int getId() {
         return id;
@@ -39,4 +41,5 @@ public class Stage {
     public void setIsKnockoutStage(boolean isKnockoutStage) {
         this.isKnockoutStage = isKnockoutStage;
     }
+
 }

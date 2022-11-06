@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
+
 
 @Component
 public class StageDAO {
@@ -34,13 +34,13 @@ public class StageDAO {
 
 
     public void save(Stage stage) {
-        jdbcTemplate.update("INSERT INTO stages (name, isKnockoutStage) VALUES (?, ?)", stage.getName(), stage.isKnockoutStage());
+        jdbcTemplate.update("INSERT INTO stages (name) VALUES (?)", stage.getName());
     }
 
 
     public void update(int id, Stage updatedStage) {
-        jdbcTemplate.update("UPDATE stages SET name=?, isKnockoutStage=? WHERE id=?",
-                updatedStage.getName(), updatedStage.isKnockoutStage(), id);
+        jdbcTemplate.update("UPDATE stages SET name=? WHERE id=?",
+                updatedStage.getName(), id);
     }
 
 

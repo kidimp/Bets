@@ -9,7 +9,8 @@ public class PointsService {
     private final Match match;
     private final Team homeTeam;
     private final Team awayTeam;
-    private int points;
+    private double points;
+    private double totalPoints;
 
     public PointsService(Bet bet, Match match, Team homeTeam, Team awayTeam) {
         this.bet = bet;
@@ -18,8 +19,7 @@ public class PointsService {
         this.awayTeam = awayTeam;
     }
 
-
-    public int getPointsForMatch() {
+    public double getPointsForMatch() {
         if (bet.getMatchId() == match.getId()) {
 
             // Здагадванне поўнага рэзультата: 5 балаў
@@ -88,7 +88,7 @@ public class PointsService {
                 points += 5;
             }
             if ((match.isPenalty()) && (bet.isPenalty() == match.isPenalty())) {
-                points += 10;
+                points += 5;
             }
             if (!(match.isExtraTime()) && (bet.isExtraTime())) {
                 points -= 2;
@@ -101,6 +101,25 @@ public class PointsService {
             // (ад 4 да 1). Калі перамагла каманда з ніжэйшым узроўнем, то агульная колькасць ачкоў
             // памнажаецца на (1.3, 1.5, 2 - адпаведна розніцы ў рэйтынгу ў 1, 2, 3), калі стаўка зробленая на
             // гэтую каманду. У выпадку адгаданай нічыі рэзультат памнажаецца на 1.3
+            if (homeTeam.getPot() != awayTeam.getPot()) {
+                if (((match.getScoreHomeTeam() > match.getScoreAwayTeam()) && (homeTeam.getPot() > awayTeam.getPot())) ||
+                        ((match.getScoreAwayTeam() > match.getScoreHomeTeam()) && (awayTeam.getPot() > homeTeam.getPot()))) {
+                    switch (Math.abs(homeTeam.getPot() - awayTeam.getPot())) {
+                        case 1:
+                            points *= 1.3;
+                            break;
+                        case 2:
+                            points *= 1.5;
+                            break;
+                        case 3:
+                            points *= 2;
+                            break;
+                    }
+                }
+                if (match.getScoreHomeTeam() == match.getScoreAwayTeam()) {
+                    points *= 1.3;
+                }
+            }
 
         }
 
@@ -108,7 +127,14 @@ public class PointsService {
             points = 0;
         }
 
+        totalPoints += points;
+
         return points;
+    }
+
+
+    public double getTotalPoints() {
+        return totalPoints;
     }
 
 }

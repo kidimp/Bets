@@ -5,11 +5,13 @@ import java.util.List;
 public class MatchView {
     private final Match match;
     private final List<Stage> stagesList;
+    private final List<Round> roundList;
     private final List<Team> teamList;
 
-    public MatchView(Match match, List<Stage> stagesList, List<Team> teamsList) {
+    public MatchView(Match match, List<Stage> stagesList, List<Round> roundList, List<Team> teamsList) {
         this.match = match;
         this.stagesList = stagesList;
+        this.roundList = roundList;
         this.teamList = teamsList;
     }
 
@@ -26,6 +28,16 @@ public class MatchView {
             }
         }
         return "stage not found";
+    }
+
+
+    public String getRound() {
+        for (Round round : roundList) {
+            if (round.getRound() == match.getRound()) {
+                return round.getName();
+            }
+        }
+        return "round not found";
     }
 
 

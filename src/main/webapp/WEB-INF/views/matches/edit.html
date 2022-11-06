@@ -47,6 +47,22 @@
         <br>
 
 
+        <label for="round">Enter round: </label>
+        <select id="round" name="round">
+            <option value="NONE" label="Select round"></option>
+            <option
+                    th:each="round : ${roundsList}"
+                    th:value="${round.getId()}"
+                    th:text="${round.getName()}"
+                    th:selected="${round.getId() == match.getRound()}">
+            </option>
+        </select>
+
+
+        <br>
+        <br>
+
+
         <label for="homeTeamId">Enter home team:</label>
         <td>
             <select id="homeTeamId" name="homeTeamId">

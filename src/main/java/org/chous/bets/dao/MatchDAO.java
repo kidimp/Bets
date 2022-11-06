@@ -33,17 +33,17 @@ public class MatchDAO {
 
 
     public void save(Match match) {
-        jdbcTemplate.update("INSERT INTO matches(dateAndTime, stageId, homeTeamId, awayTeamId, " +
-                        "isFinished, scoreHomeTeam, scoreAwayTeam, isExtraTime, isPenalty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                match.getDateAndTime(), match.getStageId(), match.getHomeTeamId(), match.getAwayTeamId(),
+        jdbcTemplate.update("INSERT INTO matches(dateAndTime, stageId, round, homeTeamId, awayTeamId, " +
+                        "isFinished, scoreHomeTeam, scoreAwayTeam, isExtraTime, isPenalty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                match.getDateAndTime(), match.getStageId(), match.getRound(), match.getHomeTeamId(), match.getAwayTeamId(),
                 match.isFinished(), match.getScoreHomeTeam(), match.getScoreAwayTeam(), match.isExtraTime(), match.isPenalty());
     }
 
 
     public void update(int id, Match updatedMatch) {
-        jdbcTemplate.update("UPDATE matches SET dateAndTime=?, stageId=?, homeTeamId=?, awayTeamId=?, " +
+        jdbcTemplate.update("UPDATE matches SET dateAndTime=?, stageId=?, round=?, homeTeamId=?, awayTeamId=?, " +
                         "isFinished=?, scoreHomeTeam=?, scoreAwayTeam=?, isExtraTime=?, isPenalty=? WHERE id=?",
-                updatedMatch.getDateAndTime(), updatedMatch.getStageId(),
+                updatedMatch.getDateAndTime(), updatedMatch.getStageId(), updatedMatch.getRound(),
                 updatedMatch.getHomeTeamId(), updatedMatch.getAwayTeamId(),
                 updatedMatch.isFinished(),
                 updatedMatch.getScoreHomeTeam(), updatedMatch.getScoreAwayTeam(),

@@ -1,13 +1,9 @@
 package org.chous.bets.controllers;
 
-import org.chous.bets.dao.BetDAO;
-import org.chous.bets.dao.MatchDAO;
-import org.chous.bets.dao.StageDAO;
-import org.chous.bets.dao.TeamDAO;
+import org.chous.bets.dao.*;
 import org.chous.bets.models.*;
 
 import org.chous.bets.repositories.UsersRepository;
-import org.chous.bets.services.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,14 +28,16 @@ public class HomeController {
     private final MatchDAO matchDAO;
     private final TeamDAO teamDAO;
     private final StageDAO stageDAO;
+    private final RoundDAO roundDAO;
     private final BetDAO betDAO;
     private final UsersRepository usersRepository;
 
     @Autowired
-    public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, BetDAO betDAO, UsersRepository usersRepository) {
+    public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
         this.matchDAO = matchDAO;
         this.teamDAO = teamDAO;
         this.stageDAO = stageDAO;
+        this.roundDAO = roundDAO;
         this.betDAO = betDAO;
         this.usersRepository = usersRepository;
     }
@@ -103,17 +101,17 @@ public class HomeController {
     }
 
 
-    // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі.
-    public List<BetView> getAllUserBetsViews(User user, List<Match> matches, List<Team> teams) {
-        List<Bet> allBets = betDAO.bets();
-        List<BetView> usersBetsViews = new ArrayList<>();
-        for (Bet bet : allBets) {
-            if (bet.getUserId() == user.getId()) {
-                usersBetsViews.add(new BetView(bet, matches, teams));
-            }
-        }
-        return usersBetsViews;
-    }
+//    // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі.
+//    public List<BetView> getAllUserBetsViews(User user, List<Match> matches, List<Team> teams) {
+//        List<Bet> allBets = betDAO.bets();
+//        List<BetView> usersBetsViews = new ArrayList<>();
+//        for (Bet bet : allBets) {
+//            if (bet.getUserId() == user.getId()) {
+//                usersBetsViews.add(new BetView(bet, matches, teams));
+//            }
+//        }
+//        return usersBetsViews;
+//    }
 
 
     @GetMapping("/")
@@ -135,13 +133,13 @@ public class HomeController {
 
         ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
         for (Match match : matchesList) {
-            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
+            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), roundDAO.rounds(), teamDAO.teams()));
         }
         model.addAttribute("matchViews", matchViewArrayList);
 
         ArrayList<MatchView> matchViewArrayListReversed = new ArrayList<>();
         for (Match match : matchesListReversed) {
-            matchViewArrayListReversed.add(new MatchView(match, stageDAO.stages(), teamDAO.teams()));
+            matchViewArrayListReversed.add(new MatchView(match, stageDAO.stages(), roundDAO.rounds(), teamDAO.teams()));
         }
         model.addAttribute("matchViewsReversed", matchViewArrayListReversed);
 
@@ -151,31 +149,44 @@ public class HomeController {
     }
 
 
-    @GetMapping("/tables")
+    @GetMapping("/results")
     public String tables(Model model) {
-        getCurrentPrincipalUserRole(model);
-
-        List<UserBet> userBets = new ArrayList<>();
-
-        List<Stage> stages = stageDAO.stages();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches = matchDAO.matches();
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            userBets.add(new UserBet(user, allUserBetsViews, matches));
-        }
-
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, teams));
-        }
-
-        model.addAttribute("userBetsList", userBets);
-        model.addAttribute("matchViews", matchViews);
-
-        return "tables";
+//        getCurrentPrincipalUserRole(model);
+//
+//        List<UserBet> userBets = new ArrayList<>();
+//
+//        List<Stage> stages = stageDAO.stages();
+//        List<Round> rounds = roundDAO.rounds();
+//        List<Team> teams = teamDAO.teams();
+//        List<Match> matches = matchDAO.matches();
+//        matches.sort(Match.COMPARE_BY_DATE);
+//
+//        for (User user : usersRepository.findAll()) {
+//            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
+//            userBets.add(new UserBet(user, allUserBetsViews, matches));
+//        }
+//
+//        ArrayList<MatchView> matchViews = new ArrayList<>();
+//        for (Match match : matches) {
+//            matchViews.add(new MatchView(match, stages, rounds, teams));
+//        }
+//
+//        for (UserBet userBet : userBets) {
+//            if (userBet != null) {
+//                for (BetView betView : userBet.getBetsViews()) {
+//                    if (betView != null) {
+//                        betView.calculatePoints();
+//                    }
+//                }
+//            }
+//        }
+//
+//        model.addAttribute("userBetsList", userBets);
+//        model.addAttribute("matchViews", matchViews);
+//
+//
+//
+        return "results";
     }
 
 
@@ -193,7 +204,6 @@ public class HomeController {
         Match match = matchDAO.show(matchId);
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("stageName", stageDAO.show(match.getStageId()).getName());
-        model.addAttribute("isKnockoutStage", stageDAO.show(match.getStageId()).isKnockoutStage());
         model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
         model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
 

@@ -51,7 +51,14 @@ public class UserBet {
     }
 
 
-    public int getTotalPoints() {
+    public double getTotalPoints() {
+        double totalPoints = 0.0;
+        for (BetView betView : betViews) {
+            if (betView != null) {
+                totalPoints += betView.points;
+            }
+        }
+
         return totalPoints;
     }
 }
