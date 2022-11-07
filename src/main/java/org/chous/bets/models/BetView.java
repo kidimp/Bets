@@ -3,7 +3,6 @@ package org.chous.bets.models;
 import org.chous.bets.services.PointsService;
 
 import java.util.Date;
-import java.util.List;
 
 public class BetView {
     private final Bet bet;
@@ -12,29 +11,14 @@ public class BetView {
     private Team awayTeam;
     private PointsService pointsService;
     private int round;
+    private double points;
 
-    public double points;
 
-    public BetView(Bet bet, List<Match> matches, List<Team> teams) {
+    public BetView(Bet bet, Match match, Team homeTeam, Team awayTeam) {
         this.bet = bet;
-
-        for (Match match : matches) {
-            if (bet.getMatchId() == match.getId()) {
-                this.match = match;
-                round = match.getRound();
-            }
-        }
-
-        for (Team team : teams) {
-            assert match != null;
-            if (match.getHomeTeamId() == team.getId()) {
-                this.homeTeam = team;
-            }
-            if (match.getAwayTeamId() == team.getId()) {
-                this.awayTeam = team;
-            }
-        }
-
+        this.match = match;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
         pointsService = new PointsService(this.bet, match, homeTeam, awayTeam);
     }
 
@@ -44,13 +28,18 @@ public class BetView {
     }
 
 
-    public String getPoints() {
-        String pointsInStr = String.valueOf(points);
-        if (points % 1 == 0) {
-            return pointsInStr.substring(0, pointsInStr.length() - 2);
-        }
-        return pointsInStr;
+    public double getPoints() {
+        return points;
     }
+
+
+//    public String getPointsInStr() {
+//        String pointsInStr = String.valueOf(points);
+//        if (points % 1 == 0) {
+//            return pointsInStr.substring(0, pointsInStr.length() - 2);
+//        }
+//        return pointsInStr;
+//    }
 
 
     public void calculatePoints() {
@@ -71,6 +60,7 @@ public class BetView {
     public int getRound() {
         return round;
     }
+
 
     public String isExtraTime() {
         if (bet.isExtraTime()) {

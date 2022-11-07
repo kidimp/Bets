@@ -133,8 +133,8 @@ public class PointsService {
     }
 
 
-    public double getTotalPoints() {
-        return totalPoints;
-    }
+//    public double getTotalPoints() {
+//        return totalPoints;
+//    }
 
 }
