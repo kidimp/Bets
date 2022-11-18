@@ -1,70 +1,94 @@
 package org.chous.bets.models;
 
-import org.chous.bets.services.MatchService;
-
 import java.util.*;
 
 public class TableRow {
     private final User user;
-    private List<BetView> betViews;
+    private final List<BetView> betsViews = new ArrayList<>();
 
-    private int totalPoints;
-    private int totalPointsFirstRound;
-    private int totalPointsSecondRound;
-    private int totalPointsThirdRound;
-    private int totalPointsKnockoutRound;
+    private int position;
 
-    private List<BetView> userBetsViewsFirstRound;
-    private List<BetView> userBetsViewsSecondRound;
-    private List<BetView> userBetsViewsThirdRound;
-    private List<BetView> userBetsViewsKnockoutRound;
+    private double totalPointsFirstRound;
+    private double totalPointsSecondRound;
+    private double totalPointsThirdRound;
+    private double totalPointsKnockoutRound;
+    private double totalPointsWholeTournament;
+
+//    private List<BetView> userBetsViewsFirstRound;
+//    private List<BetView> userBetsViewsSecondRound;
+//    private List<BetView> userBetsViewsThirdRound;
+//    private List<BetView> userBetsViewsKnockoutRound;
+//
+//    private final TreeMap<Double, User> totalPointsForEachUserFirstRound = new TreeMap<>();
+//    private final TreeMap<Double, User> totalPointsForEachUserSecondRound = new TreeMap<>();
+//    private final TreeMap<Double, User> totalPointsForEachUserThirdRound = new TreeMap<>();
+//    private final TreeMap<Double, User> totalPointsForEachUserKnockoutRound = new TreeMap<>();
+//    private final TreeMap<Double, User> totalPointsForEachUserWholeTournament = new TreeMap<>();
+
+    private double averagePosition;
 
 
     public TableRow(User user, List<BetView> allBetViews, List<Match> matches) {
         this.user = user;
-        betViews = new ArrayList<>();
         for (BetView betView : allBetViews) {
             if (betView.getBet().getUserId() == user.getId()) {
-                betViews.add(betView);
+                betsViews.add(betView);
             }
         }
         sortBetsByMatchDate(matches);
     }
 
 
-    public TableRow(User user, List<BetView> userBetsViewsFirstRound, List<BetView> userBetsViewsSecondRound,
-                    List<BetView> userBetsViewsThirdRound, List<BetView> userBetsViewsKnockoutRound) {
+    public TableRow(User user, double totalPointsFirstRound , double totalPointsSecondRound,
+                    double totalPointsThirdRound, double totalPointsKnockoutRound, double totalPointsWholeTournament) {
         this.user = user;
-        this.userBetsViewsFirstRound = userBetsViewsFirstRound;
-        this.userBetsViewsSecondRound = userBetsViewsSecondRound;
-        this.userBetsViewsThirdRound = userBetsViewsThirdRound;
-        this.userBetsViewsKnockoutRound = userBetsViewsKnockoutRound;
+        this.totalPointsFirstRound = totalPointsFirstRound;
+        this.totalPointsSecondRound = totalPointsSecondRound;
+        this.totalPointsThirdRound = totalPointsThirdRound;
+        this.totalPointsKnockoutRound = totalPointsKnockoutRound;
+        this.totalPointsWholeTournament = totalPointsWholeTournament;
 
+//        totalPointsForEachUserFirstRound.put(totalPointsFirstRound, user);
+//        totalPointsForEachUserSecondRound.put(totalPointsSecondRound, user);
+//        totalPointsForEachUserThirdRound.put(totalPointsThirdRound, user);
+//        totalPointsForEachUserKnockoutRound.put(totalPointsKnockoutRound, user);
+//        totalPointsForEachUserWholeTournament.put(totalPointsWholeTournament, user);
+    }
+
+    public TableRow(User user, double averagePosition, double totalPointsFirstRound , double totalPointsSecondRound,
+                    double totalPointsThirdRound, double totalPointsKnockoutRound, double totalPointsWholeTournament) {
+        this.user = user;
+        this.averagePosition = averagePosition;
+        this.totalPointsFirstRound = totalPointsFirstRound;
+        this.totalPointsSecondRound = totalPointsSecondRound;
+        this.totalPointsThirdRound = totalPointsThirdRound;
+        this.totalPointsKnockoutRound = totalPointsKnockoutRound;
+        this.totalPointsWholeTournament = totalPointsWholeTournament;
     }
 
 
     private void sortBetsByMatchDate(List<Match> matches) {
         for (int i = 0; i < matches.size(); i++) {
             boolean isFound = false;
-            for (int j = 0; j < betViews.size(); j++) {
-                if (betViews.get(j) != null && matches.get(i).getId() == betViews.get(j).getBet().getMatchId()) {
+            for (int j = 0; j < betsViews.size(); j++) {
+                if (betsViews.get(j) != null && matches.get(i).getId() == betsViews.get(j).getBet().getMatchId()) {
                     if (i != j) {
-                        betViews.add(i, betViews.get(j));
-                        betViews.remove(j + 1);
+                        betsViews.add(i, betsViews.get(j));
+                        betsViews.remove(j + 1);
                     }
                     isFound = true;
                     break;
                 }
             }
             if (!isFound) {
-                betViews.add(i, null);
+                betsViews.add(i, null);
             }
         }
     }
 
 
     public List<BetView> getBetsViews() {
-        return betViews;
+        return betsViews;
     }
 
 
@@ -75,9 +99,9 @@ public class TableRow {
 
     public double getTotalPointsForThisRound() {
         double totalPoints = 0.0;
-        for (BetView betView : betViews) {
+        for (BetView betView : betsViews) {
             if (betView != null) {
-                totalPoints += betView.getPoints();
+                totalPoints += betView.getBet().getPoints();
             }
         }
         return totalPoints;
@@ -85,50 +109,136 @@ public class TableRow {
 
 
     public double getTotalPointsFirstRound() {
-        for (BetView betView : userBetsViewsFirstRound) {
-            if (betView != null) {
-                betView.calculatePoints();
-                totalPointsFirstRound += betView.getPoints();
-            }
-        }
         return totalPointsFirstRound;
     }
 
 
     public double getTotalPointsSecondRound() {
-        for (BetView betView : userBetsViewsSecondRound) {
-            if (betView != null) {
-                betView.calculatePoints();
-                totalPointsSecondRound += betView.getPoints();
-            }
-        }
         return totalPointsSecondRound;
     }
 
 
     public double getTotalPointsThirdRound() {
-        for (BetView betView : userBetsViewsThirdRound) {
-            if (betView != null) {
-                betView.calculatePoints();
-                totalPointsThirdRound += betView.getPoints();
-            }
-        }
         return totalPointsThirdRound;
     }
 
 
     public double getTotalPointsKnockoutRound() {
-        for (BetView betView : userBetsViewsKnockoutRound) {
-            if (betView != null) {
-                betView.calculatePoints();
-                totalPointsKnockoutRound += betView.getPoints();
-            }
-        }
         return totalPointsKnockoutRound;
     }
 
 
-    public double getTotalPoints() {
-        return totalPointsFirstRound + totalPointsSecondRound + totalPointsThirdRound + totalPointsKnockoutRound;
+    public double getTotalPointsWholeTournament() {
+        return totalPointsWholeTournament;
     }
+
+
+    public double getAveragePosition() {
+        return averagePosition;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+
+    //    public double getTotalPointsFirstRound() {
+//        return totalPointsFirstRound;
+//    }
+//
+//    public void setTotalPointsFirstRound() {
+//        for (BetView betView : userBetsViewsFirstRound) {
+//            if (betView != null) {
+////                betView.calculatePoints();
+//                totalPointsFirstRound += betView.getBet().getPoints();
+//            }
+//        }
+//        //totalPointsForEachUserFirstRound.put(totalPointsFirstRound, user);
+//    }
+//
+//
+//    public double getTotalPointsSecondRound() {
+//        return totalPointsSecondRound;
+//    }
+//
+//    public void setTotalPointsSecondRound() {
+//        for (BetView betView : userBetsViewsSecondRound) {
+//            if (betView != null) {
+////                betView.calculatePoints();
+//                totalPointsSecondRound += betView.getBet().getPoints();
+//            }
+//        }
+////        totalPointsForEachUserSecondRound.put(totalPointsSecondRound, user);
+//    }
+//
+//
+//    public double getTotalPointsThirdRound() {
+//        return totalPointsThirdRound;
+//    }
+//
+//    public void setTotalPointsThirdRound() {
+//        for (BetView betView : userBetsViewsThirdRound) {
+//            if (betView != null) {
+////                betView.calculatePoints();
+//                totalPointsThirdRound += betView.getBet().getPoints();
+//            }
+//        }
+////        totalPointsForEachUserThirdRound.put(totalPointsThirdRound, user);
+//    }
+//
+//
+//    public double getTotalPointsKnockoutRound() {
+//        return totalPointsKnockoutRound;
+//    }
+//
+//    public void setTotalPointsKnockoutRound() {
+//        for (BetView betView : userBetsViewsKnockoutRound) {
+//            if (betView != null) {
+////                betView.calculatePoints();
+//                totalPointsKnockoutRound += betView.getBet().getPoints();
+//            }
+//        }
+////        totalPointsForEachUserKnockoutRound.put(totalPointsKnockoutRound, user);
+//    }
+//
+//
+//    public double getTotalPointsWholeTournament() {
+//        return totalPointsWholeTournament;
+//    }
+//
+//    public void setTotalPointsWholeTournament() {
+//        totalPointsWholeTournament = totalPointsFirstRound + totalPointsSecondRound +
+//                totalPointsThirdRound + totalPointsKnockoutRound;
+////        totalPointsForEachUserWholeTournament.put(totalPointsWholeTournament, user);
+//    }
+//
+//
+//
+//    public int getAveragePositionByRound(TreeMap<Double, User> totalPointsForEachUserByRound) {
+//        int position = 0;
+//        for (Map.Entry entry : totalPointsForEachUserByRound.entrySet()) {
+//            position++;
+//            if (entry.getValue() == user) {
+//                return position;
+//            }
+//        }
+//        return 0;
+//    }
+//
+//    public double getAveragePosition() {
+//        return averagePosition;
+//    }
+//
+//    public void setAveragePosition() {
+//        averagePosition = (getAveragePositionByRound(totalPointsForEachUserFirstRound) +
+//                getAveragePositionByRound(totalPointsForEachUserSecondRound) +
+//                getAveragePositionByRound(totalPointsForEachUserThirdRound) +
+//                getAveragePositionByRound(totalPointsForEachUserKnockoutRound) +
+//                getAveragePositionByRound(totalPointsForEachUserWholeTournament)) / 5.0;
+//    }
+
 }

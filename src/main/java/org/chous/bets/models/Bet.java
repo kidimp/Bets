@@ -14,6 +14,7 @@ public class Bet {
     private int scoreAwayTeam;
     private boolean isExtraTime;
     private boolean isPenalty;
+    private double points;
 
     public Bet() {
     }
@@ -79,5 +80,14 @@ public class Bet {
 
     public void setIsPenalty(boolean isPenalty) {
         this.isPenalty = isPenalty;
+    }
+
+
+    public double getPoints() {
+        return points;
+    }
+
+    public void setPoints(double points) {
+        this.points = points;
     }
 }

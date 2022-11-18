@@ -10,8 +10,8 @@ public class BetView {
     private Team homeTeam;
     private Team awayTeam;
     private PointsService pointsService;
-    private int round;
-    private double points;
+//    private int round;
+//    private double points;
 
 
     public BetView(Bet bet, Match match, Team homeTeam, Team awayTeam) {
@@ -28,9 +28,9 @@ public class BetView {
     }
 
 
-    public double getPoints() {
-        return points;
-    }
+//    public double getPoints() {
+//        return points;
+//    }
 
 
 //    public String getPointsInStr() {
@@ -43,7 +43,8 @@ public class BetView {
 
 
     public void calculatePoints() {
-        this.points = pointsService.getPointsForMatch();
+        bet.setPoints(pointsService.getPointsForMatch());
+//        this.points = pointsService.getPointsForMatch();
     }
 
 
@@ -57,9 +58,9 @@ public class BetView {
     }
 
 
-    public int getRound() {
-        return round;
-    }
+//    public int getRound() {
+//        return round;
+//    }
 
 
     public String isExtraTime() {

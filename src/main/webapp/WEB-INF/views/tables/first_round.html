@@ -92,7 +92,7 @@
                             th:text="${betView.getBet().getScoreHomeTeam() + ' : ' + betView.getBet().getScoreAwayTeam() + ' ' +
                                               betView.isExtraTime() + ' ' + betView.isPenalty()}"/>
                         <td th:if="${betView.isMatchStarted() == false}"></td>
-                        <td th:text="${betView.getPoints()}"></td>
+                        <td th:text="${betView.getBet().getPoints()}"></td>
                     </div>
                     <div th:if="${(betView == null)}">
                         <td></td>

@@ -39,15 +39,21 @@ public class BetDAO {
 
     public void save(Bet bet) {
         jdbcTemplate.update("INSERT INTO bets (userId, matchId, scoreHomeTeam, scoreAwayTeam," +
-                        "isExtraTime, isPenalty) VALUES (?, ?, ?, ?, ?, ?)",
+                        "isExtraTime, isPenalty, points) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 bet.getUserId(), bet.getMatchId(), bet.getScoreHomeTeam(), bet.getScoreAwayTeam(),
-                bet.isExtraTime(), bet.isPenalty());
+                bet.isExtraTime(), bet.isPenalty(), bet.getPoints());
     }
 
 
     public void update(int id, Bet updatedBet) {
         jdbcTemplate.update("UPDATE bets SET scoreHomeTeam=?, scoreAwayTeam=?, isExtraTime=?, isPenalty=? WHERE id=?",
                 updatedBet.getScoreHomeTeam(), updatedBet.getScoreAwayTeam(), updatedBet.isExtraTime(), updatedBet.isPenalty(), id);
+    }
+
+
+    public void updatePoints(int id, Bet updatedBet) {
+        jdbcTemplate.update("UPDATE bets SET points=? WHERE id=?",
+                updatedBet.getPoints(), id);
     }
 
 }

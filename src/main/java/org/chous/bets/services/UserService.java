@@ -1,6 +1,6 @@
 package org.chous.bets.services;
 
-import org.chous.bets.models.User;
+import org.chous.bets.models.*;
 import org.chous.bets.repositories.UsersRepository;
 import org.chous.bets.security.UsrDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     public UserService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
+        UserService.usersRepository = usersRepository;
     }
 
 
@@ -59,4 +59,5 @@ public class UserService implements UserDetailsService {
         return Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
                 .orElse(null)).getId();
     }
+
 }

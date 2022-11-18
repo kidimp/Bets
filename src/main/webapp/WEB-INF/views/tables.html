@@ -81,15 +81,16 @@
 
         <tbody>
 
-        <div th:each="tableRow : ${tableRows}">
+        <div th:each="user, iStat : ${users}">
             <tr style="text-align: center">
-                <td th:text="${tableRow.getUser().getUsername()}"></td>
-                <td>1.00</td>
-                <td th:text="${tableRow.getTotalPointsFirstRound()}"></td>
-                <td th:text="${tableRow.getTotalPointsSecondRound()}"></td>
-                <td th:text="${tableRow.getTotalPointsThirdRound()}"></td>
-                <td th:text="${tableRow.getTotalPointsKnockoutRound()}"></td>
-                <td th:text="${tableRow.getTotalPoints()}"></td>
+                <td th:text="${user.getUsername()}"></td>
+                <td th:text="${positions.get(iStat.index)}"></td>
+                <td th:text="${firstRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
+                <td th:text="${secondRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
+                <td th:text="${thirdRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
+                <td th:text="${knockoutRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
+                <td th:text="${wholeTournamentTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

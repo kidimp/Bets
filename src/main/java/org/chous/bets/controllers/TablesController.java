@@ -16,62 +16,44 @@ import java.util.List;
 
 @Controller
 public class TablesController {
-    private final MatchDAO matchDAO;
-    private final TeamDAO teamDAO;
-    private final StageDAO stageDAO;
-    private final RoundDAO roundDAO;
     private final BetDAO betDAO;
-    private final UsersRepository usersRepository;
+    private final List<Stage> stages;
+    private final List<Round> rounds;
+    private final List<Team> teams;
+    private final List<User> users;
+    private final List<MatchView> matchViews;
+    private final List<Match> matches;
+
+
+    private class TableView {
+        public List<TableRow> tableRows;
+        public List<MatchView> matchViews;
+
+        TableView(List<TableRow> tableRows, List<MatchView> matchViews) {
+            this.tableRows = tableRows;
+            this.matchViews = matchViews;
+        }
+
+        public List<TableRow> getTableRows() {
+            return tableRows;
+        }
+
+        public List<MatchView> getMatchViews() {
+            return matchViews;
+        }
+    }
+
 
     @Autowired
     public TablesController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
-        this.matchDAO = matchDAO;
-        this.teamDAO = teamDAO;
-        this.stageDAO = stageDAO;
-        this.roundDAO = roundDAO;
         this.betDAO = betDAO;
-        this.usersRepository = usersRepository;
+        stages = stageDAO.stages();
+        rounds = roundDAO.rounds();
+        teams = teamDAO.teams();
+        users = usersRepository.findAll();
+        matchViews = new ArrayList<>();
+        matches = matchDAO.matches();
     }
-
-//    public void getCurrentPrincipalUserRole(Model model) {
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        String username;
-//        if (principal instanceof UserDetails) {
-//            username = ((UserDetails) principal).getUsername();
-//        } else {
-//            username = principal.toString();
-//        }
-//
-//        if (usersRepository.findByUsername(username).isPresent()) {
-//            model.addAttribute("role", usersRepository.findByUsername(username).get().getRole());
-//        } else {
-//            model.addAttribute("role", "ROLE_USER");
-//        }
-//    }
-//
-//
-//
-//
-//    public Match getMatchById(int matchId, List<Match> matches) {
-//        for (Match match : matches) {
-//            if (matchId == match.getId()) {
-//                return match;
-////                round = match.getRound();
-//            }
-//        }
-//        return null;
-//    }
-//
-//
-//    public Team getTeamById(int teamId, List<Team> teams) {
-//        for (Team team : teams) {
-//            if (teamId == team.getId()) {
-//                return team;
-//            }
-//        }
-//        return null;
-//    }
 
 
     // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі.
@@ -93,201 +75,142 @@ public class TablesController {
     }
 
 
-    @GetMapping("/tables/first_round")
-    public String tableFirstRound(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
-
-        List<TableRow> tableRows = new ArrayList<>();
-        List<Stage> stages = stageDAO.stages();
-        List<Round> rounds = roundDAO.rounds();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches = MatchService.getMatchesByRound(1, matchDAO.matches());
-
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matches));
+    public void setTableRows(List<TableRow> tableRows, List<Match> matchesByRound) {
+        for (User user : users) {
+            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matchesByRound, teams);
+            tableRows.add(new TableRow(user, allUserBetsViews, matchesByRound));
         }
 
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, rounds, teams));
+        // sort by points
+        for (int i = 0; i < tableRows.size(); i++) {
+            tableRows.get(i).setPosition(getPosition(i, tableRows));
         }
+    }
 
-        for (TableRow tableRow : tableRows) {
-            if (tableRow != null) {
-                for (BetView betView : tableRow.getBetsViews()) {
-                    if (betView != null) {
-                        betView.calculatePoints();
-                    }
-                }
+
+    private int getPosition(int num, List<TableRow> tableRows) {
+        int position = 1;
+        double totalPoint = tableRows.get(num).getTotalPointsForThisRound();
+        for (TableRow row : tableRows) {
+            if (row.getTotalPointsForThisRound() > totalPoint) {
+                position++;
             }
         }
+        return position;
+    }
 
-        model.addAttribute("tableRows", tableRows);
-        model.addAttribute("matchViews", matchViews);
 
+    public void setMatchViewsForTableHead(List<Match> matchesByRound) {
+        for (Match match : matchesByRound) {
+            matchViews.add(new MatchView(match, stages, rounds, teams));
+        }
+    }
+
+
+    private TableView setupTableView(int numberOfRound) {
+        //tableRows.clear();
+        List<TableRow> tableRows = new ArrayList<>();
+
+        List<Match> matchesByRound = (numberOfRound != 0) ?
+                MatchService.getMatchesByRound(numberOfRound, matches) : matches;
+        matchesByRound.sort(Match.COMPARE_BY_DATE);
+        setTableRows(tableRows, matchesByRound);
+
+        matchViews.clear();
+        setMatchViewsForTableHead(matchesByRound);
+
+        return new TableView(tableRows, matchViews);
+    }
+
+
+    private void setupTable(int numberOfRound, Model model) {
+        UserService.getCurrentPrincipalUserRole(model);
+
+        TableView tableView = setupTableView(numberOfRound);
+
+        model.addAttribute("tableRows", tableView.getTableRows());
+        model.addAttribute("matchViews", tableView.getMatchViews());
+    }
+
+
+    @GetMapping("/tables/first_round")
+    public String tableFirstRound(Model model) {
+        setupTable(1, model);
         return "tables/first_round";
     }
 
 
     @GetMapping("/tables/second_round")
     public String tableSecondRound(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
-
-        List<TableRow> tableRows = new ArrayList<>();
-
-        List<Stage> stages = stageDAO.stages();
-        List<Round> rounds = roundDAO.rounds();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches = MatchService.getMatchesByRound(2, matchDAO.matches());
-
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matches));
-        }
-
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, rounds, teams));
-        }
-
-        for (TableRow tableRow : tableRows) {
-            if (tableRow != null) {
-                for (BetView betView : tableRow.getBetsViews()) {
-                    if (betView != null) {
-                        betView.calculatePoints();
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("tableRows", tableRows);
-        model.addAttribute("matchViews", matchViews);
-
+        setupTable(2, model);
         return "tables/second_round";
     }
 
 
     @GetMapping("/tables/third_round")
     public String tableThirdRound(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
-
-        List<TableRow> tableRows = new ArrayList<>();
-
-        List<Stage> stages = stageDAO.stages();
-        List<Round> rounds = roundDAO.rounds();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches = MatchService.getMatchesByRound(3, matchDAO.matches());
-
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matches));
-        }
-
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, rounds, teams));
-        }
-
-        for (TableRow tableRow : tableRows) {
-            if (tableRow != null) {
-                for (BetView betView : tableRow.getBetsViews()) {
-                    if (betView != null) {
-                        betView.calculatePoints();
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("tableRows", tableRows);
-        model.addAttribute("matchViews", matchViews);
-
+        setupTable(3, model);
         return "tables/third_round";
     }
 
 
     @GetMapping("/tables/knockout_stage")
     public String tableKnockoutStage(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
-
-        List<TableRow> tableRows = new ArrayList<>();
-
-        List<Stage> stages = stageDAO.stages();
-        List<Round> rounds = roundDAO.rounds();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches = MatchService.getMatchesByRound(4, matchDAO.matches());
-
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matches));
-        }
-
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, rounds, teams));
-        }
-
-        for (TableRow tableRow : tableRows) {
-            if (tableRow != null) {
-                for (BetView betView : tableRow.getBetsViews()) {
-                    if (betView != null) {
-                        betView.calculatePoints();
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("tableRows", tableRows);
-        model.addAttribute("matchViews", matchViews);
-
+        setupTable(4, model);
         return "tables/knockout_stage";
     }
 
 
     @GetMapping("/tables/whole_tournament")
     public String tableWholeTournament(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
-
-        List<TableRow> tableRows = new ArrayList<>();
-
-        List<Stage> stages = stageDAO.stages();
-        List<Round> rounds = roundDAO.rounds();
-        List<Team> teams = teamDAO.teams();
-        List<Match> matches =  matchDAO.matches();
-
-        matches.sort(Match.COMPARE_BY_DATE);
-
-        for (User user : usersRepository.findAll()) {
-            List<BetView> allUserBetsViews = getAllUserBetsViews(user, matches, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matches));
-        }
-
-        ArrayList<MatchView> matchViews = new ArrayList<>();
-        for (Match match : matches) {
-            matchViews.add(new MatchView(match, stages, rounds, teams));
-        }
-
-        for (TableRow tableRow : tableRows) {
-            if (tableRow != null) {
-                for (BetView betView : tableRow.getBetsViews()) {
-                    if (betView != null) {
-                        betView.calculatePoints();
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("tableRows", tableRows);
-        model.addAttribute("matchViews", matchViews);
-
+        setupTable(0, model);
         return "tables/whole_tournament";
     }
+
+
+    @GetMapping("/tables")
+    public String tables(Model model) {
+        final int AMOUNT_OF_STAGES = 5;
+        TableView[] tableViews = new TableView[AMOUNT_OF_STAGES];
+
+        //init table
+        for (int i = 0; i < AMOUNT_OF_STAGES; i++) {
+            tableViews[i] = setupTableView((i != 4) ? i + 1 : 0);
+        }
+
+        //calculate positions
+        List<Double> positions = new ArrayList<>();
+        for (int num = 0; num < tableViews[0].getTableRows().size(); num++) {
+            double position = 0.0;
+            for (int i = 0; i < AMOUNT_OF_STAGES; i++) {
+                position += tableViews[i].getTableRows().get(num).getPosition();
+            }
+            positions.add(position / AMOUNT_OF_STAGES);
+        }
+
+        model.addAttribute("positions", positions);
+        model.addAttribute("firstRoundTableRows", tableViews[0].getTableRows());
+        model.addAttribute("secondRoundTableRows", tableViews[1].getTableRows());
+        model.addAttribute("thirdRoundTableRows", tableViews[2].getTableRows());
+        model.addAttribute("knockoutRoundTableRows", tableViews[3].getTableRows());
+        model.addAttribute("wholeTournamentTableRows", tableViews[4].getTableRows());
+        model.addAttribute("users", users);
+
+        return "tables";
+    }
+
+
+//    class GeneralRows {
+//        List<User> users;
+//        double averagePosition;
+//        int firstRoundPoints;
+//        int secondRoundPoints;
+//        int thirdRoundPoints;
+//        int knockoutPoints;
+//        int wholePoints;
+//
+//        GeneralRows(TableView[] tableViews, List<User> users) {
+//            //this.users = users;
+//        }
+//    }
 }
