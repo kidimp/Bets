@@ -24,14 +24,18 @@
     <br>
     <br>
 
-    <div class="form-group required-control">
+
+        <div class="form-group required-control">
         <label for="role">Role: </label>
-        <input id="role" type="checkbox" name="role"
-               th:each="role : ${allRoles}"
-               th:text="${role.name}"
-               th:value="${role.name}"
-               th:field="*{role}">
-    </div>
+        <select id="role" name="role">
+            <option
+                    th:each="role : ${allRoles}"
+                    th:value="${role.name()}"
+                    th:text="${role.name()}"
+                    th:selected="${role.name()}">
+            </option>
+        </select>
+        </div>
 
     <br>
     <br>

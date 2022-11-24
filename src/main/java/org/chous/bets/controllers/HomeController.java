@@ -31,11 +31,7 @@ public class HomeController {
     private final RoundDAO roundDAO;
     private final BetDAO betDAO;
     private final UsersRepository usersRepository;
-
     private PointsService pointsService;
-    private final List<TableRow> generalTableRows;
-    private final List<TableRow> generalTableRowsTmp;
-    private final HashMap<User, Double> averagePositionByUser;
 
     @Autowired
     public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
@@ -45,9 +41,6 @@ public class HomeController {
         this.roundDAO = roundDAO;
         this.betDAO = betDAO;
         this.usersRepository = usersRepository;
-        generalTableRows = new ArrayList<>();
-        generalTableRowsTmp = new ArrayList<>();
-        averagePositionByUser = new HashMap<>();
     }
 
 
@@ -171,167 +164,67 @@ public class HomeController {
     }
 
 
-//    @PostMapping("recalculate_tables")
-//    public String recalculate(Model model) {
-//        List<Match> matches = matchDAO.matches();
-//        List<Team> teams = teamDAO.teams();
-//        List<User> users = usersRepository.findAll();
-//
-//        for (Bet bet : betDAO.bets()) {
-//            Match match = MatchService.getMatchById(bet.getMatchId(), matches);
-//
-//            if (match != null) {
-//                Team homeTeam = TeamService.getTeamById(match.getHomeTeamId(), teams);
-//                Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
-//                pointsService = new PointsService(bet, match, homeTeam, awayTeam);
-//            }
-//
-//            double points = pointsService.getPointsForMatch();
-//            bet.setPoints(points);
-//
-//            betDAO.updatePoints(bet.getId(), bet);
-//        }
-//
-//        for (User user : users) {
-//            double totalPointsFirstRound = getTotalPointsByRound(user, 1);
-//            double totalPointsSecondRound = getTotalPointsByRound(user, 2);
-//            double totalPointsThirdRound = getTotalPointsByRound(user, 3);
-//            double totalPointsKnockoutRound = getTotalPointsByRound(user, 4);
-//            double totalPointsWholeTournament = totalPointsFirstRound + totalPointsSecondRound +
-//                    totalPointsThirdRound + totalPointsKnockoutRound;
-//            generalTableRowsTmp.add(new TableRow(user, totalPointsFirstRound, totalPointsSecondRound,
-//                    totalPointsThirdRound, totalPointsKnockoutRound, totalPointsWholeTournament));
-//        }
-//
-////        for (TableRow tableRow : generalTableRowsTmp) {
-////            setAveragePosition(tableRow);
-////        }
-//
-//
-//        setAveragePosition(generalTableRowsTmp);
-//
-//
-//        for (Map.Entry<User, Double> entry : averagePositionByUser.entrySet()) {
-//            for (TableRow tableRow : generalTableRowsTmp) {
-//                if (tableRow.getUser() == entry.getKey()) {
-//                    generalTableRows.add(new TableRow(tableRow.getUser(), entry.getValue(),
-//                            tableRow.getTotalPointsFirstRound(), tableRow.getTotalPointsSecondRound(),
-//                            tableRow.getTotalPointsThirdRound(), tableRow.getTotalPointsKnockoutRound(),
-//                            tableRow.getTotalPointsWholeTournament()));
-//                }
-//            }
-//        }
-//
-//        return "redirect:/tables";
-//    }
-
-
-    public double getTotalPointsByRound(User user, int round) {
+    @PostMapping("recalculate_tables")
+    public String recalculate() {
         List<Match> matches = matchDAO.matches();
-        double totalPointsByRound = 0;
+        List<Team> teams = teamDAO.teams();
+
         for (Bet bet : betDAO.bets()) {
             Match match = MatchService.getMatchById(bet.getMatchId(), matches);
+
             if (match != null) {
-                if ((bet.getUserId() == user.getId()) && (match.getRound() == round)) {
-                    totalPointsByRound += bet.getPoints();
-                }
+                Team homeTeam = TeamService.getTeamById(match.getHomeTeamId(), teams);
+                Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
+                pointsService = new PointsService(bet, match, homeTeam, awayTeam);
             }
+
+            double points = pointsService.getPointsForMatch();
+            bet.setPoints(points);
+            betDAO.updatePoints(bet.getId(), bet);
         }
-        return totalPointsByRound;
+
+        return "redirect:/tables";
     }
 
 
-//    public void setAveragePosition(List<TableRow> generalTableRowsTmp) {
-//        TreeMap<Double, User> totalPointsForEachUserFirstRound = new TreeMap<>();
-//        TreeMap<Double, User> totalPointsForEachUserSecondRound = new TreeMap<>();
-//        TreeMap<Double, User> totalPointsForEachUserThirdRound = new TreeMap<>();
-//        TreeMap<Double, User> totalPointsForEachUserKnockoutRound = new TreeMap<>();
-//        TreeMap<Double, User> totalPointsForEachUserWholeTournament = new TreeMap<>();
+    @GetMapping("winning_team")
+    public String winningTeam(Model model) {
+        UserService.getCurrentPrincipalUserRole(model);
+        List<Team> teams = teamDAO.teams();
+        model.addAttribute("teams", teams);
+        return "winning_team";
+    }
+
+
+    @PostMapping("winning_team")
+    public String winningReamChoose(Model model, @ModelAttribute("team") @Valid Team team, BindingResult bindingResult) {
+        UserService.getCurrentPrincipalUserRole(model);
+
+        if (bindingResult.hasErrors()) {
+            return "/winning_team";
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
+                .orElse(null)).getId();
+
+//        bet.setUserId(currentPrincipalUserId);
 //
-//        for (TableRow tableRow : generalTableRowsTmp) {
-//            totalPointsForEachUserFirstRound.put(tableRow.getTotalPointsFirstRound(), tableRow.getUser());
-//            totalPointsForEachUserSecondRound.put(tableRow.getTotalPointsSecondRound(), tableRow.getUser());
-//            totalPointsForEachUserThirdRound.put(tableRow.getTotalPointsThirdRound(), tableRow.getUser());
-//            totalPointsForEachUserKnockoutRound.put(tableRow.getTotalPointsKnockoutRound(), tableRow.getUser());
-//            totalPointsForEachUserWholeTournament.put(tableRow.getTotalPointsWholeTournament(), tableRow.getUser());
-//        }
-//
-////        HashMap<User, ArrayList<Double>> averagePositionByRound = new HashMap<>();
-//        ArrayList<ArrayList<Double>> averagePositionByRound = new ArrayList<>();
-//
-//        for (Map.Entry<Double, User> entry : totalPointsForEachUserFirstRound.entrySet()) {
-//            double index = 0.0;
-//            ArrayList<Double> arrayList = new ArrayList<>();
-//            for (User user : usersRepository.findAll()) {
-//                index++;
-//                if (user == entry.getValue()) {
-//                    arrayList.add(index);
-//                    //averagePositionByRound.put(user, arrayList);
-//                }
-//            }
-//
-//        }
-//
-//        for (Map.Entry<Double, User> entry : totalPointsForEachUserSecondRound.entrySet()) {
-//            double index = 0.0;
-//            ArrayList<Double> arrayList = new ArrayList<>();
-//            for (User user : usersRepository.findAll()) {
-//                index++;
-//                if (user == entry.getValue()) {
-//                    arrayList.add(index);
-//                    //averagePositionByRound.put(user, arrayList);
-//                }
+//        List<Bet> allBets = betDAO.bets();
+//        for (Bet b : allBets) {
+//            if ((b.getUserId() == currentPrincipalUserId) && (b.getMatchId() == matchId)) {
+//                int id = b.getId();
+//                betDAO.update(id, bet);
+//                return "redirect:/fixtures";
 //            }
 //        }
 //
-//        for (Map.Entry<Double, User> entry : totalPointsForEachUserThirdRound.entrySet()) {
-//            double index = 0.0;
-//            ArrayList<Double> arrayList = new ArrayList<>();
-//            for (User user : usersRepository.findAll()) {
-//                index++;
-//                if (user == entry.getValue()) {
-//                    arrayList.add(index);
-//                    //averagePositionByRound.put(user, arrayList);
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Double, User> entry : totalPointsForEachUserKnockoutRound.entrySet()) {
-//            double index = 0.0;
-//            ArrayList<Double> arrayList = new ArrayList<>();
-//            for (User user : usersRepository.findAll()) {
-//                index++;
-//                if (user == entry.getValue()) {
-//                    arrayList.add(index);
-//                    //averagePositionByRound.put(user, arrayList);
-//                }
-//            }
-//        }
-//
-//        for (Map.Entry<Double, User> entry : totalPointsForEachUserWholeTournament.entrySet()) {
-//            double index = 0.0;
-//            ArrayList<Double> arrayList = new ArrayList<>();
-//            for (User user : usersRepository.findAll()) {
-//                index++;
-//                if (user == entry.getValue()) {
-//                    arrayList.add(index);
-//                    //averagePositionByRound.put(user, arrayList);
-//                }
-//            }
-//        }
-//
-//
-//        /*for (Map.Entry<User, ArrayList<Double>> entry : averagePositionByRound.entrySet()) {
-//            double pos = 0.0;
-//            for (User user : usersRepository.findAll()) {
-//                if (user == entry.getKey()) {
-//                    for (Double i : entry.getValue())
-//                        pos += i;
-//                }
-//            }
-//            averagePositionByUser.put(entry.getKey(), pos);
-//        }*/
-//    }
+//        betDAO.save(bet);
+
+        return "redirect:/tables";
+    }
+
+
 }
 
 

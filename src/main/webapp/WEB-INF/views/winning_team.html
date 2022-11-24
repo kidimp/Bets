@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Winning team</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>
+    <div sec:authorize="!isAuthenticated()" th:insert="fragments/headerAnonimus :: header"></div>
+
+    <div sec:authorize="hasRole('ROLE_USER')" th:insert="fragments/headerUser :: header"></div>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')" th:insert="fragments/headerAdmin :: header"></div>
+</header>
+
+<div class="container mt-5" style="margin-left: 100px">
+
+    <p>You can make your bet until xx.xx.xxxx xx:xx</p>
+
+    <br>
+
+    <h5>What team will win this tournament?</h5>
+
+    <td>
+        <select id="teamId" name="teamId" style="width: 330px">
+            <option value = "NONE" label = "Select team"></option>
+            <option
+                    th:each="team : ${teams}"
+                    th:value="${team.getId()}"
+                    th:text="${team.getName()}">
+            </option>
+        </select>
+    </td>
+
+    <br><br>
+
+    <input type="submit" value="Make bet!"/>
+
+</div>
+
+</body>
+
+</html>
+
+
+
+
+
