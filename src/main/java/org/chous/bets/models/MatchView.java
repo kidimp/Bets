@@ -1,5 +1,6 @@
 package org.chous.bets.models;
 
+import java.util.Date;
 import java.util.List;
 
 public class MatchView {
@@ -76,6 +77,11 @@ public class MatchView {
         } else {
             return "";
         }
+    }
+
+
+    public boolean isMatchStarted() {
+        return match.getDateAndTime().after(new Date());
     }
 
 }

@@ -7,16 +7,21 @@ import org.chous.bets.services.MatchService;
 import org.chous.bets.services.TeamService;
 import org.chous.bets.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class TablesController {
     private final BetDAO betDAO;
+    private final WinningTeamDAO winningTeamDAO;
+    private final UsersRepository usersRepository;
     private final List<Stage> stages;
     private final List<Round> rounds;
     private final List<Team> teams;
@@ -45,8 +50,10 @@ public class TablesController {
 
 
     @Autowired
-    public TablesController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
+    public TablesController(MatchDAO matchDAO, WinningTeamDAO winningTeamDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
         this.betDAO = betDAO;
+        this.winningTeamDAO = winningTeamDAO;
+        this.usersRepository = usersRepository;
         stages = stageDAO.stages();
         rounds = roundDAO.rounds();
         teams = teamDAO.teams();
@@ -97,6 +104,11 @@ public class TablesController {
             }
         }
         return position;
+    }
+
+
+    private List<Team> getWinningTeams() {
+        return winningTeamDAO.teams();
     }
 
 
@@ -188,6 +200,21 @@ public class TablesController {
             positions.add(position / AMOUNT_OF_STAGES);
         }
 
+        // атрымліваем каманды-пераможцы
+        List<String> winningTeams = new ArrayList<>();
+        for (User user : users) {
+            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
+            if (winningTeamId != null) {
+                for (Team team : teams) {
+                    if (winningTeamId == team.getId()) {
+                        winningTeams.add(team.getName());
+                    }
+                }
+            } else {
+                winningTeams.add("");
+            }
+        }
+
         model.addAttribute("positions", positions);
         model.addAttribute("firstRoundTableRows", tableViews[0].getTableRows());
         model.addAttribute("secondRoundTableRows", tableViews[1].getTableRows());
@@ -195,6 +222,7 @@ public class TablesController {
         model.addAttribute("knockoutRoundTableRows", tableViews[3].getTableRows());
         model.addAttribute("wholeTournamentTableRows", tableViews[4].getTableRows());
         model.addAttribute("users", users);
+        model.addAttribute("winningTeams", winningTeams);
 
         return "tables";
     }

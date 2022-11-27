@@ -27,20 +27,25 @@
 
     <h5>What team will win this tournament?</h5>
 
-    <td>
+    <form th:method="POST" th:action="@{/winning_team}" >
+
+        <label for="teamId"></label>
         <select id="teamId" name="teamId" style="width: 330px">
-            <option value = "NONE" label = "Select team"></option>
+            <option value="0" label="Select team"></option>
             <option
                     th:each="team : ${teams}"
                     th:value="${team.getId()}"
-                    th:text="${team.getName()}">
+                    th:text="${team.getName()}"
+                    th:selected="${team.getId() == selectedByUser}"
+                    th:object="${team.getId()}">
             </option>
         </select>
-    </td>
 
-    <br><br>
+        <br><br>
 
-    <input type="submit" value="Make bet!"/>
+        <input type="submit" value="Make bet!"/>
+
+    </form>
 
 </div>
 

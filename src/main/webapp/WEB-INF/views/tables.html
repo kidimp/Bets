@@ -74,6 +74,9 @@
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
                 aria-label=": сортировать по возрастанию" style="text-align: center;">Extra points</th>
+
+            <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
+                aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Players</th>
         </tr>
 
         </thead>
@@ -91,9 +94,9 @@
                 <td th:text="${wholeTournamentTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
                 <td></td>
                 <td></td>
+                <td th:text="${winningTeams.get(iStat.index)}"></td>
                 <td></td>
-                <td></td>
-                <td></td>
+                <td th:text="${user.getUsername()}"></td>
             </tr>
         </div>
 

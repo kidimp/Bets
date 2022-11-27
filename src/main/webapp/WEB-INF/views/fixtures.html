@@ -61,7 +61,9 @@
                     </div>
                 </div>
             </td>
-            <td style="text-align:center; width:15%"><a th:href="@{/bet/{matchId}(matchId=${matchView.getMatch().getId()})}">Make/Change bet</a></td>
+            <td style="text-align:center; width:15%" th:if="${matchView.isMatchStarted() == true}">
+                    <a th:href="@{/bet/{matchId}(matchId=${matchView.getMatch().getId()})}">Make/Change bet</a>
+            </td>
         </tr>
     </div>
 

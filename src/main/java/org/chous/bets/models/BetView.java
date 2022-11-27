@@ -28,23 +28,9 @@ public class BetView {
     }
 
 
-//    public double getPoints() {
-//        return points;
-//    }
-
-
-//    public String getPointsInStr() {
-//        String pointsInStr = String.valueOf(points);
-//        if (points % 1 == 0) {
-//            return pointsInStr.substring(0, pointsInStr.length() - 2);
-//        }
-//        return pointsInStr;
-//    }
-
 
     public void calculatePoints() {
         bet.setPoints(pointsService.getPointsForMatch());
-//        this.points = pointsService.getPointsForMatch();
     }
 
 
@@ -56,11 +42,6 @@ public class BetView {
     public Bet getBet() {
         return bet;
     }
-
-
-//    public int getRound() {
-//        return round;
-//    }
 
 
     public String isExtraTime() {

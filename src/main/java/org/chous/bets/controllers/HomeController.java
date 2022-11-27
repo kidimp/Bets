@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -30,16 +32,19 @@ public class HomeController {
     private final StageDAO stageDAO;
     private final RoundDAO roundDAO;
     private final BetDAO betDAO;
+    private final WinningTeamDAO winningTeamDAO;
     private final UsersRepository usersRepository;
     private PointsService pointsService;
 
     @Autowired
-    public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
+    public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO,
+                          WinningTeamDAO winningTeamDAO, UsersRepository usersRepository) {
         this.matchDAO = matchDAO;
         this.teamDAO = teamDAO;
         this.stageDAO = stageDAO;
         this.roundDAO = roundDAO;
         this.betDAO = betDAO;
+        this.winningTeamDAO = winningTeamDAO;
         this.usersRepository = usersRepository;
     }
 
@@ -131,8 +136,6 @@ public class HomeController {
     @PostMapping("/bet/{matchId}")
     public String makeBet(Model model, @ModelAttribute("bet") @Valid Bet bet, BindingResult bindingResult,
                           @PathVariable("matchId") int matchId) {
-        UserService.getCurrentPrincipalUserRole(model);
-
         if (bindingResult.hasErrors()) {
             return "/bet";
         }
@@ -187,20 +190,30 @@ public class HomeController {
     }
 
 
+    @ModelAttribute("teamsList")
+    public List<Team> getTeamsList(Model model) {
+        model.addAttribute("teams", teamDAO.teams());
+        return teamDAO.teams();
+    }
+
+
     @GetMapping("winning_team")
     public String winningTeam(Model model) {
         UserService.getCurrentPrincipalUserRole(model);
-        List<Team> teams = teamDAO.teams();
-        model.addAttribute("teams", teams);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
+                .orElse(null)).getId();
+
+        model.addAttribute("selectedByUser", winningTeamDAO.showWinningTeamId(currentPrincipalUserId));
         return "winning_team";
     }
 
 
     @PostMapping("winning_team")
-    public String winningReamChoose(Model model, @ModelAttribute("team") @Valid Team team, BindingResult bindingResult) {
-        UserService.getCurrentPrincipalUserRole(model);
+    public String winningTeamPredict(@ModelAttribute("teamId") @Valid int teamId, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || teamId == 0) {
             return "/winning_team";
         }
 
@@ -208,18 +221,45 @@ public class HomeController {
         int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
                 .orElse(null)).getId();
 
-//        bet.setUserId(currentPrincipalUserId);
-//
-//        List<Bet> allBets = betDAO.bets();
-//        for (Bet b : allBets) {
-//            if ((b.getUserId() == currentPrincipalUserId) && (b.getMatchId() == matchId)) {
-//                int id = b.getId();
-//                betDAO.update(id, bet);
-//                return "redirect:/fixtures";
-//            }
+        if (winningTeamDAO.show(currentPrincipalUserId) != null) {
+            winningTeamDAO.update(currentPrincipalUserId, teamId);
+            return "redirect:/tables";
+        }
+
+        winningTeamDAO.save(currentPrincipalUserId, teamId);
+
+        return "redirect:/tables";
+    }
+
+
+    @GetMapping("winning_team_setting")
+    public String winningTeamSetting(@ModelAttribute("dateAndTime") Date dateAndTime) {
+//        UserService.getCurrentPrincipalUserRole(model);
+
+        //model.addAttribute("dateAndTime", new Date());
+
+        return "winning_team_setting";
+    }
+
+
+    @PostMapping("winning_team_setting")
+    public String winningTeamSet(@ModelAttribute("teamId") @Valid int teamId,
+                                 @ModelAttribute("dateAndTime") @Valid String dateAndTime, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "/winning_team_setting";
+        }
+
+
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+//        try {
+//            this.dateAndTime = formatter.parse(dateInString);
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
 //        }
-//
-//        betDAO.save(bet);
+
+        System.out.println("teamId " + teamId);
+        System.out.println("dateAndTime " + dateAndTime);
 
         return "redirect:/tables";
     }

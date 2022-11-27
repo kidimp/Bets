@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Winning team setting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header th:insert="fragments/headerAdmin :: header"></header>
+
+<div class="container mt-5" style="margin-left: 100px">
+
+    <form th:method="POST" th:action="@{/winning_team_setting}">
+
+        <h5>Everybody can make their bets on winning team until: </h5>
+        <label for="dateAndTime">Enter date and time: </label>-->
+        <input type="datetime-local" name="dateAndTime" id="dateAndTime" placeholder="xx.xx.xxxx xx:xx"/>
+        <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="${dateAndTime}">dateAndTime Error</div>
+
+        <!--        <label for="dateAndTime">Enter date and time: </label>-->
+<!--        <input type="text" id="dateAndTime" name="dateAndTime"  placeholder="xx.xx.xxxx xx:xx"/>-->
+<!--        <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="${dateAndTime}">dateAndTime Error</div>-->
+
+        <br><br>
+
+        <h5>What team won this tournament?</h5>
+        <label for="teamId"></label>
+        <select id="teamId" name="teamId" style="width: 330px">
+            <option value="0" label="Select team"></option>
+            <option
+                    th:each="team : ${teams}"
+                    th:value="${team.getId()}"
+                    th:text="${team.getName()}"
+                    th:object="${team.getId()}">
+            </option>
+        </select>
+
+        <br><br>
+
+        <input type="submit" value="Save!"/>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
+
+
+
+
+
