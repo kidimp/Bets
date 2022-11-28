@@ -14,7 +14,6 @@ public class Team {
     @Min(value = 1, message = "Pot must be from 1 to 4")
     @Max(value = 4, message = "Pot must be from 1 to 4")
     private int pot;
-    private int winningTeamId;
 
 
     public Team() {

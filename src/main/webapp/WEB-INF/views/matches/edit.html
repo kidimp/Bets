@@ -25,7 +25,7 @@
 
         <label for="dateAndTime">Enter date and time: </label>
         <input type="text" th:field="*{dateAndTime}" id="dateAndTime" placeholder="xx.xx.xxxx xx:xx"/>
-
+        <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="*{dateAndTime}">dateAndTime Error</div>
 
         <br>
         <br>

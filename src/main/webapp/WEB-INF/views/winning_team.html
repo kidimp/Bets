@@ -21,16 +21,17 @@
 
 <div class="container mt-5" style="margin-left: 100px">
 
-    <p>You can make your bet until xx.xx.xxxx xx:xx</p>
+    <form th:method="POST" th:action="@{/winning_team}">
 
-    <br>
+        <a>You can make your bet until </a>
+        <a th:text="${dateAndTime}"></a>
 
-    <h5>What team will win this tournament?</h5>
+        <br><br><br>
 
-    <form th:method="POST" th:action="@{/winning_team}" >
+        <h5>What team will win this tournament?</h5>
 
-        <label for="teamId"></label>
-        <select id="teamId" name="teamId" style="width: 330px">
+        <label for="winningTeamId"></label>
+        <select id="winningTeamId" name="winningTeamId" style="width: 330px">
             <option value="0" label="Select team"></option>
             <option
                     th:each="team : ${teams}"
