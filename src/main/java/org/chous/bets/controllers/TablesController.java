@@ -7,28 +7,24 @@ import org.chous.bets.services.MatchService;
 import org.chous.bets.services.TeamService;
 import org.chous.bets.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class TablesController {
     private final BetDAO betDAO;
     private final WinningTeamDAO winningTeamDAO;
-    private final UsersRepository usersRepository;
+//    private final UsersRepository usersRepository;
     private final List<Stage> stages;
     private final List<Round> rounds;
     private final List<Team> teams;
     private final List<User> users;
     private final List<MatchView> matchViews;
-    private final List<Match> matches;
-
+    private final MatchDAO matchDAO;
 
     private class TableView {
         public List<TableRow> tableRows;
@@ -52,14 +48,15 @@ public class TablesController {
     @Autowired
     public TablesController(MatchDAO matchDAO, WinningTeamDAO winningTeamDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
         this.betDAO = betDAO;
+        this.matchDAO = matchDAO;
         this.winningTeamDAO = winningTeamDAO;
-        this.usersRepository = usersRepository;
+//        this.usersRepository = usersRepository;
         stages = stageDAO.stages();
         rounds = roundDAO.rounds();
         teams = teamDAO.teams();
         users = usersRepository.findAll();
         matchViews = new ArrayList<>();
-        matches = matchDAO.matches();
+
     }
 
 
@@ -79,6 +76,24 @@ public class TablesController {
             }
         }
         return usersBetsViews;
+    }
+
+    // атрымліваем каманды-пераможцы
+    public List<String> getWinningTeams() {
+        List<String> winningTeams = new ArrayList<>();
+        for (User user : users) {
+            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
+            if (winningTeamId != null) {
+                for (Team team : teams) {
+                    if (winningTeamId == team.getId()) {
+                        winningTeams.add(team.getName());
+                    }
+                }
+            } else {
+                winningTeams.add("");
+            }
+        }
+        return winningTeams;
     }
 
 
@@ -107,9 +122,9 @@ public class TablesController {
     }
 
 
-    private List<Team> getWinningTeams() {
-        return winningTeamDAO.teams();
-    }
+//    private List<Team> getWinningTeams() {
+//        return winningTeamDAO.teams();
+//    }
 
 
     public void setMatchViewsForTableHead(List<Match> matchesByRound) {
@@ -120,7 +135,7 @@ public class TablesController {
 
 
     private TableView setupTableView(int numberOfRound) {
-        //tableRows.clear();
+        List<Match> matches = matchDAO.matches();
         List<TableRow> tableRows = new ArrayList<>();
 
         List<Match> matchesByRound = (numberOfRound != 0) ?
@@ -176,6 +191,7 @@ public class TablesController {
     @GetMapping("/tables/whole_tournament")
     public String tableWholeTournament(Model model) {
         setupTable(0, model);
+        model.addAttribute("winningTeams", getWinningTeams());
         return "tables/whole_tournament";
     }
 
@@ -200,20 +216,20 @@ public class TablesController {
             positions.add(position / AMOUNT_OF_STAGES);
         }
 
-        // атрымліваем каманды-пераможцы
-        List<String> winningTeams = new ArrayList<>();
-        for (User user : users) {
-            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
-            if (winningTeamId != null) {
-                for (Team team : teams) {
-                    if (winningTeamId == team.getId()) {
-                        winningTeams.add(team.getName());
-                    }
-                }
-            } else {
-                winningTeams.add("");
-            }
-        }
+//        // атрымліваем каманды-пераможцы
+//        List<String> winningTeams = new ArrayList<>();
+//        for (User user : users) {
+//            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
+//            if (winningTeamId != null) {
+//                for (Team team : teams) {
+//                    if (winningTeamId == team.getId()) {
+//                        winningTeams.add(team.getName());
+//                    }
+//                }
+//            } else {
+//                winningTeams.add("");
+//            }
+//        }
 
         model.addAttribute("positions", positions);
         model.addAttribute("firstRoundTableRows", tableViews[0].getTableRows());
@@ -222,7 +238,7 @@ public class TablesController {
         model.addAttribute("knockoutRoundTableRows", tableViews[3].getTableRows());
         model.addAttribute("wholeTournamentTableRows", tableViews[4].getTableRows());
         model.addAttribute("users", users);
-        model.addAttribute("winningTeams", winningTeams);
+        model.addAttribute("winningTeams", getWinningTeams());
 
         return "tables";
     }

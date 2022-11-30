@@ -23,28 +23,41 @@
 
     <form th:method="POST" th:action="@{/winning_team}">
 
-        <a>You can make your bet until </a>
-        <a th:text="${dateAndTime}"></a>
+        <div th:if="${isPredictAvailable == true}">
 
-        <br><br><br>
+            <a>You can make your bet until </a>
+            <a th:text="${dateAndTime}"></a>
 
-        <h5>What team will win this tournament?</h5>
+            <br><br><br>
 
-        <label for="winningTeamId"></label>
-        <select id="winningTeamId" name="winningTeamId" style="width: 330px">
-            <option value="0" label="Select team"></option>
-            <option
-                    th:each="team : ${teams}"
-                    th:value="${team.getId()}"
-                    th:text="${team.getName()}"
-                    th:selected="${team.getId() == selectedByUser}"
-                    th:object="${team.getId()}">
-            </option>
-        </select>
+            <h5>What team will win this tournament?</h5>
 
-        <br><br>
+            <label for="winningTeamId"></label>
+            <select id="winningTeamId" name="winningTeamId" style="width: 330px">
+                <option value="0" label="Select team"></option>
+                <option
+                        th:each="team : ${teams}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getName()}"
+                        th:selected="${team.getId() == winningTeamIdByUser}"
+                        th:object="${team.getId()}">
+                </option>
+            </select>
 
-        <input type="submit" value="Make bet!"/>
+            <br><br>
+
+            <input type="submit" value="Make bet!"/>
+        </div>
+
+
+        <div th:if="${isPredictAvailable == false}">
+
+            <h6>Betting on the winning team of the tournament is closed <a th:text="${dateAndTime}"></a>.</h6>
+            <br>
+            <h6>You are betting on <a th:text="${winningTeamNameByUser}"></a>.</h6>
+
+
+        </div>
 
     </form>
 

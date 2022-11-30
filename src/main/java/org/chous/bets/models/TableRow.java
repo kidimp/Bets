@@ -13,18 +13,6 @@ public class TableRow {
     private double totalPointsThirdRound;
     private double totalPointsKnockoutRound;
     private double totalPointsWholeTournament;
-
-//    private List<BetView> userBetsViewsFirstRound;
-//    private List<BetView> userBetsViewsSecondRound;
-//    private List<BetView> userBetsViewsThirdRound;
-//    private List<BetView> userBetsViewsKnockoutRound;
-//
-//    private final TreeMap<Double, User> totalPointsForEachUserFirstRound = new TreeMap<>();
-//    private final TreeMap<Double, User> totalPointsForEachUserSecondRound = new TreeMap<>();
-//    private final TreeMap<Double, User> totalPointsForEachUserThirdRound = new TreeMap<>();
-//    private final TreeMap<Double, User> totalPointsForEachUserKnockoutRound = new TreeMap<>();
-//    private final TreeMap<Double, User> totalPointsForEachUserWholeTournament = new TreeMap<>();
-
     private double averagePosition;
 
 
@@ -47,12 +35,6 @@ public class TableRow {
         this.totalPointsThirdRound = totalPointsThirdRound;
         this.totalPointsKnockoutRound = totalPointsKnockoutRound;
         this.totalPointsWholeTournament = totalPointsWholeTournament;
-
-//        totalPointsForEachUserFirstRound.put(totalPointsFirstRound, user);
-//        totalPointsForEachUserSecondRound.put(totalPointsSecondRound, user);
-//        totalPointsForEachUserThirdRound.put(totalPointsThirdRound, user);
-//        totalPointsForEachUserKnockoutRound.put(totalPointsKnockoutRound, user);
-//        totalPointsForEachUserWholeTournament.put(totalPointsWholeTournament, user);
     }
 
     public TableRow(User user, double averagePosition, double totalPointsFirstRound , double totalPointsSecondRound,

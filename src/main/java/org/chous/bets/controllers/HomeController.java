@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -209,12 +208,25 @@ public class HomeController {
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String dateAndTimeInStr = df.format(dateAndTime);
 
+        Date currentDateAndTime = new Date();
+
+        boolean isPredictAvailable = currentDateAndTime.before(dateAndTime);
+
+        String winningTeamNameByUser = "";
+        for (Team team : teamDAO.teams()) {
+            if (winningTeamDAO.showWinningTeamId(currentPrincipalUserId) == team.getId()) {
+                winningTeamNameByUser = team.getName();
+            }
+        }
+
         model.addAttribute("dateAndTime", dateAndTimeInStr);
-        model.addAttribute("selectedByUser", winningTeamDAO.showWinningTeamId(currentPrincipalUserId));
+        model.addAttribute("isPredictAvailable", isPredictAvailable);
+        model.addAttribute("winningTeamIdByUser", winningTeamDAO.showWinningTeamId(currentPrincipalUserId));
+        model.addAttribute("winningTeamNameByUser", winningTeamNameByUser);
         return "winning_team";
     }
 
-
+//winningTeamDAO.showWinningTeamId(currentPrincipalUserId)
     @PostMapping("winning_team")
     public String winningTeamPredict(@ModelAttribute("winningTeam") WinningTeam winningTeam, BindingResult bindingResult) {
 

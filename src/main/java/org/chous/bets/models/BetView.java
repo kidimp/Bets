@@ -10,8 +10,6 @@ public class BetView {
     private Team homeTeam;
     private Team awayTeam;
     private PointsService pointsService;
-//    private int round;
-//    private double points;
 
 
     public BetView(Bet bet, Match match, Team homeTeam, Team awayTeam) {
@@ -36,6 +34,11 @@ public class BetView {
 
     public boolean isMatchStarted() {
         return !match.getDateAndTime().after(new Date());
+    }
+
+
+    public boolean isMatchFinished() {
+        return match.isFinished();
     }
 
 
