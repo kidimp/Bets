@@ -5,12 +5,17 @@ import org.chous.bets.models.Match;
 import org.chous.bets.models.Team;
 
 public class PointsService {
-    private final Bet bet;
-    private final Match match;
-    private final Team homeTeam;
-    private final Team awayTeam;
+    private Bet bet;
+    private Match match;
+    private Team homeTeam;
+    private Team awayTeam;
     private double points;
-    private double totalPoints;
+    private int numberOfHitsOnTheCorrectScore;
+    private int winningTeamId;
+    private int secondTeamId;
+    private int winningTeamIdByUser;
+    private double extraPoints;
+
 
     public PointsService(Bet bet, Match match, Team homeTeam, Team awayTeam) {
         this.bet = bet;
@@ -18,6 +23,14 @@ public class PointsService {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
     }
+
+
+    public PointsService(int winningTeamId, int secondTeamId, int winningTeamIdByUser) {
+        this.winningTeamId = winningTeamId;
+        this.secondTeamId = secondTeamId;
+        this.winningTeamIdByUser = winningTeamIdByUser;
+    }
+
 
     public double getPointsForMatch() {
         if (bet.getMatchId() == match.getId()) {
@@ -127,14 +140,27 @@ public class PointsService {
             points = 0;
         }
 
-        totalPoints += points;
-
         return points;
     }
 
 
-//    public double getTotalPoints() {
-//        return totalPoints;
-//    }
+    public boolean isHitOnTheCorrectScore() {
+        // Здагадванне поўнага рэзультата
+        return (bet.getScoreHomeTeam() == match.getScoreHomeTeam()) &&
+                (bet.getScoreAwayTeam() == match.getScoreAwayTeam() &&
+                        bet.isExtraTime() == match.isExtraTime() &&
+                        bet.isPenalty() == match.isPenalty());
+    }
+
+
+    public double getExtraPointsForWinningTeam() {
+        if (winningTeamIdByUser == winningTeamId) {
+            extraPoints = 30.0;
+        }
+        if (winningTeamIdByUser == secondTeamId) {
+            extraPoints = 10.0;
+        }
+        return extraPoints;
+    }
 
 }

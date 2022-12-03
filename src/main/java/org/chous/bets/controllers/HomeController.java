@@ -31,19 +31,19 @@ public class HomeController {
     private final StageDAO stageDAO;
     private final RoundDAO roundDAO;
     private final BetDAO betDAO;
-    private final WinningTeamDAO winningTeamDAO;
+    private final ExtraPointsDAO extraPointsDAO;
     private final UsersRepository usersRepository;
     private PointsService pointsService;
 
     @Autowired
     public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO,
-                          WinningTeamDAO winningTeamDAO, UsersRepository usersRepository) {
+                          ExtraPointsDAO extraPointsDAO, UsersRepository usersRepository) {
         this.matchDAO = matchDAO;
         this.teamDAO = teamDAO;
         this.stageDAO = stageDAO;
         this.roundDAO = roundDAO;
         this.betDAO = betDAO;
-        this.winningTeamDAO = winningTeamDAO;
+        this.extraPointsDAO = extraPointsDAO;
         this.usersRepository = usersRepository;
     }
 
@@ -168,8 +168,10 @@ public class HomeController {
 
     @PostMapping("recalculate_tables")
     public String recalculate() {
+
         List<Match> matches = matchDAO.matches();
         List<Team> teams = teamDAO.teams();
+        int numberOfHitsOnTheCorrectScore = 0;
 
         for (Bet bet : betDAO.bets()) {
             Match match = MatchService.getMatchById(bet.getMatchId(), matches);
@@ -179,10 +181,31 @@ public class HomeController {
                 Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
                 pointsService = new PointsService(bet, match, homeTeam, awayTeam);
             }
-
             double points = pointsService.getPointsForMatch();
             bet.setPoints(points);
             betDAO.updatePoints(bet.getId(), bet);
+
+            if (pointsService.isHitOnTheCorrectScore()) {
+                numberOfHitsOnTheCorrectScore++;
+            }
+            extraPointsDAO.updateNumberOfHitsOnTheCorrectScore(bet.getUserId(), numberOfHitsOnTheCorrectScore);
+        }
+
+        List<User> users = usersRepository.findAll();
+        int winningTeamId = extraPointsDAO.show().getWinningTeamId();
+        int secondTeamId = extraPointsDAO.show().getSecondPlaceTeamId();
+        for (User user : users) {
+            int winningTeamIdByUser;
+            try {
+                winningTeamIdByUser = extraPointsDAO.showWinningTeamIdByUser(user.getId());
+            } catch (Exception e) {
+                winningTeamIdByUser = 0;
+            }
+            pointsService = new PointsService(winningTeamId, secondTeamId, winningTeamIdByUser);
+
+            double extraPoints = pointsService.getExtraPointsForWinningTeam() +
+                    (double) (5 * (extraPointsDAO.showByUser(user.getId()).getNumberOfHitsOnTheCorrectScore()/5));
+            extraPointsDAO.updateExtraPointsByUser(user.getId(), extraPoints);
         }
 
         return "redirect:/tables";
@@ -197,53 +220,71 @@ public class HomeController {
 
 
     @GetMapping("winning_team")
-    public String winningTeam(Model model, @ModelAttribute("winningTeam") WinningTeam winningTeam) {
+    public String winningTeam(Model model, @ModelAttribute("winningTeam") ExtraPoints extraPoints) {
+        // атрымліваем ролю бягучага карыстальніка для адлюстравання правільнай шапкі старонкі
         UserService.getCurrentPrincipalUserRole(model);
 
+        // атрымліваем id бягучага карыстальніка
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
                 .orElse(null)).getId();
 
-        Date dateAndTime = winningTeamDAO.showWinningTeam().getDateAndTime();
+        // Атрымліваем дату і час да якіх ёсць магчамасть зрабіть стаўку на каманду-пераможцу
+        Date dateAndTime;
+        try {
+            dateAndTime = extraPointsDAO.show().getDateAndTime();
+        } catch (NullPointerException e) {
+            dateAndTime = new Date(1);
+        }
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String dateAndTimeInStr = df.format(dateAndTime);
-
         Date currentDateAndTime = new Date();
-
         boolean isPredictAvailable = currentDateAndTime.before(dateAndTime);
 
+        // Атрымліваем каманду-пераможцу на якую зрабіў стаўку гулец
         String winningTeamNameByUser = "";
+        boolean isWinningTeamNameByUserSet = true;
+        int winningTeamIdByUser;
+        try {
+            winningTeamIdByUser = extraPointsDAO.showWinningTeamIdByUser(currentPrincipalUserId);
+        } catch (NullPointerException e) {
+            winningTeamIdByUser = 0;
+        }
         for (Team team : teamDAO.teams()) {
-            if (winningTeamDAO.showWinningTeamId(currentPrincipalUserId) == team.getId()) {
+            if (winningTeamIdByUser == team.getId()) {
                 winningTeamNameByUser = team.getName();
             }
+        }
+        if (winningTeamNameByUser.equals("")) {
+            isWinningTeamNameByUserSet = false;
         }
 
         model.addAttribute("dateAndTime", dateAndTimeInStr);
         model.addAttribute("isPredictAvailable", isPredictAvailable);
-        model.addAttribute("winningTeamIdByUser", winningTeamDAO.showWinningTeamId(currentPrincipalUserId));
+        model.addAttribute("winningTeamIdByUser", extraPointsDAO.showWinningTeamIdByUser(currentPrincipalUserId));
         model.addAttribute("winningTeamNameByUser", winningTeamNameByUser);
+        model.addAttribute("isWinningTeamNameByUserSet", isWinningTeamNameByUserSet);
         return "winning_team";
     }
 
-//winningTeamDAO.showWinningTeamId(currentPrincipalUserId)
-    @PostMapping("winning_team")
-    public String winningTeamPredict(@ModelAttribute("winningTeam") WinningTeam winningTeam, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors() || winningTeam.getWinningTeamId() == 0) {
-            return "/winning_team";
+    @PostMapping("winning_team")
+    public String winningTeamPredict(@ModelAttribute("winningTeam") ExtraPoints extraPoints, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors() || extraPoints.getWinningTeamId() == 0) {
+            return "redirect:/winning_team";
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
                 .orElse(null)).getId();
 
-        if (winningTeamDAO.show(currentPrincipalUserId) != null) {
-            winningTeamDAO.update(currentPrincipalUserId, winningTeam.getWinningTeamId());
+        if (extraPointsDAO.showByUser(currentPrincipalUserId) != null) {
+            extraPointsDAO.updateWinningTeamByUser(currentPrincipalUserId, extraPoints.getWinningTeamId());
             return "redirect:/tables";
+        } else {
+            extraPointsDAO.saveWinningTeamByUser(currentPrincipalUserId, extraPoints);
         }
-
-        winningTeamDAO.save(currentPrincipalUserId, winningTeam.getWinningTeamId());
 
         return "redirect:/tables";
     }
@@ -251,33 +292,30 @@ public class HomeController {
 
     @GetMapping("winning_team_setting")
     public String winningTeamSetting(Model model) {
-        WinningTeam winningTeam = winningTeamDAO.showWinningTeam();
-        if (winningTeam == null) {
-            winningTeam = new WinningTeam();
+        ExtraPoints extraPoints = extraPointsDAO.show();
+        if (extraPoints == null) {
+            extraPoints = new ExtraPoints();
         }
-        model.addAttribute("winningTeam", winningTeam);
+        model.addAttribute("extraPoints", extraPoints);
         return "winning_team_setting";
     }
 
 
     @PostMapping("winning_team_setting")
-    public String winningTeamSet(@ModelAttribute("winningTeam") WinningTeam winningTeam, BindingResult bindingResult) {
+    public String winningTeamSet(@ModelAttribute("extraPoints") ExtraPoints extraPoints, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || extraPoints.getDateAndTime() == null) {
             return "/winning_team_setting";
         }
 
-        if (winningTeamDAO.showWinningTeam() == null) {
-            winningTeamDAO.saveWinningTeam(winningTeam);
+        if (extraPointsDAO.show() == null) {
+            extraPointsDAO.saveWinningTeam(extraPoints);
         }
 
-        winningTeamDAO.updateWinningTeam(winningTeam);
+        extraPointsDAO.updateWinningTeam(extraPoints);
 
         return "redirect:/tables";
     }
 
 
 }
-
-
-

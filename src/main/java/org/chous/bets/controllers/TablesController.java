@@ -17,8 +17,7 @@ import java.util.List;
 @Controller
 public class TablesController {
     private final BetDAO betDAO;
-    private final WinningTeamDAO winningTeamDAO;
-//    private final UsersRepository usersRepository;
+    private final ExtraPointsDAO extraPointsDAO;
     private final List<Stage> stages;
     private final List<Round> rounds;
     private final List<Team> teams;
@@ -46,11 +45,10 @@ public class TablesController {
 
 
     @Autowired
-    public TablesController(MatchDAO matchDAO, WinningTeamDAO winningTeamDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
+    public TablesController(MatchDAO matchDAO, ExtraPointsDAO extraPointsDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
         this.betDAO = betDAO;
         this.matchDAO = matchDAO;
-        this.winningTeamDAO = winningTeamDAO;
-//        this.usersRepository = usersRepository;
+        this.extraPointsDAO = extraPointsDAO;
         stages = stageDAO.stages();
         rounds = roundDAO.rounds();
         teams = teamDAO.teams();
@@ -60,7 +58,7 @@ public class TablesController {
     }
 
 
-    // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі.
+    // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі
     public List<BetView> getAllUserBetsViews(User user, List<Match> matches, List<Team> teams) {
         List<Bet> allBets = betDAO.bets();
         List<BetView> usersBetsViews = new ArrayList<>();
@@ -78,11 +76,11 @@ public class TablesController {
         return usersBetsViews;
     }
 
-    // атрымліваем каманды-пераможцы
+    // атрымліваем каманды-пераможцы для кожнага гульца
     public List<String> getWinningTeams() {
         List<String> winningTeams = new ArrayList<>();
         for (User user : users) {
-            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
+            Integer winningTeamId = extraPointsDAO.showWinningTeamIdByUser(user.getId());
             if (winningTeamId != null) {
                 for (Team team : teams) {
                     if (winningTeamId == team.getId()) {
@@ -97,13 +95,47 @@ public class TablesController {
     }
 
 
-    public void setTableRows(List<TableRow> tableRows, List<Match> matchesByRound) {
+    public List<Double> getExtraPoints() {
+        List<Double> extraPointsList = new ArrayList<>();
         for (User user : users) {
+            ExtraPoints extraPoints = extraPointsDAO.showByUser(user.getId());
+            if (extraPoints != null) {
+                double points = extraPoints.getExtraPoints();
+                extraPointsList.add(points);
+            } else {
+                extraPointsList.add(0.0);
+            }
+        }
+        return extraPointsList;
+    }
+
+
+    public List<Integer> getNumberOfHitsOnTheCorrectScore() {
+        List<Integer> numberOfHitsOnTheCorrectScoreList = new ArrayList<>();
+        for (User user : users) {
+            ExtraPoints extraPoints = extraPointsDAO.showByUser(user.getId());
+            if (extraPoints != null) {
+                int numberOfHitsOnTheCorrectScore = extraPoints.getNumberOfHitsOnTheCorrectScore();
+                numberOfHitsOnTheCorrectScoreList.add(numberOfHitsOnTheCorrectScore);
+            } else {
+                numberOfHitsOnTheCorrectScoreList.add(0);
+            }
+        }
+        return numberOfHitsOnTheCorrectScoreList;
+    }
+
+
+    public void setTableRows(List<TableRow> tableRows, List<Match> matchesByRound, int roundIndex) {
+        for (User user : users) {
+            double extraPoints = 0.0;
+            if (roundIndex == 0) {
+                extraPoints = extraPointsDAO.showByUser(user.getId()).getExtraPoints();
+            }
             List<BetView> allUserBetsViews = getAllUserBetsViews(user, matchesByRound, teams);
-            tableRows.add(new TableRow(user, allUserBetsViews, matchesByRound));
+            tableRows.add(new TableRow(user, allUserBetsViews, matchesByRound, roundIndex, extraPoints));
         }
 
-        // sort by points
+        // сартаваць па балах
         for (int i = 0; i < tableRows.size(); i++) {
             tableRows.get(i).setPosition(getPosition(i, tableRows));
         }
@@ -122,11 +154,6 @@ public class TablesController {
     }
 
 
-//    private List<Team> getWinningTeams() {
-//        return winningTeamDAO.teams();
-//    }
-
-
     public void setMatchViewsForTableHead(List<Match> matchesByRound) {
         for (Match match : matchesByRound) {
             matchViews.add(new MatchView(match, stages, rounds, teams));
@@ -134,14 +161,14 @@ public class TablesController {
     }
 
 
-    private TableView setupTableView(int numberOfRound) {
+    private TableView setupTableView(int roundIndex) {
         List<Match> matches = matchDAO.matches();
         List<TableRow> tableRows = new ArrayList<>();
 
-        List<Match> matchesByRound = (numberOfRound != 0) ?
-                MatchService.getMatchesByRound(numberOfRound, matches) : matches;
+        List<Match> matchesByRound = (roundIndex != 0) ?
+                MatchService.getMatchesByRound(roundIndex, matches) : matches;
         matchesByRound.sort(Match.COMPARE_BY_DATE);
-        setTableRows(tableRows, matchesByRound);
+        setTableRows(tableRows, matchesByRound, roundIndex);
 
         matchViews.clear();
         setMatchViewsForTableHead(matchesByRound);
@@ -192,6 +219,8 @@ public class TablesController {
     public String tableWholeTournament(Model model) {
         setupTable(0, model);
         model.addAttribute("winningTeams", getWinningTeams());
+        model.addAttribute("extraPoints", getExtraPoints());
+        model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
         return "tables/whole_tournament";
     }
 
@@ -201,12 +230,12 @@ public class TablesController {
         final int AMOUNT_OF_STAGES = 5;
         TableView[] tableViews = new TableView[AMOUNT_OF_STAGES];
 
-        //init table
+        // ініцыялізуем табліцы
         for (int i = 0; i < AMOUNT_OF_STAGES; i++) {
             tableViews[i] = setupTableView((i != 4) ? i + 1 : 0);
         }
 
-        //calculate positions
+        // вылічаем пазіцыі
         List<Double> positions = new ArrayList<>();
         for (int num = 0; num < tableViews[0].getTableRows().size(); num++) {
             double position = 0.0;
@@ -216,21 +245,6 @@ public class TablesController {
             positions.add(position / AMOUNT_OF_STAGES);
         }
 
-//        // атрымліваем каманды-пераможцы
-//        List<String> winningTeams = new ArrayList<>();
-//        for (User user : users) {
-//            Integer winningTeamId = winningTeamDAO.showWinningTeamId(user.getId());
-//            if (winningTeamId != null) {
-//                for (Team team : teams) {
-//                    if (winningTeamId == team.getId()) {
-//                        winningTeams.add(team.getName());
-//                    }
-//                }
-//            } else {
-//                winningTeams.add("");
-//            }
-//        }
-
         model.addAttribute("positions", positions);
         model.addAttribute("firstRoundTableRows", tableViews[0].getTableRows());
         model.addAttribute("secondRoundTableRows", tableViews[1].getTableRows());
@@ -239,6 +253,9 @@ public class TablesController {
         model.addAttribute("wholeTournamentTableRows", tableViews[4].getTableRows());
         model.addAttribute("users", users);
         model.addAttribute("winningTeams", getWinningTeams());
+        model.addAttribute("extraPoints", getExtraPoints());
+        model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
+
 
         return "tables";
     }
@@ -254,7 +271,7 @@ public class TablesController {
 //        int wholePoints;
 //
 //        GeneralRows(TableView[] tableViews, List<User> users) {
-//            //this.users = users;
+//            this.users = users;
 //        }
 //    }
 }

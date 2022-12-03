@@ -95,14 +95,14 @@
         <tbody>
 
 
-        <div th:each="tableRow : ${tableRows}">
+        <div th:each="tableRow, iStat : ${tableRows}">
             <tr style="text-align: center;">
                 <td th:text="${tableRow.getUser().getUsername()}"></td>
                 <td th:text="${tableRow.getTotalPointsForThisRound()}"></td>
+                <td th:text="${numberOfHitsOnTheCorrectScore.get(iStat.index)}"></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td th:text="${winningTeams.get(iStat.index)}"></td>
+                <td th:text="${extraPoints.get(iStat.index)}"></td>
 
                 <div th:each="betView : ${tableRow.getBetsViews()}">
                     <div th:if="${(betView != null)}">

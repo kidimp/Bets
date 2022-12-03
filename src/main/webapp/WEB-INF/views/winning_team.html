@@ -54,7 +54,8 @@
 
             <h6>Betting on the winning team of the tournament is closed <a th:text="${dateAndTime}"></a>.</h6>
             <br>
-            <h6>You are betting on <a th:text="${winningTeamNameByUser}"></a>.</h6>
+            <h6 th:if="${isWinningTeamNameByUserSet == true}">You are betting on <a th:text="${winningTeamNameByUser}"></a>.</h6>
+            <h6 th:if="${isWinningTeamNameByUserSet == false}">Unfortunately, you didn't choose anyone.</h6>
 
 
         </div>
@@ -66,8 +67,3 @@
 </body>
 
 </html>
-
-
-
-
-

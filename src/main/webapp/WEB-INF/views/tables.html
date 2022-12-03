@@ -92,10 +92,10 @@
                 <td th:text="${thirdRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
                 <td th:text="${knockoutRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
                 <td th:text="${wholeTournamentTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
-                <td></td>
+                <td th:text="${numberOfHitsOnTheCorrectScore.get(iStat.index)}"></td>
                 <td></td>
                 <td th:text="${winningTeams.get(iStat.index)}"></td>
-                <td></td>
+                <td th:text="${extraPoints.get(iStat.index)}"></td>
                 <td th:text="${user.getUsername()}"></td>
             </tr>
         </div>
