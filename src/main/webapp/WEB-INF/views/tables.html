@@ -67,7 +67,7 @@
                 aria-label=": сортировать по возрастанию" style="text-align: center;">Number of hits on the correct score</th>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label=": сортировать по возрастанию" style="text-align: center;">Number of hits on the match winner</th>
+                aria-label=": сортировать по возрастанию" style="text-align: center;">Number of hits on the match result</th>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
                 aria-label=": сортировать по возрастанию" style="text-align: center;">Winning team</th>
@@ -93,7 +93,7 @@
                 <td th:text="${knockoutRoundTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
                 <td th:text="${wholeTournamentTableRows.get(iStat.index).getTotalPointsForThisRound()}"></td>
                 <td th:text="${numberOfHitsOnTheCorrectScore.get(iStat.index)}"></td>
-                <td></td>
+                <td th:text="${numberOfHitsOnTheMatchResult.get(iStat.index)}"></td>
                 <td th:text="${winningTeams.get(iStat.index)}"></td>
                 <td th:text="${extraPoints.get(iStat.index)}"></td>
                 <td th:text="${user.getUsername()}"></td>
@@ -104,6 +104,8 @@
     </table>
 
 </div>
+
+<footer th:insert="fragments/footer :: footer"></footer>
 
 </body>
 

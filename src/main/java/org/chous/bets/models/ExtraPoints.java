@@ -10,7 +10,7 @@ public class ExtraPoints {
     private int winningTeamId;
     private int secondPlaceTeamId;
     private int numberOfHitsOnTheCorrectScore;
-    private int numberOfHitsOnTheMatchWinner;
+    private int numberOfHitsOnTheMatchResult;
     private double extraPoints;
 
 
@@ -54,12 +54,12 @@ public class ExtraPoints {
     }
 
 
-    public int getNumberOfHitsOnTheMatchWinner() {
-        return numberOfHitsOnTheMatchWinner;
+    public int getNumberOfHitsOnTheMatchResult() {
+        return numberOfHitsOnTheMatchResult;
     }
 
-    public void setNumberOfHitsOnTheMatchWinner(int numberOfHitsOnTheMatchWinner) {
-        this.numberOfHitsOnTheMatchWinner = numberOfHitsOnTheMatchWinner;
+    public void setNumberOfHitsOnTheMatchResult(int numberOfHitsOnTheMatchResult) {
+        this.numberOfHitsOnTheMatchResult = numberOfHitsOnTheMatchResult;
     }
 
 

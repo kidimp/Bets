@@ -147,18 +147,36 @@ public class PointsService {
     public boolean isHitOnTheCorrectScore() {
         // Здагадванне поўнага рэзультата
         return (bet.getScoreHomeTeam() == match.getScoreHomeTeam()) &&
-                (bet.getScoreAwayTeam() == match.getScoreAwayTeam() &&
-                        bet.isExtraTime() == match.isExtraTime() &&
-                        bet.isPenalty() == match.isPenalty());
+                (bet.getScoreAwayTeam() == match.getScoreAwayTeam());
+    }
+
+
+    public boolean isHitOnTheMatchResult() {
+        // Здагадванне рэзультата матчу
+        if (((bet.getScoreHomeTeam() - bet.getScoreAwayTeam()) < 0) &&
+                ((match.getScoreHomeTeam() - match.getScoreAwayTeam()) < 0)) {
+            return true;
+        }
+        if (((bet.getScoreAwayTeam() - bet.getScoreHomeTeam()) < 0) &&
+                ((match.getScoreAwayTeam() - match.getScoreHomeTeam()) < 0)) {
+            return true;
+        }
+        if ((bet.getScoreAwayTeam() == bet.getScoreHomeTeam()) &&
+                (match.getScoreAwayTeam() == match.getScoreHomeTeam())) {
+            return true;
+        }
+        return false;
     }
 
 
     public double getExtraPointsForWinningTeam() {
-        if (winningTeamIdByUser == winningTeamId) {
-            extraPoints = 30.0;
-        }
-        if (winningTeamIdByUser == secondTeamId) {
-            extraPoints = 10.0;
+        if (winningTeamIdByUser != 0) {
+            if (winningTeamIdByUser == winningTeamId) {
+                extraPoints = 30.0;
+            }
+            if (winningTeamIdByUser == secondTeamId) {
+                extraPoints = 10.0;
+            }
         }
         return extraPoints;
     }

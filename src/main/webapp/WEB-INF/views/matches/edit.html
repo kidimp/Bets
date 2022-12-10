@@ -24,7 +24,7 @@
     <form th:method="POST" th:action="@{/matches/{id}/edit(id=${match.getId()})}" th:object="${match}">
 
         <label for="dateAndTime">Enter date and time: </label>
-        <input type="text" th:field="*{dateAndTime}" id="dateAndTime" placeholder="xx.xx.xxxx xx:xx"/>
+        <input type="text" th:field="*{dateAndTime}" id="dateAndTime" placeholder="00.00.0000 00:00"/>
         <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="*{dateAndTime}">dateAndTime Error</div>
 
         <br>

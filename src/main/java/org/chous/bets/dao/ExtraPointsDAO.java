@@ -43,9 +43,9 @@ public class ExtraPointsDAO {
     }
 
 
-    public void saveWinningTeamByUser(int userId, ExtraPoints extraPoints) {
-        jdbcTemplate.update("INSERT INTO extra_points_by_user (userId, teamId, numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchWinner, extraPoints) VALUES (?, ?, ?, ?, ?)",
-                userId, extraPoints.getWinningTeamId(), extraPoints.getNumberOfHitsOnTheCorrectScore(), extraPoints.getNumberOfHitsOnTheMatchWinner(), extraPoints.getExtraPoints());
+    public void saveExtraPointsByUser(int userId, ExtraPoints extraPoints) {
+        jdbcTemplate.update("INSERT INTO extra_points_by_user (userId, teamId, numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult, extraPoints) VALUES (?, ?, ?, ?, ?)",
+                userId, extraPoints.getWinningTeamId(), extraPoints.getNumberOfHitsOnTheCorrectScore(), extraPoints.getNumberOfHitsOnTheMatchResult(), extraPoints.getExtraPoints());
     }
 
 
@@ -59,8 +59,9 @@ public class ExtraPointsDAO {
     }
 
 
-    public void updateNumberOfHitsOnTheCorrectScore(int userId, int numberOfHitsOnTheCorrectScore) {
-        jdbcTemplate.update("UPDATE extra_points_by_user SET numberOfHitsOnTheCorrectScore=? WHERE userId=?", numberOfHitsOnTheCorrectScore, userId);
+    public void updateNumberOfHitsOnTheCorrectScore(int userId, int numberOfHitsOnTheCorrectScore, int numberOfHitsOnTheMatchResult) {
+        jdbcTemplate.update("UPDATE extra_points_by_user SET numberOfHitsOnTheCorrectScore=?, numberOfHitsOnTheMatchResult=? WHERE userId=?",
+                numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult, userId);
     }
 
 

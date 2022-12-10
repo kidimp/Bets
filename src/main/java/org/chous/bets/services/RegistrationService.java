@@ -4,6 +4,7 @@ import org.chous.bets.models.User;
 import org.chous.bets.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -16,11 +17,13 @@ public class RegistrationService {
 
     private final UsersRepository usersRepository;
     private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationService(UsersRepository usersRepository, MailService mailService) {
+    public RegistrationService(UsersRepository usersRepository, MailService mailService, PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.mailService = mailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -28,7 +31,7 @@ public class RegistrationService {
     public void register(User user) {
         user.setEmail(user.getEmail());
         user.setRole("ROLE_USER");
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user.setUsername(user.getUsername());
 

@@ -34,6 +34,7 @@ public class HomeController {
     private final ExtraPointsDAO extraPointsDAO;
     private final UsersRepository usersRepository;
     private PointsService pointsService;
+    private Date dateAndTimeWhenBetPageWasOpened;
 
     @Autowired
     public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO,
@@ -113,6 +114,8 @@ public class HomeController {
     public String bet(Model model, @PathVariable("matchId") int matchId) {
         UserService.getCurrentPrincipalUserRole(model);
 
+        dateAndTimeWhenBetPageWasOpened = new Date();
+
         Match match = matchDAO.show(matchId);
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("round", match.getRound());
@@ -149,12 +152,16 @@ public class HomeController {
         for (Bet b : allBets) {
             if ((b.getUserId() == currentPrincipalUserId) && (b.getMatchId() == matchId)) {
                 int id = b.getId();
-                betDAO.update(id, bet);
+                if (Objects.requireNonNull(MatchService.getMatchById(bet.getMatchId(), matchDAO.matches())).getDateAndTime().before(dateAndTimeWhenBetPageWasOpened)) {
+                    betDAO.update(id, bet);
+                }
                 return "redirect:/fixtures";
             }
         }
 
-        betDAO.save(bet);
+        if (Objects.requireNonNull(MatchService.getMatchById(bet.getMatchId(), matchDAO.matches())).getDateAndTime().after(dateAndTimeWhenBetPageWasOpened)) {
+            betDAO.save(bet);
+        }
 
         return "redirect:/fixtures";
     }
@@ -172,28 +179,46 @@ public class HomeController {
         List<Match> matches = matchDAO.matches();
         List<Team> teams = teamDAO.teams();
         int numberOfHitsOnTheCorrectScore = 0;
+        int numberOfHitsOnTheMatchResult = 0;
+
 
         for (Bet bet : betDAO.bets()) {
+            double points = 0.0;
             Match match = MatchService.getMatchById(bet.getMatchId(), matches);
 
-            if (match != null) {
+            if (match != null && match.isFinished()) {
                 Team homeTeam = TeamService.getTeamById(match.getHomeTeamId(), teams);
                 Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
                 pointsService = new PointsService(bet, match, homeTeam, awayTeam);
+                points = pointsService.getPointsForMatch();
+
+                if (pointsService.isHitOnTheCorrectScore()) {
+                    numberOfHitsOnTheCorrectScore++;
+                }
+                if (pointsService.isHitOnTheMatchResult()) {
+                    numberOfHitsOnTheMatchResult++;
+                }
             }
-            double points = pointsService.getPointsForMatch();
+
             bet.setPoints(points);
             betDAO.updatePoints(bet.getId(), bet);
 
-            if (pointsService.isHitOnTheCorrectScore()) {
-                numberOfHitsOnTheCorrectScore++;
+            if (extraPointsDAO.showByUser(bet.getUserId()) != null) {
+                extraPointsDAO.updateNumberOfHitsOnTheCorrectScore(bet.getUserId(), numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult);
+            } else {
+                extraPointsDAO.saveExtraPointsByUser(bet.getUserId(), new ExtraPoints());
+                extraPointsDAO.updateNumberOfHitsOnTheCorrectScore(bet.getUserId(), numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult);
             }
-            extraPointsDAO.updateNumberOfHitsOnTheCorrectScore(bet.getUserId(), numberOfHitsOnTheCorrectScore);
         }
 
         List<User> users = usersRepository.findAll();
-        int winningTeamId = extraPointsDAO.show().getWinningTeamId();
-        int secondTeamId = extraPointsDAO.show().getSecondPlaceTeamId();
+        int winningTeamId = 0;
+        int secondTeamId = 0;
+        try {
+            winningTeamId = extraPointsDAO.show().getWinningTeamId();
+            secondTeamId = extraPointsDAO.show().getSecondPlaceTeamId();
+        } catch (NullPointerException e){}
+
         for (User user : users) {
             int winningTeamIdByUser;
             try {
@@ -202,9 +227,18 @@ public class HomeController {
                 winningTeamIdByUser = 0;
             }
             pointsService = new PointsService(winningTeamId, secondTeamId, winningTeamIdByUser);
-
+            int numberOfHitsOnTheCorrectScoreByUser = 0;
+            int numberOfHitsOnTheMatchResultByUser = 0;
+            try {
+                // кожныя пяць трапленняў на дакладны счёт
+                numberOfHitsOnTheCorrectScoreByUser = extraPointsDAO.showByUser(user.getId()).getNumberOfHitsOnTheCorrectScore()/5;
+                // кожныя пяць трапленняў на вынік матчу
+                numberOfHitsOnTheMatchResultByUser = extraPointsDAO.showByUser(user.getId()).getNumberOfHitsOnTheMatchResult()/5;
+            } catch (NullPointerException e) {
+            }
             double extraPoints = pointsService.getExtraPointsForWinningTeam() +
-                    (double) (5 * (extraPointsDAO.showByUser(user.getId()).getNumberOfHitsOnTheCorrectScore()/5));
+                    (double) (5 * numberOfHitsOnTheCorrectScoreByUser) +
+                    (double) (3 * numberOfHitsOnTheMatchResultByUser);
             extraPointsDAO.updateExtraPointsByUser(user.getId(), extraPoints);
         }
 
@@ -283,7 +317,7 @@ public class HomeController {
             extraPointsDAO.updateWinningTeamByUser(currentPrincipalUserId, extraPoints.getWinningTeamId());
             return "redirect:/tables";
         } else {
-            extraPointsDAO.saveWinningTeamByUser(currentPrincipalUserId, extraPoints);
+            extraPointsDAO.saveExtraPointsByUser(currentPrincipalUserId, extraPoints);
         }
 
         return "redirect:/tables";

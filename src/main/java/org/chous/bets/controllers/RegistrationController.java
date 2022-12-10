@@ -114,12 +114,6 @@ public class RegistrationController {
             return "auth/reset-form";
         }
 
-//        userValidator.checkEquality(password, passwordConfirm, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "auth/reset-form";
-//        }
-
         registrationService.updatePassword(user, password);
 
         model.addAttribute("message", "You have successfully changed your password.");

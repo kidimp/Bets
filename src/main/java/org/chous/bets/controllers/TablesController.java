@@ -81,7 +81,7 @@ public class TablesController {
         List<String> winningTeams = new ArrayList<>();
         for (User user : users) {
             Integer winningTeamId = extraPointsDAO.showWinningTeamIdByUser(user.getId());
-            if (winningTeamId != null) {
+            if (winningTeamId != null && winningTeamId != 0) {
                 for (Team team : teams) {
                     if (winningTeamId == team.getId()) {
                         winningTeams.add(team.getName());
@@ -125,11 +125,29 @@ public class TablesController {
     }
 
 
+    public List<Integer> getNumberOfHitsOnTheMatchResult() {
+        List<Integer> numberOfHitsOnTheMatchResultList = new ArrayList<>();
+        for (User user : users) {
+            ExtraPoints extraPoints = extraPointsDAO.showByUser(user.getId());
+            if (extraPoints != null) {
+                int numberOfHitsOnTheMatchResult = extraPoints.getNumberOfHitsOnTheMatchResult();
+                numberOfHitsOnTheMatchResultList.add(numberOfHitsOnTheMatchResult);
+            } else {
+                numberOfHitsOnTheMatchResultList.add(0);
+            }
+        }
+        return numberOfHitsOnTheMatchResultList;
+    }
+
+
     public void setTableRows(List<TableRow> tableRows, List<Match> matchesByRound, int roundIndex) {
         for (User user : users) {
             double extraPoints = 0.0;
             if (roundIndex == 0) {
-                extraPoints = extraPointsDAO.showByUser(user.getId()).getExtraPoints();
+                try {
+                    extraPoints = extraPointsDAO.showByUser(user.getId()).getExtraPoints();
+                } catch (NullPointerException e) {
+                }
             }
             List<BetView> allUserBetsViews = getAllUserBetsViews(user, matchesByRound, teams);
             tableRows.add(new TableRow(user, allUserBetsViews, matchesByRound, roundIndex, extraPoints));
@@ -221,6 +239,7 @@ public class TablesController {
         model.addAttribute("winningTeams", getWinningTeams());
         model.addAttribute("extraPoints", getExtraPoints());
         model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
+        model.addAttribute("numberOfHitsOnTheMatchResult", getNumberOfHitsOnTheMatchResult());
         return "tables/whole_tournament";
     }
 
@@ -255,7 +274,7 @@ public class TablesController {
         model.addAttribute("winningTeams", getWinningTeams());
         model.addAttribute("extraPoints", getExtraPoints());
         model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
-
+        model.addAttribute("numberOfHitsOnTheMatchResult", getNumberOfHitsOnTheMatchResult());
 
         return "tables";
     }
