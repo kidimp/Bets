@@ -1,12 +1,15 @@
 package org.chous.bets.models;
 
+import org.springframework.util.comparator.Comparators;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Comparator;
 
 
-public class Team {
+public class Team implements Comparable<Team> {
     private int id;
     @NotEmpty(message = "Name must not be empty")
     @Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")
@@ -45,4 +48,21 @@ public class Team {
     public void setPot(int pot) {
         this.pot = pot;
     }
+
+
+    @Override
+    public int compareTo(Team o) {
+        return Comparators.NAME.compare(this, o);
+    }
+
+
+    public static class Comparators {
+        public static Comparator<Team> NAME = new Comparator<Team>() {
+            @Override
+            public int compare(Team o1, Team o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        };
+    }
+
 }

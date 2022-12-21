@@ -1,5 +1,7 @@
 package org.chous.bets.models;
 
+import org.chous.bets.services.PointsService;
+
 import java.util.*;
 
 public class TableRow {
@@ -63,7 +65,7 @@ public class TableRow {
         if (roundIndex == 0) {
             totalPoints += extraPoints;
         }
-        return totalPoints;
+        return PointsService.round(totalPoints, 2);
     }
 
 

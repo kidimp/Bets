@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,8 +40,10 @@ public class MatchesController {
 
     @ModelAttribute("teamsList")
     public List<Team> getTeamsList(Model model) {
-        model.addAttribute("teams", teamDAO.teams());
-        return teamDAO.teams();
+        List<Team> teams = teamDAO.teams();
+        Collections.sort(teams, Team.Comparators.NAME);
+        model.addAttribute("teams", teams);
+        return teams;
     }
 
 

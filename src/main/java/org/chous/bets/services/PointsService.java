@@ -4,13 +4,15 @@ import org.chous.bets.models.Bet;
 import org.chous.bets.models.Match;
 import org.chous.bets.models.Team;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class PointsService {
     private Bet bet;
     private Match match;
     private Team homeTeam;
     private Team awayTeam;
     private double points;
-    private int numberOfHitsOnTheCorrectScore;
     private int winningTeamId;
     private int secondTeamId;
     private int winningTeamIdByUser;
@@ -41,36 +43,38 @@ public class PointsService {
                 points = 5;
             }
             // У матчы ёсць пераможца (няма нічыі)
-            if (bet.getScoreHomeTeam() != bet.getScoreAwayTeam()) {
-                // Памылка ў 1 гол ад поўнага рэзультата: 4 балы
-                if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                        (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 1) {
-                    points = 4;
-                }
-                // Памылка ў 2 галы ад поўнага рэзультата: 3 балы
-                if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                        (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 2) {
-                    points = 3;
-                }
-                // Правільны вынік гульні, але памылка больш, чым у 2 галы ад поўнага выніка: 2 балы
-                if (((bet.getScoreHomeTeam() < bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() < match.getScoreAwayTeam())) ||
-                        ((bet.getScoreHomeTeam() > bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() > match.getScoreAwayTeam()))) {
+            if (match.getScoreHomeTeam() != match.getScoreAwayTeam()) {
+                // Гулец угадаў вынік матчу
+                if (isHitOnTheMatchResult()) {
+                    // Памылка ў 1 гол ад поўнага рэзультата: 4 балы
                     if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 3) {
-                        points = 2;
+                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 1) {
+                        points = 4;
+                    }
+                    // Памылка ў 2 галы ад поўнага рэзультата: 3 балы
+                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
+                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 2) {
+                        points = 3;
+                    }
+                    // Правільны вынік гульні, але памылка больш, чым у 2 галы ад поўнага выніка: 2 балы
+                    if (((bet.getScoreHomeTeam() < bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() < match.getScoreAwayTeam())) ||
+                            ((bet.getScoreHomeTeam() > bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() > match.getScoreAwayTeam()))) {
+                        if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
+                                (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 3) {
+                            points = 2;
+                        }
                     }
                 }
-                // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
-                if (((bet.getScoreHomeTeam() < bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() > match.getScoreAwayTeam())) ||
-                        ((bet.getScoreHomeTeam() > bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() < match.getScoreAwayTeam()))) {
+                if (!isHitOnTheMatchResult()) {
+                    // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
                     if ((bet.getScoreHomeTeam() == match.getScoreHomeTeam()) || (bet.getScoreAwayTeam() == match.getScoreAwayTeam())) {
                         points = 1;
                     }
-                }
-                // Адваротны вынік: 1 бал
-                if ((bet.getScoreHomeTeam() == match.getScoreAwayTeam()) &&
-                        (bet.getScoreAwayTeam() == match.getScoreHomeTeam())) {
-                    points = 1;
+                    // Адваротны вынік: 1 бал
+                    if ((bet.getScoreHomeTeam() == match.getScoreAwayTeam()) &&
+                            (bet.getScoreAwayTeam() == match.getScoreHomeTeam())) {
+                        points = 1;
+                    }
                 }
             } else {
                 // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
@@ -90,6 +94,12 @@ public class PointsService {
                 if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
                         (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 6) {
                     points = 2;
+                }
+                if (!isHitOnTheMatchResult()) {
+                    // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
+                    if ((bet.getScoreHomeTeam() == match.getScoreHomeTeam()) || (bet.getScoreAwayTeam() == match.getScoreAwayTeam())) {
+                        points = 1;
+                    }
                 }
             }
 
@@ -114,23 +124,25 @@ public class PointsService {
             // (ад 4 да 1). Калі перамагла каманда з ніжэйшым узроўнем, то агульная колькасць ачкоў
             // памнажаецца на (1.3, 1.5, 2 - адпаведна розніцы ў рэйтынгу ў 1, 2, 3), калі стаўка зробленая на
             // гэтую каманду. У выпадку адгаданай нічыі рэзультат памнажаецца на 1.3
-            if (homeTeam.getPot() != awayTeam.getPot()) {
-                if (((match.getScoreHomeTeam() > match.getScoreAwayTeam()) && (homeTeam.getPot() > awayTeam.getPot())) ||
-                        ((match.getScoreAwayTeam() > match.getScoreHomeTeam()) && (awayTeam.getPot() > homeTeam.getPot()))) {
-                    switch (Math.abs(homeTeam.getPot() - awayTeam.getPot())) {
-                        case 1:
-                            points *= 1.3;
-                            break;
-                        case 2:
-                            points *= 1.5;
-                            break;
-                        case 3:
-                            points *= 2;
-                            break;
+            if (isHitOnTheMatchResult()) {
+                if (homeTeam.getPot() != awayTeam.getPot()) {
+                    if (((match.getScoreHomeTeam() > match.getScoreAwayTeam()) && (homeTeam.getPot() > awayTeam.getPot())) ||
+                            ((match.getScoreAwayTeam() > match.getScoreHomeTeam()) && (awayTeam.getPot() > homeTeam.getPot()))) {
+                        switch (Math.abs(homeTeam.getPot() - awayTeam.getPot())) {
+                            case 1:
+                                points *= 1.3;
+                                break;
+                            case 2:
+                                points *= 1.5;
+                                break;
+                            case 3:
+                                points *= 2;
+                                break;
+                        }
                     }
-                }
-                if (match.getScoreHomeTeam() == match.getScoreAwayTeam()) {
-                    points *= 1.3;
+                    if (match.getScoreHomeTeam() == match.getScoreAwayTeam()) {
+                        points *= 1.3;
+                    }
                 }
             }
 
@@ -141,6 +153,15 @@ public class PointsService {
         }
 
         return points;
+    }
+
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 
@@ -161,11 +182,8 @@ public class PointsService {
                 ((match.getScoreAwayTeam() - match.getScoreHomeTeam()) < 0)) {
             return true;
         }
-        if ((bet.getScoreAwayTeam() == bet.getScoreHomeTeam()) &&
-                (match.getScoreAwayTeam() == match.getScoreHomeTeam())) {
-            return true;
-        }
-        return false;
+        return (bet.getScoreAwayTeam() == bet.getScoreHomeTeam()) &&
+                (match.getScoreAwayTeam() == match.getScoreHomeTeam());
     }
 
 

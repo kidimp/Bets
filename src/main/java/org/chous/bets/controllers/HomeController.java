@@ -33,8 +33,7 @@ public class HomeController {
     private final BetDAO betDAO;
     private final ExtraPointsDAO extraPointsDAO;
     private final UsersRepository usersRepository;
-    private PointsService pointsService;
-    private Date dateAndTimeWhenBetPageWasOpened;
+
 
     @Autowired
     public HomeController(MatchDAO matchDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO,
@@ -114,8 +113,6 @@ public class HomeController {
     public String bet(Model model, @PathVariable("matchId") int matchId) {
         UserService.getCurrentPrincipalUserRole(model);
 
-        dateAndTimeWhenBetPageWasOpened = new Date();
-
         Match match = matchDAO.show(matchId);
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("round", match.getRound());
@@ -127,6 +124,7 @@ public class HomeController {
         if (bet == null) {
             bet = new Bet();
         }
+
         bet.setMatchId(matchId);
 
         model.addAttribute("bet", bet);
@@ -148,18 +146,21 @@ public class HomeController {
 
         bet.setUserId(currentPrincipalUserId);
 
+        Match match = MatchService.getMatchById(matchId, matchDAO.matches());
+
         List<Bet> allBets = betDAO.bets();
         for (Bet b : allBets) {
             if ((b.getUserId() == currentPrincipalUserId) && (b.getMatchId() == matchId)) {
                 int id = b.getId();
-                if (Objects.requireNonNull(MatchService.getMatchById(bet.getMatchId(), matchDAO.matches())).getDateAndTime().before(dateAndTimeWhenBetPageWasOpened)) {
+
+                if (new Date().before(Objects.requireNonNull(match).getDateAndTime())) {
                     betDAO.update(id, bet);
                 }
                 return "redirect:/fixtures";
             }
         }
 
-        if (Objects.requireNonNull(MatchService.getMatchById(bet.getMatchId(), matchDAO.matches())).getDateAndTime().after(dateAndTimeWhenBetPageWasOpened)) {
+        if (new Date().before(Objects.requireNonNull(match).getDateAndTime())) {
             betDAO.save(bet);
         }
 
@@ -182,6 +183,7 @@ public class HomeController {
         int numberOfHitsOnTheMatchResult = 0;
 
 
+        PointsService pointsService;
         for (Bet bet : betDAO.bets()) {
             double points = 0.0;
             Match match = MatchService.getMatchById(bet.getMatchId(), matches);
@@ -190,7 +192,7 @@ public class HomeController {
                 Team homeTeam = TeamService.getTeamById(match.getHomeTeamId(), teams);
                 Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
                 pointsService = new PointsService(bet, match, homeTeam, awayTeam);
-                points = pointsService.getPointsForMatch();
+                points = PointsService.round(pointsService.getPointsForMatch(), 2);
 
                 if (pointsService.isHitOnTheCorrectScore()) {
                     numberOfHitsOnTheCorrectScore++;
@@ -199,6 +201,8 @@ public class HomeController {
                     numberOfHitsOnTheMatchResult++;
                 }
             }
+
+
 
             bet.setPoints(points);
             betDAO.updatePoints(bet.getId(), bet);
