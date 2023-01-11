@@ -59,12 +59,15 @@ public class ExtraPointsDAO {
     }
 
 
-    public void updateNumberOfHitsOnTheCorrectScore(int userId, int numberOfHitsOnTheCorrectScore, int numberOfHitsOnTheMatchResult) {
+    public void updateNumberOfHitsOnTheCorrectScoreAndNumberOfHitsOnTheMatchResult(int userId, int numberOfHitsOnTheCorrectScore, int numberOfHitsOnTheMatchResult) {
         jdbcTemplate.update("UPDATE extra_points_by_user SET numberOfHitsOnTheCorrectScore=?, numberOfHitsOnTheMatchResult=? WHERE userId=?",
                 numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult, userId);
     }
 
 
+//    public Integer showNumberOfHitsOnTheCorrectScoreByUser(int userId) {
+//        return jdbcTemplate.queryForObject("SELECT numberOfHitsOnTheCorrectScore FROM extra_points_by_user WHERE userId=?;", new Object[]{userId}, Integer.class);
+//    }
 
 
     public void saveWinningTeam(ExtraPoints extraPoints) {

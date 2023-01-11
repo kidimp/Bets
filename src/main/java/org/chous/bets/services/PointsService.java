@@ -47,22 +47,19 @@ public class PointsService {
                 // Гулец угадаў вынік матчу
                 if (isHitOnTheMatchResult()) {
                     // Памылка ў 1 гол ад поўнага рэзультата: 4 балы
-                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 1) {
+                    if ((Math.abs((bet.getScoreHomeTeam() - match.getScoreHomeTeam()))) +
+                            (Math.abs((bet.getScoreAwayTeam() - match.getScoreAwayTeam()))) == 1) {
                         points = 4;
                     }
                     // Памылка ў 2 галы ад поўнага рэзультата: 3 балы
-                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 2) {
+                    if ((Math.abs((bet.getScoreHomeTeam() - match.getScoreHomeTeam()))) +
+                            (Math.abs((bet.getScoreAwayTeam() - match.getScoreAwayTeam()))) == 2) {
                         points = 3;
                     }
                     // Правільны вынік гульні, але памылка больш, чым у 2 галы ад поўнага выніка: 2 балы
-                    if (((bet.getScoreHomeTeam() < bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() < match.getScoreAwayTeam())) ||
-                            ((bet.getScoreHomeTeam() > bet.getScoreAwayTeam()) && (match.getScoreHomeTeam() > match.getScoreAwayTeam()))) {
-                        if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                                (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 3) {
-                            points = 2;
-                        }
+                    if ((Math.abs((bet.getScoreHomeTeam() - match.getScoreHomeTeam()))) +
+                            (Math.abs((bet.getScoreAwayTeam() - match.getScoreAwayTeam()))) >= 3) {
+                        points = 2;
                     }
                 }
                 if (!isHitOnTheMatchResult()) {
@@ -199,4 +196,8 @@ public class PointsService {
         return extraPoints;
     }
 
+
+    public Bet getBet() {
+        return bet;
+    }
 }
