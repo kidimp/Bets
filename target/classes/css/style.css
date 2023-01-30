@@ -1,0 +1,17 @@
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button_a {
+    border: none;
+    padding: 0px 10px;
+    background: transparent;
+    cursor: pointer;
+    margin: 0;
+}
+
+
