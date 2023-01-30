@@ -65,11 +65,6 @@ public class ExtraPointsDAO {
     }
 
 
-//    public Integer showNumberOfHitsOnTheCorrectScoreByUser(int userId) {
-//        return jdbcTemplate.queryForObject("SELECT numberOfHitsOnTheCorrectScore FROM extra_points_by_user WHERE userId=?;", new Object[]{userId}, Integer.class);
-//    }
-
-
     public void saveWinningTeam(ExtraPoints extraPoints) {
         jdbcTemplate.update("INSERT INTO winning_team (id, dateAndTime, winningTeamId, secondPlaceTeamId) VALUES (?, ?, ?, ?)",
                 1, extraPoints.getDateAndTime(), extraPoints.getWinningTeamId(), extraPoints.getSecondPlaceTeamId());

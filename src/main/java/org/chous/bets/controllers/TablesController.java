@@ -52,7 +52,8 @@ public class TablesController {
         stages = stageDAO.stages();
         rounds = roundDAO.rounds();
         teams = teamDAO.teams();
-        users = usersRepository.findAll();
+//        users = usersRepository.findAll();
+        users = usersRepository.findAllActiveUsers();
         matchViews = new ArrayList<>();
 
     }
@@ -278,19 +279,4 @@ public class TablesController {
 
         return "tables";
     }
-
-
-//    class GeneralRows {
-//        List<User> users;
-//        double averagePosition;
-//        int firstRoundPoints;
-//        int secondRoundPoints;
-//        int thirdRoundPoints;
-//        int knockoutPoints;
-//        int wholePoints;
-//
-//        GeneralRows(TableView[] tableViews, List<User> users) {
-//            this.users = users;
-//        }
-//    }
 }

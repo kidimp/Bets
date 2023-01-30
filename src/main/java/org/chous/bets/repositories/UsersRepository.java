@@ -2,7 +2,9 @@ package org.chous.bets.repositories;
 
 import org.chous.bets.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<User, Long> {
@@ -13,4 +15,9 @@ public interface UsersRepository extends JpaRepository<User, Long> {
     User findByActivationCode(String code);
 
     User findByResetPasswordToken(String token);
+
+    @Query(value = "SELECT * FROM user WHERE EXISTS (SELECT userId FROM bets WHERE userId=user.id)", nativeQuery = true)
+    List<User> findAllActiveUsers();
+
+
 }

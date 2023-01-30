@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Delete match</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
 </head>
 
@@ -15,37 +15,37 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/matches/{id}/delete(id=${match.getId()})}">
+    <form th:method="POST" th:action="@{/matches/{id}/delete(id=${match.getId()})}">
 
-    <p th:text="${'Date: ' + match.getDateInStr()}">VALUE</p>
+        <p th:text="${'Date: ' + match.getDateInStr()}">VALUE</p>
 
-    <div th:each="stage : ${stagesList}">
-        <p th:if="${(match.getStageId() == stage.getId())}" th:text="${'Stage: ' + stage.getName()}">match</p>
-    </div>
+        <div th:each="stage : ${stagesList}">
+            <p th:if="${(match.getStageId() == stage.getId())}" th:text="${'Stage: ' + stage.getName()}">match</p>
+        </div>
 
-    <div th:each="round : ${roundsList}">
-        <p th:if="${(match.getRound() == round.getId())}" th:text="${'Round: ' + round.getName()}">match</p>
-    </div>
+        <div th:each="round : ${roundsList}">
+            <p th:if="${(match.getRound() == round.getId())}" th:text="${'Round: ' + round.getName()}">match</p>
+        </div>
 
-    <div th:each="team : ${teamsList}">
-        <p th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${'Home team: ' + team.getName()}">match</p>
-    </div>
+        <div th:each="team : ${teamsList}">
+            <p th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${'Home team: ' + team.getName()}">match</p>
+        </div>
 
-    <div th:each="team : ${teamsList}">
-        <p th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${'Away team: ' + team.getName()}">match</p>
-    </div>
+        <div th:each="team : ${teamsList}">
+            <p th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${'Away team: ' + team.getName()}">match</p>
+        </div>
 
-    <td><p th:text="${'Score: ' + match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
+        <td><p th:text="${'Score: ' + match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
                                     ' ' + match.isExtraTime() + ' ' + match.isPenalty()}">match</p></td>
 
-    <p th:text="${'Is match finished: ' + match.isFinished()}">VALUE</p>
+        <p th:text="${'Is match finished: ' + match.isFinished()}">VALUE</p>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <input type="submit" value="Delete!"/>
+        <input type="submit" value="Delete!"/>
 
-</form>
+    </form>
 
 </div>
 

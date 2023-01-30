@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>New match</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
 </head>
 
@@ -15,109 +15,109 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/matches}" th:object="${match}">
+    <form th:method="POST" th:action="@{/matches}" th:object="${match}">
 
-    <label for="dateAndTime">Enter date and time: </label>
-    <input type="text" th:field="*{dateAndTime}" id="dateAndTime" placeholder="00.00.0000 00:00"/>
-    <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="*{dateAndTime}">dateAndTime Error</div>
+        <label for="dateAndTime">Enter date and time: </label>
+        <input type="text" th:field="*{dateAndTime}" id="dateAndTime" placeholder="00.00.0000 00:00"/>
+        <div style="color:red" th:if="${#fields.hasErrors('dateAndTime')}" th:errors="*{dateAndTime}">dateAndTime Error</div>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <label for="stageId">Enter stage:</label>
-    <td>
-        <select id="stageId" name="stageId">
-            <option value = "NONE" label = "Select stage"></option>
-            <option
-                    th:each="stage : ${stagesList}"
-                    th:value="${stage.getId()}"
-                    th:text="${stage.getName()}">
-            </option>
-        </select>
-    </td>
+        <label for="stageId">Enter stage:</label>
+        <td>
+            <select id="stageId" name="stageId">
+                <option value = "NONE" label = "Select stage"></option>
+                <option
+                        th:each="stage : ${stagesList}"
+                        th:value="${stage.getId()}"
+                        th:text="${stage.getName()}">
+                </option>
+            </select>
+        </td>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <label for="round">Choose round:</label>
-    <td>
-        <select id="round" name="round">
-            <option value = "NONE" label = "Choose round"></option>
-            <option
-                    th:each="round : ${roundsList}"
-                    th:value="${round.getId()}"
-                    th:text="${round.getName()}">
-            </option>
-        </select>
-    </td>
+        <label for="round">Choose round:</label>
+        <td>
+            <select id="round" name="round">
+                <option value = "NONE" label = "Choose round"></option>
+                <option
+                        th:each="round : ${roundsList}"
+                        th:value="${round.getId()}"
+                        th:text="${round.getName()}">
+                </option>
+            </select>
+        </td>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <label for="homeTeamId">Enter home team:</label>
-    <td>
-        <select id="homeTeamId" name="homeTeamId">
-            <option value = "NONE" label = "Select team"></option>
-            <option
-                    th:each="team : ${teamsList}"
-                    th:value="${team.getId()}"
-                    th:text="${team.getName()}">
-            </option>
-        </select>
-    </td>
+        <label for="homeTeamId">Enter home team:</label>
+        <td>
+            <select id="homeTeamId" name="homeTeamId">
+                <option value = "NONE" label = "Select team"></option>
+                <option
+                        th:each="team : ${teamsList}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getName()}">
+                </option>
+            </select>
+        </td>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <label for="awayTeamId">Enter away team: </label>
-    <td>
-        <select id="awayTeamId" name="awayTeamId">
-            <option value = "NONE" label = "Select team"></option>
-            <option
-                    th:each="team : ${teamsList}"
-                    th:value="${team.getId()}"
-                    th:text="${team.getName()}">
-            </option>
-        </select>
-    </td>
+        <label for="awayTeamId">Enter away team: </label>
+        <td>
+            <select id="awayTeamId" name="awayTeamId">
+                <option value = "NONE" label = "Select team"></option>
+                <option
+                        th:each="team : ${teamsList}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getName()}">
+                </option>
+            </select>
+        </td>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <div class="form-group required-control">
-        <label for="isFinished">Is match finished: </label>
-        <input id="isFinished" type="checkbox" name="isFinished" th:checked="*{isFinished}" />
-    </div>
-
-
-    <label for="scoreHomeTeam">Enter score of home team: </label>
-    <input type="text" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
-    <div style="color:red" th:if="${#fields.hasErrors('scoreHomeTeam')}" th:errors="*{scoreHomeTeam}">ScoreHomeTeam Error</div>
-
-    <br>
-    <br>
-
-    <label for="scoreAwayTeam">Enter score of away team: </label>
-    <input type="text" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
-    <div style="color:red" th:if="${#fields.hasErrors('scoreAwayTeam')}" th:errors="*{scoreAwayTeam}">ScoreAwayTeam Error</div>
-
-    <br>
-    <br>
-
-    <div class="form-group required-control">
-        <label for="isExtraTime">Is extra time: </label>
-        <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
-    </div>
+        <div class="form-group required-control">
+            <label for="isFinished">Is match finished: </label>
+            <input id="isFinished" type="checkbox" name="isFinished" th:checked="*{isFinished}" />
+        </div>
 
 
-    <div class="form-group required-control">
-        <label for="isPenalty">Is penalty: </label>
-        <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
-    </div>
+        <label for="scoreHomeTeam">Enter score of home team: </label>
+        <input type="text" th:field="*{scoreHomeTeam}" id="scoreHomeTeam"/>
+        <div style="color:red" th:if="${#fields.hasErrors('scoreHomeTeam')}" th:errors="*{scoreHomeTeam}">ScoreHomeTeam Error</div>
 
-    <input type="submit" value="Create!"/>
+        <br>
+        <br>
 
-</form>
+        <label for="scoreAwayTeam">Enter score of away team: </label>
+        <input type="text" th:field="*{scoreAwayTeam}" id="scoreAwayTeam"/>
+        <div style="color:red" th:if="${#fields.hasErrors('scoreAwayTeam')}" th:errors="*{scoreAwayTeam}">ScoreAwayTeam Error</div>
+
+        <br>
+        <br>
+
+        <div class="form-group required-control">
+            <label for="isExtraTime">Is extra time: </label>
+            <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
+        </div>
+
+
+        <div class="form-group required-control">
+            <label for="isPenalty">Is penalty: </label>
+            <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
+        </div>
+
+        <input type="submit" value="Create!"/>
+
+    </form>
 
 </div>
 

@@ -3,7 +3,6 @@
 
 <div th:fragment="header">
 
-    <link rel="stylesheet" href="/static/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
@@ -36,7 +35,7 @@
             <div class="nav-link active" sec:authorize="isAuthenticated()"><a sec:authentication="name"></a></div>
             <div class="text-end">
                 <form th:action="@{/logout}" method="POST" class="btn btn-warning me-4">
-                    <input type="submit" value="Log out"/>
+                    <input type="submit" value="Log out" class="button_a"/>
                 </form>
             </div>
         </div>

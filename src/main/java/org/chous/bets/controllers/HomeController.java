@@ -81,22 +81,25 @@ public class HomeController {
     @GetMapping("/fixtures")
     public String fixtures(Model model) {
         UserService.getCurrentPrincipalUserRole(model);
+        List<Stage> stageList = stageDAO.stages();
+        List<Round> roundList = roundDAO.rounds();
+        List<Team> teamList = teamDAO.teams();
 
         List<Match> matchesList = matchDAO.matches();
         matchesList.sort(Match.COMPARE_BY_DATE);
 
-        List<Match> matchesListReversed = matchDAO.matches();
+        List<Match> matchesListReversed = new ArrayList<>(matchesList);
         matchesListReversed.sort(Collections.reverseOrder(Match.COMPARE_BY_DATE));
 
         ArrayList<MatchView> matchViewArrayList = new ArrayList<>();
         for (Match match : matchesList) {
-            matchViewArrayList.add(new MatchView(match, stageDAO.stages(), roundDAO.rounds(), teamDAO.teams()));
+            matchViewArrayList.add(new MatchView(match, stageList, roundList, teamList));
         }
         model.addAttribute("matchViews", matchViewArrayList);
 
         ArrayList<MatchView> matchViewArrayListReversed = new ArrayList<>();
         for (Match match : matchesListReversed) {
-            matchViewArrayListReversed.add(new MatchView(match, stageDAO.stages(), roundDAO.rounds(), teamDAO.teams()));
+            matchViewArrayListReversed.add(new MatchView(match, stageList, roundList, teamList));
         }
         model.addAttribute("matchViewsReversed", matchViewArrayListReversed);
 
@@ -183,9 +186,6 @@ public class HomeController {
 
         List<Match> matches = matchDAO.matches();
         List<Team> teams = teamDAO.teams();
-//        int numberOfHitsOnTheCorrectScore = 0;
-//        int numberOfHitsOnTheMatchResult = 0;
-
 
         PointsService pointsService;
         for (Bet bet : betDAO.bets()) {
@@ -219,14 +219,6 @@ public class HomeController {
                         userAndNumberOfHitsOnTheMatchResultMap.put(userId, numberOfHitsOnTheMatchResult);
                     }
                 }
-
-
-//                if (pointsService.isHitOnTheCorrectScore() && pointsService.getBet().getUserId()) {
-//                    numberOfHitsOnTheCorrectScore++;
-//                }
-//                if (pointsService.isHitOnTheMatchResult()) {
-//                    numberOfHitsOnTheMatchResult++;
-//                }
             }
 
 
@@ -381,6 +373,4 @@ public class HomeController {
 
         return "redirect:/tables";
     }
-
-
 }

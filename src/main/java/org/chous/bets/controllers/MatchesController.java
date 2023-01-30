@@ -4,21 +4,24 @@ import org.chous.bets.dao.MatchDAO;
 import org.chous.bets.dao.RoundDAO;
 import org.chous.bets.dao.StageDAO;
 import org.chous.bets.dao.TeamDAO;
-import org.chous.bets.models.*;
-
-import org.chous.bets.services.PointsService;
+import org.chous.bets.models.Match;
+import org.chous.bets.models.Round;
+import org.chous.bets.models.Stage;
+import org.chous.bets.models.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.validation.Valid;
+
 
 @Controller
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -41,7 +44,7 @@ public class MatchesController {
     @ModelAttribute("teamsList")
     public List<Team> getTeamsList(Model model) {
         List<Team> teams = teamDAO.teams();
-        Collections.sort(teams, Team.Comparators.NAME);
+        teams.sort(Team.Comparators.NAME);
         model.addAttribute("teams", teams);
         return teams;
     }

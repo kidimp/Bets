@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Edit user</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
 </head>
 
@@ -15,34 +15,34 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/users/{username}/edit(username=${user.getUsername()})}" th:object="${user}">
+    <form th:method="POST" th:action="@{/users/{username}/edit(username=${user.getUsername()})}" th:object="${user}">
 
-    <label for="username">Enter username: </label>
-    <input type="text" th:field="*{username}" id="username"/>
-    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
+        <label for="username">Enter username: </label>
+        <input type="text" th:field="*{username}" id="username"/>
+        <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
 
         <div class="form-group required-control">
-        <label for="role">Role: </label>
-        <select id="role" name="role">
-            <option
-                    th:each="role : ${allRoles}"
-                    th:value="${role.name()}"
-                    th:text="${role.name()}"
-                    th:selected="${role.name()}">
-            </option>
-        </select>
+            <label for="role">Role: </label>
+            <select id="role" name="role">
+                <option
+                        th:each="role : ${allRoles}"
+                        th:value="${role.name()}"
+                        th:text="${role.name()}"
+                        th:selected="${role.name()}">
+                </option>
+            </select>
         </div>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <input type="submit" value="Save changes!"/>
+        <input type="submit" value="Save changes!"/>
 
-</form>
+    </form>
 
 </div>
 

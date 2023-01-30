@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Tables - whole tournament</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
 </head>
 
@@ -37,16 +37,20 @@
 
 <div>
 
-    <table class="table table-striped table-bordered table-hover data-table dataTable" style="width:100%" id="DataTables_Table_0"
-           role="grid" aria-describedby="DataTables_Table_0_info">
+    <table class="table table-striped table-bordered table-hover data-table dataTable sortable" style="width:100%; display: block;overflow-x: auto;"
+           id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 
         <thead>
 
         <tr role="row">
+            <th rowspan="2" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
+                aria-label=": сортировать по возрастанию" style="min-width: 50px;text-align: right;">
+            </th>
+
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
                 aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Players</th>
 
-            <th rowspan="2" class="sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
+            <th rowspan="2" class="sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"  id="total-points"
                 aria-label="Total points: сортировать по возрастанию" aria-sort="descending" style="width:55px;text-align: center;">Total points</th>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
@@ -97,6 +101,7 @@
 
         <div th:each="tableRow, iStat : ${tableRows}">
             <tr style="text-align: center;">
+                <td></td>
                 <td th:text="${tableRow.getUser().getUsername()}"></td>
                 <td th:text="${tableRow.getTotalPointsForThisRound()}"></td>
                 <td th:text="${numberOfHitsOnTheCorrectScore.get(iStat.index)}"></td>
@@ -136,6 +141,31 @@
 
 
 <footer th:insert="fragments/footer :: footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable/sortable.min.js"></script>
+
+<script>
+    window.addEventListener('load', function () {
+        const el = document.getElementById('total-points')
+        // without id:
+        // const el = document.querySelector('.sortable th:first-child')
+        // const el = document.querySelector('.sortable th:nth-child(2)')
+        // const el = document.querySelectorAll('.sortable')[3].querySelector('th:nth-child(7)')
+        // etc.
+        if (el) {
+            el.click()
+        }
+
+        var table = document.getElementsByTagName('table')[0],
+            rows = table.getElementsByTagName('tr'),
+            text = 'textContent' in document ? 'textContent' : 'innerText';
+
+        for (var i = 1, len = rows.length; i < len; i++) {
+            rows[i].children[0][text] = i - 1;
+        }
+
+    })
+</script>
 
 </body>
 

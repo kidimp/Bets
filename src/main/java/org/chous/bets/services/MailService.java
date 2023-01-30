@@ -12,7 +12,7 @@ public class MailService {
 
     public void send(String to, String subject, String text) {
 
-        to = "kidminsk@yandex.ru";
+//        to = "kidminsk@yandex.ru";
         String from = "kidimpminsk@gmail.com";
         final String username = "kidimpminsk";
         final String password = "jgpdnhecvehsuwdm";

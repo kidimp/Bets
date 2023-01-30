@@ -27,20 +27,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                    .antMatchers("/", "/registration", "/login", "/fixtures", "/tables/**", "/rules",
-                            "/activate/*", "/reset/*", "/reset-password", "/reset-form/*", "/static/**").permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers("/", "/registration", "/login", "/fixtures", "/tables/**", "/rules",
+                        "/activate/*", "/reset/*", "/reset-password", "/reset-form/*", "/css/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/process_login")
-                    .defaultSuccessUrl("/", true)
-                    .failureUrl("/login?error")
-                    .usernameParameter("email")
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/process_login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error")
+                .usernameParameter("email")
                 .and()
-                    .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login");
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login");
     }
 
     @Override

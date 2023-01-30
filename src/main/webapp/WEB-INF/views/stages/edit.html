@@ -6,7 +6,7 @@
     <title>Edit stage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
 </head>
 
@@ -16,18 +16,18 @@
 
 <div class="container mt-5">
 
-<form th:method="POST" th:action="@{/stages/{id}/edit(id=${stage.getId()})}" th:object="${stage}">
+    <form th:method="POST" th:action="@{/stages/{id}/edit(id=${stage.getId()})}" th:object="${stage}">
 
-    <label for="name">Enter name: </label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+        <label for="name">Enter name: </label>
+        <input type="text" th:field="*{name}" id="name"/>
+        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
-    <input type="submit" value="Save changes!"/>
+        <input type="submit" value="Save changes!"/>
 
-</form>
+    </form>
 
 </div>
 

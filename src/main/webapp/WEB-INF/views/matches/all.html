@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Matches</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="/static/style.css">
-<!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
+    <link rel="stylesheet" href="/css/style.css">
+    <!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
 </head>
 
 <body>
@@ -58,17 +58,17 @@
             </td>
 
             <td style="text-align:right; width:10%">
-            <div th:each="team : ${teamsList}">
-            <a th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
-            </div>
+                <div th:each="team : ${teamsList}">
+                    <a th:if="${(match.getHomeTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
+                </div>
             </td>
 
             <td style="text-align:center; width:1%"><a th:text="':'">match</a></td>
 
             <td style="text-align:left; width:10%">
-            <div th:each="team : ${teamsList}">
-            <a th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
-            </div>
+                <div th:each="team : ${teamsList}">
+                    <a th:if="${(match.getAwayTeamId() == team.getId())}" th:text="${team.getName()}">match</a>
+                </div>
             </td>
 
 
