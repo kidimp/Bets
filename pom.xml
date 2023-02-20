@@ -23,7 +23,7 @@
 
 
     <properties>
-        <java.version>11</java.version>
+        <java.runtime.version>11</java.runtime.version>
 
         <spring.version>5.3.23</spring.version>
 
