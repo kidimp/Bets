@@ -157,8 +157,6 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -166,10 +164,17 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 
     <build>
+        <finalName>bets-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
