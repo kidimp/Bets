@@ -24,7 +24,7 @@
 
 <div class="container mt-5">
 
-    <form th:method="POST" th:action="@{/reset-form/{token}(token=${token})}" >
+    <form th:method="POST" th:action="@{~/reset-form/{token}(token=${token})}" >
         <input type="hidden" name="token" th:value="${token}" />
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 

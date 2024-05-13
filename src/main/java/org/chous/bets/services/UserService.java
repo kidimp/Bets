@@ -24,14 +24,21 @@ public class UserService implements UserDetailsService {
         UserService.usersRepository = usersRepository;
     }
 
+    UsersRepository getUsersRepository() {
+        return usersRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = usersRepository.findByEmail(email);
 
-        if (user.isEmpty()) {
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException("User not found");
         }
+
+//        if (user.isEmpty()) {
+//            throw new UsernameNotFoundException("User not found");
+//        }
 
         return new UsrDetails(user.get());
     }

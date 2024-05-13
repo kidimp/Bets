@@ -41,7 +41,7 @@ public class RegistrationService {
             String subject = "Please activate your account";
             String text = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to Bets. Please, visit next link to activate your account: http://localhost:8080/activate/%s",
+                            "Welcome to Bets. Please, visit next link to activate your account: http://bets.pras.by/activate/%s",
                     user.getUsername(), user.getActivationCode()
             );
 
@@ -72,7 +72,7 @@ public class RegistrationService {
     public void updateResetPasswordToken(String email) {
         Optional<User> user = usersRepository.findByEmail(email);
 
-        if (user.isEmpty()) {
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException("User not found");
         }
 
@@ -82,7 +82,7 @@ public class RegistrationService {
             String subject = "Please set a new password for your account";
             String text = String.format(
                     "Hello, %s! \n" +
-                            "Please visit next link to set a new password for your account: http://localhost:8080/reset-form/%s",
+                            "Please visit next link to set a new password for your account: http://bets.pras.by/reset-form/%s",
                     user.get().getUsername(), user.get().getResetPasswordToken()
             );
 
