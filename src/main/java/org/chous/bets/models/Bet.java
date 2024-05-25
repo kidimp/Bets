@@ -6,10 +6,10 @@ public class Bet {
     private int id;
     private int userId;
     private int matchId;
-    @Min(value = 0, message = "Value cannot be negative")
+    @Min(value = 0, message = "Значение не может быть отрицательным")
 //    @NotEmpty(message = "Value cannot be empty")
     private int scoreHomeTeam;
-    @Min(value = 0, message = "Value cannot be negative")
+    @Min(value = 0, message = "Значение не может быть отрицательным")
 //    @NotBlank(message = "Value cannot be empty")
     private int scoreAwayTeam;
     private boolean isExtraTime;

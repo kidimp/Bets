@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Fixtures</title>
+    <title>Матчи</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="/css/style.css">
     <!--    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>-->
@@ -23,7 +23,7 @@
 
 
 <h5 style="margin-left: 100px">
-    Following fixtures
+    Будущие матчи
 </h5>
 
 <br>
@@ -31,12 +31,12 @@
 <table class="table table-hover" style="width:100%">
     <thead>
     <tr>
-        <th scope="col" style="text-align:center; width:14%">Date</th>
-        <th scope="col" style="text-align:center; width:10%">Round</th>
-        <th scope="col" style="text-align:center; width:10%">Stage</th>
-        <th colspan="3" style="text-align:center; width:22%">Teams</th>
-        <th scope="col" style="text-align:center; width:14%">Score</th>
-        <th scope="col" style="text-align:center; width:14%">Bet</th>
+        <th scope="col" style="text-align:center; width:14%">Дата</th>
+        <th scope="col" style="text-align:center; width:10%">Раунд</th>
+        <th scope="col" style="text-align:center; width:10%">Стадия</th>
+        <th colspan="3" style="text-align:center; width:22%">Команды</th>
+        <th scope="col" style="text-align:center; width:14%">Счёт</th>
+        <th scope="col" style="text-align:center; width:14%">Ставка</th>
         <th scope="col" style="width:16%"></th>
     </tr>
     </thead>
@@ -46,7 +46,7 @@
     <div th:each="matchView : ${matchViews}">
         <tr th:if="${(matchView.getMatch().isFinished() == false)}">
             <td style="text-align:center;"><a th:text="${matchView.getMatch().getDateInStr()}"></a></td>
-            <td style="text-align:center;"><a th:text="${matchView.getRound() + ' round'}"></a></td>
+            <td style="text-align:center;"><a th:text="${matchView.getRound() + ' раунд'}"></a></td>
             <td style="text-align:center;"><a th:text="${matchView.getStage()}"></a></td>
             <td style="text-align:right;"><a th:text="${matchView.getHomeTeam()}"></a></td>
             <td style="text-align:center;"><a th:text="' : '"></a></td>
@@ -75,7 +75,7 @@
 
 
 <h5 style="margin-left: 100px">
-    Finished matches
+    Завершённые матчи
 </h5>
 
 <br>
@@ -83,12 +83,12 @@
 <table class="table table-hover" style="width:100%">
     <thead>
     <tr>
-        <th scope="col" style="text-align:center; width:14%">Date</th>
-        <th scope="col" style="text-align:center; width:10%">Round</th>
-        <th scope="col" style="text-align:center; width:10%">Stage</th>
-        <th colspan="3" style="text-align:center; width:22%">Teams</th>
-        <th scope="col" style="text-align:center; width:14%">Score</th>
-        <th scope="col" style="text-align:center; width:14%">Bet</th>
+        <th scope="col" style="text-align:center; width:14%">Дата</th>
+        <th scope="col" style="text-align:center; width:10%">Раунд</th>
+        <th scope="col" style="text-align:center; width:10%">Стадия</th>
+        <th colspan="3" style="text-align:center; width:22%">Команды</th>
+        <th scope="col" style="text-align:center; width:14%">Счёт</th>
+        <th scope="col" style="text-align:center; width:14%">Ставка</th>
         <th scope="col" style="width:16%"></th>
     </tr>
     </thead>
@@ -98,7 +98,7 @@
     <div th:each="matchView : ${matchViewsReversed}">
         <tr th:if="${(matchView.getMatch().isFinished() == true)}">
             <td style="text-align:center;"><a th:text="${matchView.getMatch().getDateInStr()}"></a></td>
-            <td style="text-align:center;"><a th:text="${matchView.getRound() + ' round'}"></a></td>
+            <td style="text-align:center;"><a th:text="${matchView.getRound() + ' раунд'}"></a></td>
             <td style="text-align:center;"><a th:text="${matchView.getStage()}"></a></td>
             <td style="text-align:right;"><a th:text="${matchView.getHomeTeam()}"></a></td>
             <td style="text-align:center;"><a th:text="' : '"></a></td>

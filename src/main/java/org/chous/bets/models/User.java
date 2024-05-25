@@ -12,12 +12,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters long")
+    @Size(min = 2, max = 100, message = "Имя должно содержать от 2 до 100 символов")
     private String username;
-    @Size(min = 1, message = "Email must not be empty")
-    @Email(message = "Email must be valid")
+    @Size(min = 1, message = "Электронная почта не должна быть пустой")
+    @Email(message = "Электронная почта должна быть действительной")
     private String email;
-    @Size(min = 3, message = "Password must be at least three characters long")
+    @Size(min = 3, message = "Пароль должен состоять не менее чем из трех символов")
     private String password;
     private String role;
     private boolean isActive;

@@ -1,5 +1,6 @@
 package org.chous.bets.services;
 
+import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -7,10 +8,127 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+import okhttp3.*;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class MailService {
+    private final String HOST_NAME = "http://mailer.pras.by";
+    private final String APP_NAME = "pras.by";
+    private final String APP_PASSWORD = "PasswordPrasBy";
+    private final String MEDIA_TYPE_UTF8 = "application/json; charset=utf-8";
+    private volatile String token = "";
+
+    public void getToken() {
+        OkHttpClient client = new OkHttpClient();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("login", APP_NAME);
+        jsonObject.put("password", APP_PASSWORD);
+
+        RequestBody body = RequestBody.create(
+                jsonObject.toString(), MediaType.get(MEDIA_TYPE_UTF8));
+
+        Request request = new Request.Builder()
+                .url(HOST_NAME +"/token")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String tokenObject = response.body().string();
+
+                //System.out.println("Response Code: " + response.code());
+                //System.out.println("Response Body: " + tokenObject);
+
+                parseToken(tokenObject);
+                sendMessageToServer();
+            }
+        });
+    }
+
+    public void parseToken(String tokenObject) {
+        token = "";
+
+        JSONObject object = new JSONObject(tokenObject);
+        token = object.get("accessToken").toString();
+    }
+
+    public void sendMessageToServer() {
+
+    }
 
     public void send(String to, String subject, String text) {
+        CompletableFuture.runAsync(() -> {
+
+        getToken();
+        //CompletableFuture.supplyAsync(() -> getToken()).thenAccept(result -> {
+
+        while (token.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+            OkHttpClient client = new OkHttpClient();
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("clientName", APP_NAME);
+            jsonObject.put("clientMessageId", "abc30");
+            jsonObject.put("recipients", to);
+            jsonObject.put("subject", subject);
+            jsonObject.put("body", text);
+
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(jsonObject);
+
+            RequestBody body = RequestBody.create(
+                    jsonArray.toString(), MediaType.get(MEDIA_TYPE_UTF8));
+
+            Request request = new Request.Builder()
+                    .url(HOST_NAME +"/add")
+                    .header("Authorization", "Bearer " + token)
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    }
+
+                    //System.out.println("Response Code: " + response.code());
+                    //System.out.println("Response Body: " + response.body().string());
+                }
+            });
+
+
+        }).thenRun(() -> System.out.println("Готово!"));
+            /* обработка результата */// });
+    }
+
+/*    public void send(String to, String subject, String text) {
 
 //        to = "kidminsk@yandex.ru";
         String from = "kidimpminsk@gmail.com";
@@ -37,16 +155,16 @@ public class MailService {
 
 
         try {
-            Message message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress(from));
 
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(to));
 
-            message.setSubject(subject);
+            message.setSubject(subject, "UTF-8");
 
-            message.setText(text);
+            message.setText(text, "UTF-8");
 
 //            setAttachment(message, "/Users/pras/Desktop/text.txt");
 
@@ -57,8 +175,7 @@ public class MailService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-    }
-
+    }*/
 
 
 //    public static void setAttachment(Message message, String filename) throws MessagingException {

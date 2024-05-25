@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,10 +39,11 @@ public class RegistrationService {
         user.setActivationCode(UUID.randomUUID().toString());
 
         if (!StringUtils.isEmpty(user.getEmail())) {
-            String subject = "Please activate your account";
+            String subject = "Пожалуйста, активируйте ваш аккаунт";
             String text = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome to Bets. Please, visit next link to activate your account: http://bets.pras.by/activate/%s",
+                    "Привет, %s! \n" +
+                            "Добро пожаловать в Bets. Пожалуйста, перейдите по этой ссылке, " +
+                            "чтобы активировать ваш аккаунт: http://bets.pras.by/activate/%s",
                     user.getUsername(), user.getActivationCode()
             );
 
@@ -79,10 +81,11 @@ public class RegistrationService {
         user.get().setResetPasswordToken(UUID.randomUUID().toString());
 
         if (!StringUtils.isEmpty(user.get().getEmail())) {
-            String subject = "Please set a new password for your account";
+            String subject = "Пожалуйста, установите новый пароль для вашей учетной записи";
             String text = String.format(
-                    "Hello, %s! \n" +
-                            "Please visit next link to set a new password for your account: http://bets.pras.by/reset-form/%s",
+                    "Привет, %s! \n" +
+                            "Пожалуйста, перейдите по этой ссылке, чтобы установить новый пароль" +
+                            " для вашей учетной записи: http://bets.pras.by/reset-form/%s",
                     user.get().getUsername(), user.get().getResetPasswordToken()
             );
 
@@ -104,11 +107,10 @@ public class RegistrationService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetPasswordToken(null);
 
         usersRepository.save(user);
     }
-
 
 }

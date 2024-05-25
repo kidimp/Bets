@@ -33,10 +33,6 @@ public class HomeController {
     private final BetDAO betDAO;
     private final ExtraPointsDAO extraPointsDAO;
     private final UsersRepository usersRepository;
-    private HashMap<Integer, Integer> userAndNumberOfHitsOnTheCorrectScoreMap = new HashMap<>();
-    private HashMap<Integer, Integer> userAndNumberOfHitsOnTheMatchResultMap = new HashMap<>();
-    int numberOfHitsOnTheCorrectScore = 0;
-    int numberOfHitsOnTheMatchResult = 0;
 
 
     @Autowired
@@ -186,6 +182,16 @@ public class HomeController {
 
         List<Match> matches = matchDAO.matches();
         List<Team> teams = teamDAO.teams();
+        List<User> users = usersRepository.findAllActiveUsers();
+
+        HashMap<Integer, Integer> userAndNumberOfHitsOnTheCorrectScoreMap = new HashMap<>();
+        for (User user : users) {
+            userAndNumberOfHitsOnTheCorrectScoreMap.put(user.getId(), 0);
+        }
+        HashMap<Integer, Integer> userAndNumberOfHitsOnTheMatchResultMap = new HashMap<>();
+        for (User user : users) {
+            userAndNumberOfHitsOnTheMatchResultMap.put(user.getId(), 0);
+        }
 
         PointsService pointsService;
         for (Bet bet : betDAO.bets()) {
@@ -202,21 +208,19 @@ public class HomeController {
 
                 if (pointsService.isHitOnTheCorrectScore()) {
                     if (userAndNumberOfHitsOnTheCorrectScoreMap.containsKey(userId)) {
-                        numberOfHitsOnTheCorrectScore = userAndNumberOfHitsOnTheCorrectScoreMap.get(userId) + 1;
+                        int numberOfHitsOnTheCorrectScore = userAndNumberOfHitsOnTheCorrectScoreMap.get(userId) + 1;
                         userAndNumberOfHitsOnTheCorrectScoreMap.replace(userId, numberOfHitsOnTheCorrectScore);
                     } else {
-                        numberOfHitsOnTheCorrectScore = 1;
-                        userAndNumberOfHitsOnTheCorrectScoreMap.put(userId, numberOfHitsOnTheCorrectScore);
+                        userAndNumberOfHitsOnTheCorrectScoreMap.put(userId, 1);
                     }
                 }
 
                 if (pointsService.isHitOnTheMatchResult()) {
                     if (userAndNumberOfHitsOnTheMatchResultMap.containsKey(userId)) {
-                        numberOfHitsOnTheMatchResult = userAndNumberOfHitsOnTheMatchResultMap.get(userId) + 1;
+                        int numberOfHitsOnTheMatchResult = userAndNumberOfHitsOnTheMatchResultMap.get(userId) + 1;
                         userAndNumberOfHitsOnTheMatchResultMap.replace(userId, numberOfHitsOnTheMatchResult);
                     } else {
-                        numberOfHitsOnTheMatchResult = 1;
-                        userAndNumberOfHitsOnTheMatchResultMap.put(userId, numberOfHitsOnTheMatchResult);
+                        userAndNumberOfHitsOnTheMatchResultMap.put(userId, 1);
                     }
                 }
             }
@@ -225,15 +229,16 @@ public class HomeController {
             bet.setPoints(points);
             betDAO.updatePoints(bet.getId(), bet);
 
-            if (extraPointsDAO.showByUser(bet.getUserId()) != null) {
-                extraPointsDAO.updateNumberOfHitsOnTheCorrectScoreAndNumberOfHitsOnTheMatchResult(bet.getUserId(), numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult);
-            } else {
-                extraPointsDAO.saveExtraPointsByUser(bet.getUserId(), new ExtraPoints());
-                extraPointsDAO.updateNumberOfHitsOnTheCorrectScoreAndNumberOfHitsOnTheMatchResult(bet.getUserId(), numberOfHitsOnTheCorrectScore, numberOfHitsOnTheMatchResult);
-            }
         }
 
-        List<User> users = usersRepository.findAll();
+        for (Map.Entry<Integer, Integer> entry : userAndNumberOfHitsOnTheCorrectScoreMap.entrySet()) {
+            int userId = entry.getKey();
+            int correctScore = entry.getValue();
+            int matchResult = userAndNumberOfHitsOnTheMatchResultMap.get(userId);
+            extraPointsDAO.updateNumberOfHitsOnTheCorrectScoreAndNumberOfHitsOnTheMatchResult(userId, correctScore, matchResult);
+        }
+
+
         int winningTeamId = 0;
         int secondTeamId = 0;
         try {

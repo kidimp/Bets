@@ -21,17 +21,17 @@
 </header>
 
 <h5 style="margin-left: 100px">
-    Tables and statistics
+    Таблицы и статистика
 </h5>
 
 <br>
 
-<a href="/tables" style="margin-left: 50px">General table </a>
-<a href="/tables/first_round" style="margin-left: 50px">First round </a>
-<a href="/tables/second_round" style="margin-left: 50px">Second round </a>
-<a href="/tables/third_round" style="margin-left: 50px">Third round </a>
-<a style="margin-left: 50px">Knockout stage </a>
-<a href="/tables/whole_tournament" style="margin-left: 50px">Whole tournament </a>
+<a href="/tables" style="margin-left: 50px">Общая таблица </a>
+<a href="/tables/first_round" style="margin-left: 50px">Первый раунд </a>
+<a href="/tables/second_round" style="margin-left: 50px">Второй раунд </a>
+<a href="/tables/third_round" style="margin-left: 50px">Третий раунд </a>
+<a style="margin-left: 50px">Нокаут-стадия </a>
+<a href="/tables/whole_tournament" style="margin-left: 50px">Весь турнир </a>
 
 <br><br>
 
@@ -48,10 +48,10 @@
             </th>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Players</th>
+                aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Игроки</th>
 
             <th rowspan="2" class="sorting_desc" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"  id="total-points"
-                aria-label="Total points: сортировать по возрастанию" aria-sort="descending" style="width:55px;text-align: center;">Total points</th>
+                aria-label="Total points: сортировать по возрастанию" aria-sort="descending" style="width:55px;text-align: center;">Всего очков</th>
 
             <div th:each="matchView : ${matchViews}">
                 <th colspan="2" rowspan="1" style="text-align: center;">
@@ -66,17 +66,17 @@
             </div>
 
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label="Total points: сортировать по возрастанию" style="width:55px;text-align: center;">Total points</th>
+                aria-label="Total points: сортировать по возрастанию" style="width:55px;text-align: center;">Всего очков</th>
             <th rowspan="2" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" colspan="1"
-                aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Players</th>
+                aria-label=": сортировать по возрастанию" style="width: 200px;text-align: center;">Игроки</th>
         </tr>
 
         <tr role="row">
             <div th:each="matchView : ${matchViews}">
                 <td data-orderable="false" class="sorting_disabled" rowspan="1" colspan="1" aria-label="Bet"
-                    style="min-width:65px;text-align: center;">Bet</td>
+                    style="min-width:65px;text-align: center;">Ставка</td>
                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
-                    aria-label="Points: сортировать по возрастанию" style="min-width:65px;text-align: center;">Points</th>
+                    aria-label="Points: сортировать по возрастанию" style="min-width:65px;text-align: center;">Очки</th>
             </div>
         </tr>
 

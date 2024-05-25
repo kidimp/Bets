@@ -36,9 +36,15 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
-//        if (user.isEmpty()) {
-//            throw new UsernameNotFoundException("User not found");
-//        }
+        return new UsrDetails(user.get());
+    }
+
+    public UserDetails loadUserByName(String name) throws UsernameNotFoundException {
+        Optional<User> user = usersRepository.findByUsername(name);
+
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
         return new UsrDetails(user.get());
     }
@@ -46,15 +52,15 @@ public class UserService implements UserDetailsService {
 
     public static void getCurrentPrincipalUserRole(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
+        String email;
         if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
+            email = ((UserDetails) principal).getUsername();
         } else {
-            username = principal.toString();
+            email = principal.toString();
         }
 
-        if (usersRepository.findByUsername(username).isPresent()) {
-            model.addAttribute("role", usersRepository.findByUsername(username).get().getRole());
+        if (usersRepository.findByEmail(email).isPresent()) {
+            model.addAttribute("role", usersRepository.findByEmail(email).get().getRole());
         } else {
             model.addAttribute("role", "ROLE_USER");
         }

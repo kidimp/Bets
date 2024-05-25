@@ -36,7 +36,7 @@
         <table style="width:220pt;">
             <tr style="height:30pt;">
                 <td colspan="5" style="text-align:center;">
-                    <h5>Bet</h5>
+                    <h5>Ставка</h5>
                 </td>
             </tr>
 
@@ -76,14 +76,14 @@
                 <div th:if="${round == 4}">
                     <td colspan="2" style="text-align:center;">
                         <div class="form-group required-control">
-                            <label for="isExtraTime">Extra time</label>
+                            <label for="isExtraTime">Экстра-тайм</label>
                             <input id="isExtraTime" type="checkbox" name="isExtraTime" th:checked="*{isExtraTime}" />
                         </div>
                     </td>
                     <td></td>
                     <td colspan="2" style="text-align:center;">
                         <div class="form-group required-control">
-                            <label for="isPenalty">Penalty</label>
+                            <label for="isPenalty">Пенальти</label>
                             <input id="isPenalty" type="checkbox" name="isPenalty" th:checked="*{isPenalty}" />
                         </div>
                     </td>
@@ -92,7 +92,7 @@
 
         </table>
 
-        <input type="submit" value="Make bet!"/>
+        <input type="submit" value="Сделать ставку!"/>
 
     </form>
 </div>
