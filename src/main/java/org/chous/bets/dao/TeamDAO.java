@@ -31,13 +31,13 @@ public class TeamDAO {
 
 
     public void save(Team team) {
-        jdbcTemplate.update("INSERT INTO teams (name, pot) VALUES (?, ?)", team.getName(), team.getPot());
+        jdbcTemplate.update("INSERT INTO teams (name, isoName, pot) VALUES (?, ?, ?)", team.getName(), team.getIsoName(), team.getPot());
     }
 
 
     public void update(int id, Team updatedTeam) {
-        jdbcTemplate.update("UPDATE teams SET name=?, pot=? WHERE id=?",
-                updatedTeam.getName(), updatedTeam.getPot(), id);
+        jdbcTemplate.update("UPDATE teams SET name=?, isoName=?, pot=? WHERE id=?",
+                updatedTeam.getName(), updatedTeam.getIsoName(), updatedTeam.getPot(), id);
     }
 
 

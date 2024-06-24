@@ -26,14 +26,14 @@ public class UsersController {
     }
 
 
-    @GetMapping("users/all")
+    @GetMapping("/admin/users")
     public String users(Model model, @ModelAttribute("user") @Valid User user) {
         model.addAttribute("users", usersRepository.findAll());
-        return "users/all";
+        return "/users/all";
     }
 
 
-    @GetMapping("/users/{username}/edit")
+    @GetMapping("/admin/users/{username}/edit")
     public String edit(Model model, @PathVariable String username) {
 
         if (usersRepository.findByUsername(username).isPresent()) {
@@ -46,11 +46,11 @@ public class UsersController {
 
         model.addAttribute("allRoles", roles);
 
-        return "users/edit";
+        return "/users/edit";
     }
 
 
-    @PostMapping("users/{username}/edit")
+    @PostMapping("/admin/users/{username}/edit")
     public String update(Model model, @ModelAttribute("user") @Valid User user, BindingResult bindingResult,
                          @PathVariable("username") String username) {
 
@@ -76,7 +76,7 @@ public class UsersController {
 
         usersRepository.save(userToChange);
 
-        return "redirect:/users/all";
+        return "redirect:/admin/users";
     }
 
 }

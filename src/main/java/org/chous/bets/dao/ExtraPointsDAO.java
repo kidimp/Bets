@@ -53,7 +53,6 @@ public class ExtraPointsDAO {
         jdbcTemplate.update("UPDATE extra_points_by_user SET teamId=? WHERE userId=?", teamId, userId);
     }
 
-
     public void updateExtraPointsByUser(int userId, double extraPoints) {
         jdbcTemplate.update("UPDATE extra_points_by_user SET extraPoints=? WHERE userId=?", extraPoints, userId);
     }

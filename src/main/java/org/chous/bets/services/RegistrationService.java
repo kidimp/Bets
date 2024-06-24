@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -39,11 +40,14 @@ public class RegistrationService {
         user.setActivationCode(UUID.randomUUID().toString());
 
         if (!StringUtils.isEmpty(user.getEmail())) {
+            //Атрымаць фактычны url без залежнасці ад размяшчэння сайта.
+            final String baseUrl = "https://bets.pras.by";//ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
             String subject = "Пожалуйста, активируйте ваш аккаунт";
             String text = String.format(
                     "Привет, %s! \n" +
                             "Добро пожаловать в Bets. Пожалуйста, перейдите по этой ссылке, " +
-                            "чтобы активировать ваш аккаунт: http://bets.pras.by/activate/%s",
+                            "чтобы активировать ваш аккаунт: " +baseUrl +"/activate/%s",
                     user.getUsername(), user.getActivationCode()
             );
 
@@ -81,11 +85,14 @@ public class RegistrationService {
         user.get().setResetPasswordToken(UUID.randomUUID().toString());
 
         if (!StringUtils.isEmpty(user.get().getEmail())) {
+            //Атрымаць фактычны url без залежнасці ад размяшчэння сайта.
+            final String baseUrl = "https://bets.pras.by";//ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
             String subject = "Пожалуйста, установите новый пароль для вашей учетной записи";
             String text = String.format(
                     "Привет, %s! \n" +
                             "Пожалуйста, перейдите по этой ссылке, чтобы установить новый пароль" +
-                            " для вашей учетной записи: http://bets.pras.by/reset-form/%s",
+                            " для вашей учётной записи: " +baseUrl +"/reset-form/%s",
                     user.get().getUsername(), user.get().getResetPasswordToken()
             );
 
@@ -102,8 +109,8 @@ public class RegistrationService {
 
 
     public void updatePassword(User user, String newPassword) {
-
         if (user == null) {
+            //TODO: дадаць апрацоўку exception у кантролере пры скідзе пароля
             throw new UsernameNotFoundException("User not found");
         }
 

@@ -5,7 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class ExtraPoints {
-    @DateTimeFormat(pattern = "dd.MM.yyy HH:mm")
+//    @DateTimeFormat(pattern = "dd.MM.yyy HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date dateAndTime;
     private int winningTeamId;
     private int secondPlaceTeamId;

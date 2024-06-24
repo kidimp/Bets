@@ -25,7 +25,7 @@ public class RoundsController {
     }
 
 
-    @GetMapping("rounds/all")
+    @GetMapping("/admin/rounds")
     public String rounds(Model model) {
 
         model.addAttribute("rounds", roundDAO.rounds());
@@ -33,13 +33,13 @@ public class RoundsController {
     }
 
 
-    @GetMapping("rounds/new")
+    @GetMapping("/admin/rounds/new")
     public String newRound(@ModelAttribute("round") Round round) {
         return "rounds/new";
     }
 
 
-    @PostMapping("/rounds")
+    @PostMapping("/admin/rounds/new")
     public String create(@ModelAttribute("round") @Valid Round round, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -47,11 +47,11 @@ public class RoundsController {
         }
 
         roundDAO.save(round);
-        return "redirect:/rounds/all";
+        return "redirect:/admin/rounds";
     }
 
 
-    @GetMapping("/rounds/{id}/edit")
+    @GetMapping("/admin/rounds/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
 
         model.addAttribute("round", roundDAO.show(id));
@@ -59,7 +59,7 @@ public class RoundsController {
     }
 
 
-    @PostMapping("rounds/{id}/edit")
+    @PostMapping("/admin/rounds/{id}/edit")
     public String update(@ModelAttribute("round") @Valid Round round, BindingResult bindingResult,
                          @PathVariable("id") int id) {
 
@@ -68,22 +68,22 @@ public class RoundsController {
         }
 
         roundDAO.update(id, round);
-        return "redirect:/rounds/all";
+        return "redirect:/admin/rounds";
     }
 
 
-    @GetMapping("/rounds/{id}/delete")
+    /*@GetMapping("/admin/rounds/{id}/delete")
     public String delete(Model model, @PathVariable("id") int id) {
 
         model.addAttribute("round", roundDAO.show(id));
         return "rounds/delete";
-    }
+    }*/
 
 
-    @PostMapping("rounds/{id}/delete")
+    @PostMapping("/admin/rounds/{id}/delete")
     public String deleteRound(@PathVariable("id") int id) {
 
         roundDAO.delete(id);
-        return "redirect:/rounds/all";
+        return "redirect:/admin/rounds";
     }
 }

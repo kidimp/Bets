@@ -42,23 +42,23 @@ public class MatchView {
     }
 
 
-    public String getHomeTeam() {
+    public Team getHomeTeam() {
         for (Team team : teamList) {
             if (team.getId() == match.getHomeTeamId()) {
-                return team.getName();
+                return team;
             }
         }
-        return "team not found";
+        return null;
     }
 
 
-    public String getAwayTeam() {
+    public Team getAwayTeam() {
         for (Team team : teamList) {
             if (team.getId() == match.getAwayTeamId()) {
-                return team.getName();
+                return team;
             }
         }
-        return "team not found";
+        return null;
     }
 
 

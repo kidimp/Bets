@@ -25,7 +25,7 @@ public class StagesController {
     }
 
 
-    @GetMapping("stages/all")
+    @GetMapping("/admin/stages")
     public String stages(Model model) {
 
         model.addAttribute("stages", stageDAO.stages());
@@ -33,13 +33,13 @@ public class StagesController {
     }
 
 
-    @GetMapping("stages/new")
+    @GetMapping("/admin/stages/new")
     public String newStage(@ModelAttribute("stage") Stage stage) {
         return "stages/new";
     }
 
 
-    @PostMapping("/stages")
+    @PostMapping("/admin/stages/new")
     public String create(@ModelAttribute("stage") @Valid Stage stage, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -47,11 +47,11 @@ public class StagesController {
         }
 
         stageDAO.save(stage);
-        return "redirect:/stages/all";
+        return "redirect:/admin/stages";
     }
 
 
-    @GetMapping("/stages/{id}/edit")
+    @GetMapping("/admin/stages/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
 
         model.addAttribute("stage", stageDAO.show(id));
@@ -59,7 +59,7 @@ public class StagesController {
     }
 
 
-    @PostMapping("stages/{id}/edit")
+    @PostMapping("/admin/stages/{id}/edit")
     public String update(@ModelAttribute("stage") @Valid Stage stage, BindingResult bindingResult,
                          @PathVariable("id") int id) {
 
@@ -68,22 +68,22 @@ public class StagesController {
         }
 
         stageDAO.update(id, stage);
-        return "redirect:/stages/all";
+        return "redirect:/admin/stages";
     }
 
 
-    @GetMapping("/stages/{id}/delete")
+    /*@GetMapping("/admin/stages/{id}/delete")
     public String delete(Model model, @PathVariable("id") int id) {
 
         model.addAttribute("stage", stageDAO.show(id));
         return "stages/delete";
-    }
+    }*/
 
 
-    @PostMapping("stages/{id}/delete")
+    @PostMapping("/admin/stages/{id}/delete")
     public String deleteStage(@PathVariable("id") int id) {
 
         stageDAO.delete(id);
-        return "redirect:/stages/all";
+        return "redirect:/admin/stages";
     }
 }

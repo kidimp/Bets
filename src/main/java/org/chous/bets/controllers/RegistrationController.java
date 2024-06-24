@@ -3,6 +3,7 @@ package org.chous.bets.controllers;
 import org.chous.bets.models.User;
 import org.chous.bets.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,11 +60,9 @@ public class RegistrationController {
         boolean isActivated = registrationService.activateUser(code);
 
         if (isActivated) {
-            model.addAttribute("message", "User successfully activated!");
-            System.out.println("User is activated!");
+            model.addAttribute("message", "Вы подтвердили email. Теперь входите :)");
         } else {
-            model.addAttribute("message", "Activation code is not found!");
-            System.out.println("Activation code is not found!");
+            model.addAttribute("message", "Активационный код не найден или просрочен. Попробуйте восстановить пароль ещё раз");
         }
 
         return "auth/login";
@@ -113,11 +112,20 @@ public class RegistrationController {
             return "auth/reset-form" ;
         }
 
-        registrationService.updatePassword(user, password);
-
-        model.addAttribute("message", "You have successfully changed your password.");
+        try {
+            registrationService.updatePassword(user, password);
+            model.addAttribute("message", "Вы успешно сбросили пароль");
+        }
+        catch(UsernameNotFoundException ex) {
+            model.addAttribute("message", "Время действия ссылки на восстановление пароля истекло. Попробуйте ещё раз.");
+        }
 
         return "auth/login";
+    }
+
+    @GetMapping("/profile")
+    public String profilePage(@ModelAttribute("user") User user){
+        return "profile";
     }
 
 }

@@ -4,6 +4,8 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth/reset-form.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/auth" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/fixtures.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/fragments/headerAdmin.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/fragments" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/tables.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users/edit.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users" />
       </map>

@@ -29,6 +29,11 @@ public class BetDAO {
         return jdbcTemplate.query("SELECT * FROM bets", new BeanPropertyRowMapper<>(Bet.class));
     }
 
+    public List<Bet> betsByUser(int userId) {
+        return jdbcTemplate.query("SELECT * FROM bets WHERE userId=?", new Object[]{userId},
+                new BeanPropertyRowMapper<>(Bet.class));
+    }
+
 
     public Bet show(int userId, int matchId) {
         return jdbcTemplate.query("SELECT * FROM bets WHERE userId=? AND matchId=?;", new Object[]{userId, matchId},
