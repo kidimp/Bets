@@ -1,11 +1,14 @@
 package org.chous.bets.services;
 
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Arrays;
 import java.util.Properties;
 
 import okhttp3.*;
@@ -16,11 +19,15 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class MailService {
-    private final String HOST_NAME = "http://mailer.pras.by";
+    private final String HOST_NAME = "https://mailer.pras.by";
     private final String APP_NAME = "pras.by";
+    private final String SENDER = "BETS - ставки";
     private final String APP_PASSWORD = "PasswordPrasBy";
     private final String MEDIA_TYPE_UTF8 = "application/json; charset=utf-8";
     private volatile String token = "";
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     public void getToken() {
         OkHttpClient client = new OkHttpClient();
@@ -40,12 +47,14 @@ public class MailService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                logger.error("Failed to get Token: {}", e.getMessage());
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
+                    logger.error("Failed to get Token. Unexpected code: {}", response);
                     throw new IOException("Unexpected code " + response);
                 }
 
@@ -74,6 +83,7 @@ public class MailService {
     public void send(String to, String subject, String text) {
         CompletableFuture.runAsync(() -> {
 
+        token = "";
         getToken();
         //CompletableFuture.supplyAsync(() -> getToken()).thenAccept(result -> {
 
@@ -89,7 +99,8 @@ public class MailService {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("clientName", APP_NAME);
-            jsonObject.put("clientMessageId", "abc30");
+            jsonObject.put("clientMessageId", "none");
+            jsonObject.put("sender", SENDER);
             jsonObject.put("recipients", to);
             jsonObject.put("subject", subject);
             jsonObject.put("body", text);
@@ -109,12 +120,13 @@ public class MailService {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to send email to {}: {}", to, e.getMessage(), e);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful()) {
+                        logger.error("Failed to send email to {}: Unexpected code {}", to, response);
                         throw new IOException("Unexpected code " + response);
                     }
 

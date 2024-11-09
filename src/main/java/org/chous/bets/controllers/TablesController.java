@@ -12,18 +12,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
 public class TablesController {
     private final BetDAO betDAO;
+    private final StageDAO stageDAO;
+    private final TeamDAO teamDAO;
+    private final RoundDAO roundDAO;
     private final ExtraPointsDAO extraPointsDAO;
-    private final List<Stage> stages;
-    private final List<Round> rounds;
-    private final List<Team> teams;
-    private final List<User> users;
+    //private final List<Stage> stages;
+    //private final List<Round> rounds;
+    //private final List<Team> teams;
+
+    private List<User> users;
     private final List<MatchView> matchViews;
     private final MatchDAO matchDAO;
+    private final UsersRepository usersRepository;
 
     private class TableView {
         public List<TableRow> tableRows;
@@ -48,22 +54,25 @@ public class TablesController {
     public TablesController(MatchDAO matchDAO, ExtraPointsDAO extraPointsDAO, TeamDAO teamDAO, StageDAO stageDAO, RoundDAO roundDAO, BetDAO betDAO, UsersRepository usersRepository) {
         this.betDAO = betDAO;
         this.matchDAO = matchDAO;
+        this.stageDAO = stageDAO;
+        this.teamDAO = teamDAO;
+        this.roundDAO = roundDAO;
         this.extraPointsDAO = extraPointsDAO;
-        stages = stageDAO.stages();
+        this.usersRepository = usersRepository;
+        /*stages = stageDAO.stages();
         rounds = roundDAO.rounds();
         teams = teamDAO.teams();
 //        users = usersRepository.findAll();
-        users = usersRepository.findAllActiveUsers();
+        users = usersRepository.findAllActiveUsers();*/
         matchViews = new ArrayList<>();
-
     }
 
 
     // Атрымліваем для кожнага карыстальніка спіс яго ставак незалежна ад аўтэнтыфікацыі
     public List<BetView> getAllUserBetsViews(User user, List<Match> matches, List<Team> teams) {
-        List<Bet> allBets = betDAO.bets();
+        List<Bet> allUserBets = betDAO.betsByUser(user.getId());//betDAO.bets();
         List<BetView> usersBetsViews = new ArrayList<>();
-        for (Bet bet : allBets) {
+        for (Bet bet : allUserBets) {
             if (bet.getUserId() == user.getId()) {
                 Match match = MatchService.getMatchById(bet.getMatchId(), matches);
                 if (match != null) {
@@ -79,7 +88,9 @@ public class TablesController {
 
     // атрымліваем каманды-пераможцы для кожнага гульца
     public List<String> getWinningTeams() {
+        List<Team> teams = teamDAO.teams();
         List<String> winningTeams = new ArrayList<>();
+
         for (User user : users) {
             Integer winningTeamId = extraPointsDAO.showWinningTeamIdByUser(user.getId());
             if (winningTeamId != null && winningTeamId != 0) {
@@ -142,6 +153,8 @@ public class TablesController {
 
 
     public void setTableRows(List<TableRow> tableRows, List<Match> matchesByRound, int roundIndex) {
+        List<Team> teams = teamDAO.teams();
+
         for (User user : users) {
             double extraPoints = 0.0;
             if (roundIndex == 0) {
@@ -174,6 +187,10 @@ public class TablesController {
 
 
     public void setMatchViewsForTableHead(List<Match> matchesByRound) {
+        List<Stage> stages = stageDAO.stages();
+        List<Round> rounds = roundDAO.rounds();
+        List<Team> teams = teamDAO.teams();
+
         for (Match match : matchesByRound) {
             matchViews.add(new MatchView(match, stages, rounds, teams));
         }
@@ -185,7 +202,8 @@ public class TablesController {
         List<TableRow> tableRows = new ArrayList<>();
 
         List<Match> matchesByRound = (roundIndex != 0) ?
-                MatchService.getMatchesByRound(roundIndex, matches) : matches;
+                matchDAO.matchesByRound(roundIndex) : matches;
+                //MatchService.getMatchesByRound(roundIndex, matches) : matches;
         matchesByRound.sort(Match.COMPARE_BY_DATE);
         setTableRows(tableRows, matchesByRound, roundIndex);
 
@@ -197,51 +215,58 @@ public class TablesController {
 
 
     private void setupTable(int numberOfRound, Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
+        //UserService.getCurrentPrincipalUserRole(model);
+
+        users = usersRepository.findAllActiveUsers();
 
         TableView tableView = setupTableView(numberOfRound);
 
+        model.addAttribute("numberOfRound", numberOfRound);
         model.addAttribute("tableRows", tableView.getTableRows());
         model.addAttribute("matchViews", tableView.getMatchViews());
     }
 
 
-    @GetMapping("/tables/first_round")
+    @GetMapping("/tables/first-round")
     public String tableFirstRound(Model model) {
         setupTable(1, model);
-        return "tables/first_round";
+        return "tables/stage-table";
     }
 
 
-    @GetMapping("/tables/second_round")
+    @GetMapping("/tables/second-round")
     public String tableSecondRound(Model model) {
         setupTable(2, model);
-        return "tables/second_round";
+        return "tables/stage-table";
     }
 
 
-    @GetMapping("/tables/third_round")
+    @GetMapping("/tables/third-round")
     public String tableThirdRound(Model model) {
         setupTable(3, model);
-        return "tables/third_round";
+        return "tables/stage-table";
     }
 
 
-    @GetMapping("/tables/knockout_stage")
+    @GetMapping("/tables/knockout-stage")
     public String tableKnockoutStage(Model model) {
         setupTable(4, model);
-        return "tables/knockout_stage";
+        return "tables/stage-table";
     }
 
 
-    @GetMapping("/tables/whole_tournament")
+    @GetMapping("/tables/whole-tournament")
     public String tableWholeTournament(Model model) {
         setupTable(0, model);
         model.addAttribute("winningTeams", getWinningTeams());
         model.addAttribute("extraPoints", getExtraPoints());
         model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
         model.addAttribute("numberOfHitsOnTheMatchResult", getNumberOfHitsOnTheMatchResult());
-        return "tables/whole_tournament";
+
+        boolean isPredictAvailable = (new Date()).before(extraPointsDAO.show().getDateAndTime());
+        model.addAttribute("isPredictAvailable", isPredictAvailable);
+
+        return "tables/whole-tournament";
     }
 
 
@@ -249,6 +274,8 @@ public class TablesController {
     public String tables(Model model) {
         final int AMOUNT_OF_STAGES = 5;
         TableView[] tableViews = new TableView[AMOUNT_OF_STAGES];
+
+        users = usersRepository.findAllActiveUsers();
 
         // ініцыялізуем табліцы
         for (int i = 0; i < AMOUNT_OF_STAGES; i++) {
@@ -265,6 +292,9 @@ public class TablesController {
             positions.add(position / AMOUNT_OF_STAGES);
         }
 
+        boolean isPredictAvailable = (new Date()).before(extraPointsDAO.show().getDateAndTime());
+        model.addAttribute("isPredictAvailable", isPredictAvailable);
+
         model.addAttribute("positions", positions);
         model.addAttribute("firstRoundTableRows", tableViews[0].getTableRows());
         model.addAttribute("secondRoundTableRows", tableViews[1].getTableRows());
@@ -277,6 +307,6 @@ public class TablesController {
         model.addAttribute("numberOfHitsOnTheCorrectScore", getNumberOfHitsOnTheCorrectScore());
         model.addAttribute("numberOfHitsOnTheMatchResult", getNumberOfHitsOnTheMatchResult());
 
-        return "tables";
+        return "/tables/tables";
     }
 }

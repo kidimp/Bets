@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -69,14 +71,14 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
+        //UserService.getCurrentPrincipalUserRole(model);
         return "home";
     }
 
 
     @GetMapping("/fixtures")
     public String fixtures(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
+        //UserService.getCurrentPrincipalUserRole(model);
         List<Stage> stageList = stageDAO.stages();
         List<Round> roundList = roundDAO.rounds();
         List<Team> teamList = teamDAO.teams();
@@ -107,39 +109,63 @@ public class HomeController {
 
     @GetMapping("/rules")
     public String rules(Model model) {
-        UserService.getCurrentPrincipalUserRole(model);
+        //UserService.getCurrentPrincipalUserRole(model);
         return "rules";
     }
 
-
-    @GetMapping("/bet/{matchId}")
-    public String bet(Model model, @PathVariable("matchId") int matchId) {
-        UserService.getCurrentPrincipalUserRole(model);
-
+    private void prepareMatchView(Model model, int matchId) throws Exception {
         Match match = matchDAO.show(matchId);
+
+        //Матча няма
+        if (match == null) {
+            throw new Exception();
+        }
+
+        //Праверка на немагчымасць ставак, калі гульня пачалася
+        if (new Date().after(match.getDateAndTime())) {
+            throw new Exception();
+        }
+
         model.addAttribute("date", match.getDateInStr());
         model.addAttribute("round", match.getRound());
         model.addAttribute("stageName", stageDAO.show(match.getStageId()).getName());
         model.addAttribute("homeTeamName", teamDAO.show(match.getHomeTeamId()).getName());
         model.addAttribute("awayTeamName", teamDAO.show(match.getAwayTeamId()).getName());
+    }
+
+    @GetMapping("/bet/{matchId}")
+    public String bet(Model model, @PathVariable("matchId") int matchId) {
+        try{
+            prepareMatchView(model, matchId);
+        }
+        catch (Exception ex) {
+            // TODO: 404
+            return "redirect:/fixtures";
+        }
 
         Bet bet = betDAO.show(UserService.getCurrentPrincipalUserId(), matchId);
         if (bet == null) {
             bet = new Bet();
         }
-
         bet.setMatchId(matchId);
 
         model.addAttribute("bet", bet);
 
-        return "bet";
+        return "/bet";
     }
 
 
     @PostMapping("/bet/{matchId}")
-    public String makeBet(@ModelAttribute("bet") @Valid Bet bet, BindingResult bindingResult,
+    public String makeBet(Model model, @ModelAttribute("bet") @Valid Bet bet, BindingResult bindingResult,
                           @PathVariable("matchId") int matchId) {
         if (bindingResult.hasErrors()) {
+            try{
+                prepareMatchView(model, matchId);
+            }
+            catch (Exception ex) {
+                // TODO: 404
+                return "redirect:/fixtures";
+            }
             return "/bet";
         }
 
@@ -171,13 +197,13 @@ public class HomeController {
     }
 
 
-    @GetMapping("recalculate_tables")
-    public String recalculateTables() {
-        return "recalculate_tables";
-    }
+//    @GetMapping("recalculate_tables")
+//    public String recalculateTables() {
+//        return "/WEB-INF/views/-recalculate-tables.html";
+//    }
 
 
-    @PostMapping("recalculate_tables")
+    @PostMapping("/admin/recalculate-tables")
     public String recalculate() {
 
         List<Match> matches = matchDAO.matches();
@@ -202,9 +228,15 @@ public class HomeController {
                 Team homeTeam = TeamService.getTeamById(match.getHomeTeamId(), teams);
                 Team awayTeam = TeamService.getTeamById(match.getAwayTeamId(), teams);
                 pointsService = new PointsService(bet, match, homeTeam, awayTeam);
+                int userId = pointsService.getBet().getUserId();
+
+                if ((userId == 57) && (match.getId() == 44)) {
+                    int i = 0;
+                }
+
                 points = PointsService.round(pointsService.getPointsForMatch(), 2);
 
-                int userId = pointsService.getBet().getUserId();
+
 
                 if (pointsService.isHitOnTheCorrectScore()) {
                     if (userAndNumberOfHitsOnTheCorrectScoreMap.containsKey(userId)) {
@@ -235,6 +267,9 @@ public class HomeController {
             int userId = entry.getKey();
             int correctScore = entry.getValue();
             int matchResult = userAndNumberOfHitsOnTheMatchResultMap.get(userId);
+            if (extraPointsDAO.showByUser(userId) == null) {
+                extraPointsDAO.saveExtraPointsByUser(userId, new ExtraPoints());
+            }
             extraPointsDAO.updateNumberOfHitsOnTheCorrectScoreAndNumberOfHitsOnTheMatchResult(userId, correctScore, matchResult);
         }
 
@@ -270,7 +305,7 @@ public class HomeController {
             extraPointsDAO.updateExtraPointsByUser(user.getId(), extraPoints);
         }
 
-        return "redirect:/tables";
+        return "redirect:/admin/matches";
     }
 
 
@@ -281,17 +316,17 @@ public class HomeController {
     }
 
 
-    @GetMapping("winning_team")
+    @GetMapping("winning-team")
     public String winningTeam(Model model, @ModelAttribute("winningTeam") ExtraPoints extraPoints) {
         // атрымліваем ролю бягучага карыстальніка для адлюстравання правільнай шапкі старонкі
-        UserService.getCurrentPrincipalUserRole(model);
+        //UserService.getCurrentPrincipalUserRole(model);
 
         // атрымліваем id бягучага карыстальніка
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int currentPrincipalUserId = Objects.requireNonNull(usersRepository.findByUsername(authentication.getName())
                 .orElse(null)).getId();
 
-        // Атрымліваем дату і час да якіх ёсць магчамасть зрабіть стаўку на каманду-пераможцу
+        // Атрымліваем дату і час, да якіх ёсць магчымасць зрабіць стаўку на каманду-пераможцу
         Date dateAndTime;
         try {
             dateAndTime = extraPointsDAO.show().getDateAndTime();
@@ -326,15 +361,15 @@ public class HomeController {
         model.addAttribute("winningTeamIdByUser", extraPointsDAO.showWinningTeamIdByUser(currentPrincipalUserId));
         model.addAttribute("winningTeamNameByUser", winningTeamNameByUser);
         model.addAttribute("isWinningTeamNameByUserSet", isWinningTeamNameByUserSet);
-        return "winning_team";
+        return "winning-team";
     }
 
 
-    @PostMapping("winning_team")
+    @PostMapping("winning-team")
     public String winningTeamPredict(@ModelAttribute("winningTeam") ExtraPoints extraPoints, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors() || extraPoints.getWinningTeamId() == 0) {
-            return "redirect:/winning_team";
+            return "winning-team";
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -343,31 +378,30 @@ public class HomeController {
 
         if (extraPointsDAO.showByUser(currentPrincipalUserId) != null) {
             extraPointsDAO.updateWinningTeamByUser(currentPrincipalUserId, extraPoints.getWinningTeamId());
-            return "redirect:/tables";
         } else {
             extraPointsDAO.saveExtraPointsByUser(currentPrincipalUserId, extraPoints);
         }
 
-        return "redirect:/tables";
+        return "redirect:/fixtures";
     }
 
 
-    @GetMapping("winning_team_setting")
+    @GetMapping("/admin/winning-team")
     public String winningTeamSetting(Model model) {
         ExtraPoints extraPoints = extraPointsDAO.show();
         if (extraPoints == null) {
             extraPoints = new ExtraPoints();
         }
         model.addAttribute("extraPoints", extraPoints);
-        return "winning_team_setting";
+        return "/winning-team-setting";
     }
 
 
-    @PostMapping("winning_team_setting")
+    @PostMapping("/admin/winning-team")
     public String winningTeamSet(@ModelAttribute("extraPoints") ExtraPoints extraPoints, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors() || extraPoints.getDateAndTime() == null) {
-            return "/winning_team_setting";
+            return "winning-team-setting";
         }
 
         if (extraPointsDAO.show() == null) {
@@ -376,6 +410,6 @@ public class HomeController {
 
         extraPointsDAO.updateWinningTeam(extraPoints);
 
-        return "redirect:/tables";
+        return "redirect:/admin/matches";
     }
 }

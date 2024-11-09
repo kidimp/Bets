@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
 
 
     public static void getCurrentPrincipalUserRole(Model model) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        /*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email;
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
             model.addAttribute("role", usersRepository.findByEmail(email).get().getRole());
         } else {
             model.addAttribute("role", "ROLE_USER");
-        }
+        }*/
     }
 
 

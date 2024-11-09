@@ -62,41 +62,45 @@ public class PointsService {
                         points = 2;
                     }
                 }
-                if (!isHitOnTheMatchResult()) {
-                    // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
-                    if ((bet.getScoreHomeTeam() == match.getScoreHomeTeam()) || (bet.getScoreAwayTeam() == match.getScoreAwayTeam())) {
-                        points = 1;
-                    }
-                    // Адваротны вынік: 1 бал
-                    if ((bet.getScoreHomeTeam() == match.getScoreAwayTeam()) &&
-                            (bet.getScoreAwayTeam() == match.getScoreHomeTeam())) {
-                        points = 1;
-                    }
-                }
+
             } else {
-                // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
-                // Памылка ў 1 гол ад поўнага рэзультата: 4 балы
-                if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                        (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 2) {
-                    points = 4;
+                if (bet.getScoreHomeTeam() == bet.getScoreAwayTeam()) {
+                    // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
+                    // Памылка ў 1 гол ад поўнага рэзультата: 4 балы
+                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
+                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 2) {
+                        points = 4;
+                    }
+                    // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
+                    // Памылка ў 2 галы ад поўнага рэзультата: 3 балы
+                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
+                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 4) {
+                        points = 3;
+                    }
+                    // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
+                    // Правільны вынік гульні, але памылка больш, чым у 2 галы ад поўнага выніка: 2 балы
+                    if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
+                            (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 6) {
+                        points = 2;
+                    }
                 }
-                // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
-                // Памылка ў 2 галы ад поўнага рэзультата: 3 балы
-                if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                        (match.getScoreHomeTeam() + match.getScoreAwayTeam())) == 4) {
-                    points = 3;
-                }
-                // У выпадку пастаўленнай нічыі розніца галоў скарачаецца ў 2 разы.
-                // Правільны вынік гульні, але памылка больш, чым у 2 галы ад поўнага выніка: 2 балы
-                if (Math.abs((bet.getScoreHomeTeam() + bet.getScoreAwayTeam()) -
-                        (match.getScoreHomeTeam() + match.getScoreAwayTeam())) >= 6) {
-                    points = 2;
-                }
-                if (!isHitOnTheMatchResult()) {
+                /*if (!isHitOnTheMatchResult()) {
                     // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
                     if ((bet.getScoreHomeTeam() == match.getScoreHomeTeam()) || (bet.getScoreAwayTeam() == match.getScoreAwayTeam())) {
                         points = 1;
                     }
+                }*/
+            }
+
+            if (!isHitOnTheMatchResult()) {
+                // Неправільны вынік гульні, але здагаданае колькасць галоў адной з каманд: 1 бал
+                if ((bet.getScoreHomeTeam() == match.getScoreHomeTeam()) || (bet.getScoreAwayTeam() == match.getScoreAwayTeam())) {
+                    points = 1;
+                }
+                // Адваротны вынік: 1 бал
+                if ((bet.getScoreHomeTeam() == match.getScoreAwayTeam()) &&
+                        (bet.getScoreAwayTeam() == match.getScoreHomeTeam())) {
+                    points = 1;
                 }
             }
 

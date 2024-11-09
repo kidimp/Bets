@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Delete round</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/css/style.css">
+    <style> .footer {position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;}</style>
+</head>
+
+<body>
+
+<header th:insert="fragments/header-admin :: header"></header>
+
+<div class="container mt-5">
+
+    <form th:method="POST" th:action="@{/rounds/{id}/delete(id=${round.getId()})}">
+
+        <p th:text="${'Name: ' + round.getName()}">VALUE</p>
+
+        <p th:text="${'Round: ' + round.getRound()}">VALUE</p>
+
+        <input type="submit" value="Delete!"/>
+
+    </form>
+
+</div>
+
+<footer th:insert="fragments/footer :: footer"></footer>
+
+</body>
+
+</html>

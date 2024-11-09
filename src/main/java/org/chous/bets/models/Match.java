@@ -7,12 +7,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Min;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 
 public class Match {
     private int id;
-    @DateTimeFormat(pattern = "dd.MM.yyy HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date dateAndTime;
     private int stageId;
     private int round;
@@ -61,7 +63,8 @@ public class Match {
     }
 
     public void setDateAndTime(String dateInString) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        //SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         try {
             this.dateAndTime = formatter.parse(dateInString);
         } catch (ParseException e) {
@@ -159,6 +162,7 @@ public class Match {
     public static final Comparator<Match> COMPARE_BY_DATE = new Comparator<Match>() {
         @Override
         public int compare(Match lhs, Match rhs) {
+            //return lhs.getDateAndTime().compareTo(rhs.dateAndTime);
             return Long.compare(lhs.getDateAndTime().getTime(), rhs.getDateAndTime().getTime());
         }
     };

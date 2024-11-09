@@ -24,20 +24,20 @@ public class TeamsController {
     }
 
 
-    @GetMapping("teams/all")
+    @GetMapping("/admin/teams")
     public String teams(Model model) {
         model.addAttribute("teams", teamDAO.teams());
         return "teams/all";
     }
 
 
-    @GetMapping("teams/new")
+    @GetMapping("/admin/teams/new")
     public String newTeam(@ModelAttribute("team") Team team) {
         return "teams/new";
     }
 
 
-    @PostMapping("/teams")
+    @PostMapping("/admin/teams/new")
     public String create(@ModelAttribute("team") @Valid Team team, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -45,18 +45,18 @@ public class TeamsController {
         }
 
         teamDAO.save(team);
-        return "redirect:/teams/all";
+        return "redirect:/admin/teams";
     }
 
 
-    @GetMapping("/teams/{id}/edit")
+    @GetMapping("/admin/teams/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("team", teamDAO.show(id));
         return "teams/edit";
     }
 
 
-    @PostMapping("teams/{id}/edit")
+    @PostMapping("/admin/teams/{id}/edit")
     public String update(@ModelAttribute("team") @Valid Team team, BindingResult bindingResult,
                          @PathVariable("id") int id) {
 
@@ -66,19 +66,19 @@ public class TeamsController {
 
         teamDAO.update(id, team);
 
-        return "redirect:/teams/all";
+        return "redirect:/admin/teams";
     }
 
 
-    @GetMapping("/teams/{id}/delete")
+    /*@GetMapping("/admin/teams/{id}/delete")
     public String delete(Model model, @PathVariable("id") int id) {
         model.addAttribute("team", teamDAO.show(id));
         return "teams/delete";
-    }
+    }*/
 
-    @PostMapping("teams/{id}/delete")
+    @PostMapping("/admin/teams/{id}/delete")
     public String deleteTeam(@PathVariable("id") int id) {
         teamDAO.delete(id);
-        return "redirect:/teams/all";
+        return "redirect:/admin/teams";
     }
 }

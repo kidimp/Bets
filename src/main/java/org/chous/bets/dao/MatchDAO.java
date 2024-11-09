@@ -25,6 +25,11 @@ public class MatchDAO {
         return jdbcTemplate.query("SELECT * FROM matches", new BeanPropertyRowMapper<>(Match.class));
     }
 
+    public List<Match> matchesByRound(int roundId) {
+        return jdbcTemplate.query("SELECT * FROM matches WHERE round=?", new Object[]{roundId},
+                new BeanPropertyRowMapper<>(Match.class));
+    }
+
 
     public Match show(int id) {
         return jdbcTemplate.query("SELECT * FROM matches WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(Match.class))

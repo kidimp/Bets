@@ -2,26 +2,27 @@
 
 
 <div th:fragment="footer">
-
-
-    <footer class="footer mt-auto py-auto">
-
+    <footer class="footer">
         <div class="container">
-            <footer class="py-auto my-auto">
-                <ul class="nav justify-content-center border-bottom pb-auto mb-auto">
-                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Euro 2024</a></li>
-                    <li class="nav-item"><a href="/fixtures" class="nav-link px-2 text-muted">Матчи и результаты</a>
-                    </li>
-                    <li class="nav-item"><a href="/tables" class="nav-link px-2 text-muted">Таблицы и статистика</a>
-                    </li>
-                </ul>
-                <p class="text-center text-muted">© 2024 PRAS</p>
-            </footer>
+            <div class="footer__inner">
+                <div class="footer__top"><a class="logo footer__logo" href="/">Euro 2024</a>
+                    <nav class="footer__nav">
+                        <ul class="list-reset footer__nav-list">
+                            <li class="footer__nav-item"><a class="footer__nav-link" href="/fixtures">Матчи и
+                                результаты</a>
+                            </li>
+                            <li class="footer__nav-item"><a class="footer__nav-link" href="/tables">Таблицы и
+                                статистика</a>
+                            </li>
+                            <li class="footer__nav-item"><a class="footer__nav-link" href="/winning-team">Команда-победитель</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="footer__bot">
+                    <p class="footer__copyright">&copy; 2024 PRAS</p>
+                </div>
+            </div>
         </div>
-
     </footer>
-
 </div>
-
-
-</html>

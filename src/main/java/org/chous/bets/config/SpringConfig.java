@@ -40,7 +40,10 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("WEB-INF/resources/css/");
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("WEB-INF/assets/");
+                //.setCacheControl(CacheControl.maxAge(Duration.ofDays(365)));
+        //registry.addResourceHandler("/css/**").addResourceLocations("WEB-INF/assets/css/");
     }
 
     @Bean

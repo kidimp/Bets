@@ -1,0 +1,34 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<header th:fragment="header" class="header" id="header">
+    <div class="header__scroll">
+        <div class="container">
+            <div class="header__inner">
+                <div class="header__mobile"><a class="logo header__logo mobile" href="/">Euro 2024</a>
+                    <button class="burger-button js_burger-btn" aria-label="открыть меню"><span></span>
+                    </button>
+                </div>
+                <div class="header__left"><a class="logo header__logo" href="/">Euro 2024</a>
+                    <nav class="header__nav">
+                        <ul class="list-reset header__nav-list">
+                            <li class="header__nav-item"><a class="header__nav-link" href="/fixtures">Матчи и результаты</a>
+                            </li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="/tables">Таблицы и статистика</a>
+                            </li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="/winning-team">Команда-победитель</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="header__right">
+                    <div class="header__username" sec:authorize="isAuthenticated()"><a sec:authentication="name"></a></div>
+                    <a class="header__admin-link" href="/admin/matches">Админка</a>
+                    <form th:action="@{~/logout}" method="POST">
+                        <button class="button" type="submit">Выйти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
