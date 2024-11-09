@@ -247,6 +247,10 @@ public class HomeController {
                     }
                 }
 
+                if (userId == 26) {
+                    int i = 0;
+                }
+
                 if (pointsService.isHitOnTheMatchResult()) {
                     if (userAndNumberOfHitsOnTheMatchResultMap.containsKey(userId)) {
                         int numberOfHitsOnTheMatchResult = userAndNumberOfHitsOnTheMatchResultMap.get(userId) + 1;
