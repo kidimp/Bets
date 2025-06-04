@@ -1,8 +1,8 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
 import org.chous.bets.dao.RoundDAO;
 
-import org.chous.bets.models.Round;
+import org.chous.bets.model.Round;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

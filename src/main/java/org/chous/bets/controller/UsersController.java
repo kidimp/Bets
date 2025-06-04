@@ -1,8 +1,8 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
-import org.chous.bets.models.Role;
-import org.chous.bets.models.User;
-import org.chous.bets.repositories.UsersRepository;
+import org.chous.bets.model.Role;
+import org.chous.bets.model.User;
+import org.chous.bets.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

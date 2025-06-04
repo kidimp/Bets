@@ -1,6 +1,6 @@
 package org.chous.bets.dao;
 
-import org.chous.bets.models.Round;
+import org.chous.bets.model.Round;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

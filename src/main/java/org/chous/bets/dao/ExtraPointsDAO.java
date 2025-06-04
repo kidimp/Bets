@@ -1,7 +1,7 @@
 package org.chous.bets.dao;
 
-import org.chous.bets.models.ExtraPoints;
-import org.chous.bets.models.Team;
+import org.chous.bets.model.ExtraPoints;
+import org.chous.bets.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

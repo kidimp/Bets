@@ -1,6 +1,6 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
-import org.chous.bets.models.Match;
+import org.chous.bets.model.Match;
 
 import java.util.ArrayList;
 import java.util.List;

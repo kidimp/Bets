@@ -1,6 +1,6 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
-import org.chous.bets.models.Team;
+import org.chous.bets.model.Team;
 
 import java.util.List;
 

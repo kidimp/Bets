@@ -1,7 +1,7 @@
 package org.chous.bets.util;
 
-import org.chous.bets.models.User;
-import org.chous.bets.services.UserService;
+import org.chous.bets.model.User;
+import org.chous.bets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;

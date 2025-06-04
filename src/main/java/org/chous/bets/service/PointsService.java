@@ -1,8 +1,8 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
-import org.chous.bets.models.Bet;
-import org.chous.bets.models.Match;
-import org.chous.bets.models.Team;
+import org.chous.bets.model.Bet;
+import org.chous.bets.model.Match;
+import org.chous.bets.model.Team;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
