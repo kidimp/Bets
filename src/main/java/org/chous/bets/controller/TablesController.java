@@ -1,11 +1,10 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
 import org.chous.bets.dao.*;
-import org.chous.bets.models.*;
-import org.chous.bets.repositories.UsersRepository;
-import org.chous.bets.services.MatchService;
-import org.chous.bets.services.TeamService;
-import org.chous.bets.services.UserService;
+import org.chous.bets.model.*;
+import org.chous.bets.repository.UsersRepository;
+import org.chous.bets.service.MatchService;
+import org.chous.bets.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

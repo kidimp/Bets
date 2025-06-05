@@ -1,7 +1,7 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
 import org.chous.bets.dao.TeamDAO;
-import org.chous.bets.models.Team;
+import org.chous.bets.model.Team;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

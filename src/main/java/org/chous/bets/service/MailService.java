@@ -1,4 +1,4 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Arrays;
-import java.util.Properties;
 
 import okhttp3.*;
 import org.json.JSONObject;

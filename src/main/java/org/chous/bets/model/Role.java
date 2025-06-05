@@ -1,4 +1,4 @@
-package org.chous.bets.models;
+package org.chous.bets.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

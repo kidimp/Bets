@@ -1,6 +1,6 @@
 package org.chous.bets.config;
 
-import org.chous.bets.services.UserService;
+import org.chous.bets.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

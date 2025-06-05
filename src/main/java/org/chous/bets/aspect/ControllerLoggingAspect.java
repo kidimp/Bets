@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ControllerLoggingAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Around("execution(* org.chous.bets.controllers.*.*(..))")
+    @Around("execution(* org.chous.bets.controller.*.*(..))")
     public Object logAroundControllers(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         Object[] methodArgs = joinPoint.getArgs();

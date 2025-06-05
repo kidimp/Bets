@@ -1,6 +1,6 @@
 package org.chous.bets.dao;
 
-import org.chous.bets.models.Team;
+import org.chous.bets.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

@@ -1,7 +1,7 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
-import org.chous.bets.models.*;
-import org.chous.bets.repositories.UsersRepository;
+import org.chous.bets.model.*;
+import org.chous.bets.repository.UsersRepository;
 import org.chous.bets.security.UsrDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

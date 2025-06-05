@@ -1,6 +1,6 @@
 package org.chous.bets.dao;
 
-import org.chous.bets.models.Match;
+import org.chous.bets.model.Match;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

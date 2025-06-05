@@ -1,6 +1,6 @@
-package org.chous.bets.models;
+package org.chous.bets.model;
 
-import org.chous.bets.services.PointsService;
+import org.chous.bets.service.PointsService;
 
 import java.util.*;
 

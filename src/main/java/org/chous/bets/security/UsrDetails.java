@@ -1,6 +1,6 @@
 package org.chous.bets.security;
 
-import org.chous.bets.models.User;
+import org.chous.bets.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

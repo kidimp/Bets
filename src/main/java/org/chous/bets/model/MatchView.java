@@ -1,4 +1,4 @@
-package org.chous.bets.models;
+package org.chous.bets.model;
 
 import java.util.Date;
 import java.util.List;

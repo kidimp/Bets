@@ -1,13 +1,13 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
 import org.chous.bets.dao.MatchDAO;
 import org.chous.bets.dao.RoundDAO;
 import org.chous.bets.dao.StageDAO;
 import org.chous.bets.dao.TeamDAO;
-import org.chous.bets.models.Match;
-import org.chous.bets.models.Round;
-import org.chous.bets.models.Stage;
-import org.chous.bets.models.Team;
+import org.chous.bets.model.Match;
+import org.chous.bets.model.Round;
+import org.chous.bets.model.Stage;
+import org.chous.bets.model.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

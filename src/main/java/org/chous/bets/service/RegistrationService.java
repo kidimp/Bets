@@ -1,16 +1,14 @@
-package org.chous.bets.services;
+package org.chous.bets.service;
 
-import org.chous.bets.models.User;
-import org.chous.bets.repositories.UsersRepository;
+import org.chous.bets.model.User;
+import org.chous.bets.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 

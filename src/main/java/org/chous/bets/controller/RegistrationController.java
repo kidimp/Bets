@@ -1,6 +1,6 @@
-package org.chous.bets.controllers;
+package org.chous.bets.controller;
 
-import org.chous.bets.models.User;
+import org.chous.bets.model.User;
 import org.chous.bets.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.chous.bets.services.RegistrationService;
+import org.chous.bets.service.RegistrationService;
 
 import javax.validation.Valid;
 
