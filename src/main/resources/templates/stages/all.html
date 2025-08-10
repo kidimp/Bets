@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="descrip">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="ie=edge" http-equiv="x-ua-compatible">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/img/ico/favicon.ico" type="image/vnd.microsoft.icon">
+    <title>Админка. Все стадии</title>
+</head>
+
+<body>
+<div class="page">
+    <header th:insert="fragments/header-admin :: header"></header>
+    <main>
+        <div class="admin">
+            <div class="container"><strong class="title title--md section-title">Админ-панель</strong>
+                <form class="admin__recalculate-form" th:method="POST" th:action="@{/admin/recalculate-tables}">
+                    <button class="button button--primary admin__btn admin__btn--recalculate">Перерассчитать таблицы</button>
+                </form>
+                <div class="tabs">
+                    <div class="tabs__nav">
+                        <ul class="list-reset tabs__list">
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/matches">Матчи</a></li>
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/teams">Команды</a></li>
+                            <li class="tabs__item active"><a class="tabs__link" href="/admin/stages">Стадии</a></li>
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/rounds">Раунды</a></li>
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/users">Пользователи</a></li>
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/winning-team">Команда-победитель</a></li>
+                        </ul>
+                    </div>
+                    <div class="tabs__content"><a class="button button--primary admin__btn" href="/admin/stages/new">Добавить стадию</a>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <button class="table__sort js_table-sort">Стадия
+                                            <svg class="table__sort-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M9.61665 1.82309C9.47656 1.62074 9.24611 1.5 9 1.5C8.75389 1.5 8.52344 1.62074 8.38336 1.82309L5.00836 6.69809C4.84957 6.92745 4.8312 7.22598 4.96067 7.47308C5.09013 7.72018 5.34604 7.875 5.625 7.875H12.375C12.654 7.875 12.9099 7.72018 13.0393 7.47308C13.1688 7.22598 13.1504 6.92745 12.9916 6.69809L9.61665 1.82309Z"
+                                                />
+                                                <path d="M5.625 10.125C5.34604 10.125 5.09013 10.2798 4.96067 10.5269C4.8312 10.774 4.84957 11.0725 5.00836 11.3019L8.38336 16.1769C8.52344 16.3793 8.75389 16.5 9 16.5C9.24611 16.5 9.47656 16.3793 9.61665 16.1769L12.9916 11.3019C13.1504 11.0725 13.1688 10.774 13.0393 10.5269C12.9099 10.2798 12.654 10.125 12.375 10.125H5.625Z"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="stage : ${stages}">
+                                    <div class="modal fade" th:id="modal-delete+${stage.id }" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5">Подтвердите удаление</h1>
+                                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body"></div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Отменить</button>
+                                                    <form th:method="POST" th:action="@{/admin/stages/{id}/delete(id=${stage.id})}">
+                                                        <button class="btn btn-primary" type="submit">Подтвердить</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <tr>
+                                        <td th:text="${stage.name}"/>
+                                        <td style="width: 15%"><a th:href="@{/admin/stages/{id}/edit(id=${stage.id})}" style="text-align: right">Редактировать</a></td>
+                                        <td style="width: 15%">
+                                            <button class="button-remove" style="text-align: left" data-bs-toggle="modal" th:attr="data-bs-target='#modal-delete'+${stage.id}">Удалить</button>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:insert="fragments/footer :: footer"></footer>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

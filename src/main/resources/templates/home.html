@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="descrip">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="ie=edge" http-equiv="x-ua-compatible">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="icon" href="/img/ico/favicon.ico" type="image/vnd.microsoft.icon">
+    <title>Euro 2024 - bets. Ставки</title>
+</head>
+
+    <body>
+        <div class="page">
+            <header sec:authorize="!isAuthenticated()" th:insert="fragments/header-anonimus :: header"></header>
+            <header sec:authorize="hasRole('USER')" th:insert="fragments/header-user :: header"></header>
+            <header sec:authorize="hasRole('ADMIN')" th:insert="fragments/header-admin :: header"></header>
+
+            <main>
+                <div class="main">
+                    <div class="container container--md">
+                        <div class="main__inner">
+                            <div class="gallery">
+                                <div class="gallery__column gallery__column--left">
+                                    <a href="https://ru.uefa.com/euro2024/" target="_blank">
+                                        <img src="/img/jpg/official-website-of-the-tournament-tall.jpg" alt="Picture 1">
+                                    </a>
+                                </div>
+                                <div class="gallery__column gallery__column--right">
+                                    <a href="https://ru.uefa.com/euro2024/fixtures-results/#/d/2024-06-15" target="_blank">
+                                        <img src="/img/jpg/match-schedule.jpg" alt="Picture 2">
+                                    </a>
+                                    <a href="https://ru.uefa.com/euro2024/news/0287-1983d622436d-90150f2e0fb7-1000--%D0%BA%D0%BE%D1%80%D0%B7%D0%B8%D0%BD%D1%8B/" target="_blank">
+                                        <img src="/img/jpg/teams-seeding.jpg" alt="Picture 3">
+                                    </a>
+                                    <a href="rules" >
+                                        <img src="/img/jpg/betting-rules.jpg" alt="Picture 4">
+                                    </a>
+                                    <a href="https://t.me/+65tCIc8zO0YzNjYy" target="_blank">
+                                        <img src="/img/jpg/telegram-chat.jpg" alt="Picture 5">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer th:insert="fragments/footer :: footer"></footer>
+
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+                crossorigin="anonymous"></script>
+        <script src="/js/main.js"></script>
+    </body>
+</html>
