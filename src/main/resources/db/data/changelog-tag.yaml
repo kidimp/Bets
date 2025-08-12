@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      author: chous
+      id: 1.0.0
+      changes:
+        - tagDatabase:
+            tag: 1.0
+
+  - include:
+      file: 07-insert-data-table-winning-team.sql
+      relativeToChangelogFile: true
