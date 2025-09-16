@@ -1,4 +1,4 @@
-package org.chous.bets.util;
+package org.chous.bets.validator;
 
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.model.dto.RegistrationRequestDTO;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class UserValidatorUtil {
+public class UserValidator {
 
     private final UserRepository userRepository;
 
