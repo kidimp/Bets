@@ -5,7 +5,10 @@ import org.chous.bets.exception.DataNotFoundException;
 import org.chous.bets.mapper.TeamMapper;
 import org.chous.bets.model.dto.TeamDTO;
 import org.chous.bets.model.entity.Team;
+import org.chous.bets.repository.ExtraPointsRepository;
+import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
+import org.chous.bets.repository.WinningTeamRepository;
 import org.chous.bets.service.TeamServiceAPI;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,9 @@ import java.util.stream.Collectors;
 public class TeamServiceImpl implements TeamServiceAPI {
 
     private final TeamRepository teamRepository;
+    private final MatchRepository matchRepository;
+    private final ExtraPointsRepository extraPointsRepository;
+    private final WinningTeamRepository winningTeamRepository;
     private final TeamMapper teamMapper;
 
     @Override
@@ -59,6 +65,9 @@ public class TeamServiceImpl implements TeamServiceAPI {
 
     @Override
     public void delete(int id) {
+        matchRepository.deleteAllByTeamId(id);
+        extraPointsRepository.deleteAllByTeamId(id);
+        winningTeamRepository.deleteAllByTeamId(id);
         teamRepository.deleteById(id);
     }
 

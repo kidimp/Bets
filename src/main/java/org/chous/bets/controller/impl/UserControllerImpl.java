@@ -2,7 +2,6 @@ package org.chous.bets.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.UserControllerAPI;
-import org.chous.bets.model.dto.UserDTO;
 import org.chous.bets.model.dto.UserUpdateDTO;
 import org.chous.bets.model.enums.RoleEnum;
 import org.chous.bets.service.UserServiceAPI;

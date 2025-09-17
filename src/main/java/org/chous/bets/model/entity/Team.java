@@ -18,7 +18,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +26,10 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "teams", uniqueConstraints = {
+@Table(name = "team", uniqueConstraints = {
         @UniqueConstraint(name = "unq_team_iso_name", columnNames = {"iso_name"})
 })
-public class Team implements Comparable<Team> {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,14 +51,9 @@ public class Team implements Comparable<Team> {
     @Column(name = "pot", nullable = false)
     private int pot;
 
-    @Override
-    public int compareTo(Team team) {
-        return Comparators.NAME.compare(this, team);
-    }
-
-    public static class Comparators {
-        public static final Comparator<Team> NAME = Comparator.comparing(Team::getName);
-    }
+//    @ToString.Exclude
+//    @ManyToMany(mappedBy = "teams", fetch = FetchType.LAZY)
+//    private Set<Tournament> tournaments = new HashSet<>();
 
     @Override
     public final boolean equals(final Object o) {

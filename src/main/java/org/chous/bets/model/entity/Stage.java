@@ -23,7 +23,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "stages")
+@Table(name = "stage")
 public class Stage {
 
     @Id
