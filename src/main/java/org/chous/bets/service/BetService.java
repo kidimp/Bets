@@ -5,7 +5,7 @@ import org.chous.bets.model.entity.Bet;
 
 import java.util.List;
 
-public interface BetServiceAPI {
+public interface BetService {
 
     Bet getOrCreateBetForUserAndMatch(int userId, int matchId);
 

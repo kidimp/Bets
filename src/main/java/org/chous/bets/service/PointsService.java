@@ -1,6 +1,6 @@
 package org.chous.bets.service;
 
-public interface PointsServiceAPI {
+public interface PointsService {
 
     void recalculatePoints();
 }

@@ -2,9 +2,8 @@ package org.chous.bets.service;
 
 import org.chous.bets.model.dto.RegistrationRequestDTO;
 import org.chous.bets.model.dto.UserDTO;
-import org.springframework.validation.BindingResult;
 
-public interface RegistrationServiceAPI {
+public interface RegistrationService {
 
     void register(RegistrationRequestDTO registrationRequest, String rawPassword);
 

@@ -4,7 +4,7 @@ import org.chous.bets.model.dto.RoundDTO;
 
 import java.util.List;
 
-public interface RoundServiceAPI {
+public interface RoundService {
 
     List<RoundDTO> findAll();
 

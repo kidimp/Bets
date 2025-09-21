@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface TeamServiceAPI {
+public interface TeamService {
 
     List<TeamDTO> findAll();
 

@@ -10,8 +10,8 @@ import org.chous.bets.model.dto.UserDTO;
 import org.chous.bets.model.entity.User;
 import org.chous.bets.model.enums.RoleEnum;
 import org.chous.bets.repository.UserRepository;
-import org.chous.bets.service.MailServiceAPI;
-import org.chous.bets.service.RegistrationServiceAPI;
+import org.chous.bets.service.MailService;
+import org.chous.bets.service.RegistrationService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +19,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class RegistrationServiceImpl implements RegistrationServiceAPI {
+public class RegistrationServiceImpl implements RegistrationService {
 
-    private final MailServiceAPI mailService;
+    private final MailService mailService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;

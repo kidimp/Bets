@@ -3,7 +3,7 @@ package org.chous.bets.controller.impl;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.StageControllerAPI;
 import org.chous.bets.model.dto.StageDTO;
-import org.chous.bets.service.StageServiceAPI;
+import org.chous.bets.service.StageService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import org.springframework.validation.BindingResult;
 @PreAuthorize("hasRole('ADMIN')")
 public class StageControllerImpl implements StageControllerAPI {
 
-    private final StageServiceAPI stageService;
+    private final StageService stageService;
 
     @Override
     public String findAll(Model model) {

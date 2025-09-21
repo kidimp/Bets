@@ -7,8 +7,8 @@ import org.chous.bets.model.entity.Match;
 import org.chous.bets.model.entity.Round;
 import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.RoundRepository;
-import org.chous.bets.service.MatchServiceAPI;
-import org.chous.bets.service.RoundServiceAPI;
+import org.chous.bets.service.MatchService;
+import org.chous.bets.service.RoundService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +17,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class RoundServiceImpl implements RoundServiceAPI {
+public class RoundServiceImpl implements RoundService {
 
     private final RoundRepository roundRepository;
     private final RoundMapper roundMapper;
     private final MatchRepository matchRepository;
-    private final MatchServiceAPI matchService;
+    private final MatchService matchService;
 
     @Override
     public List<RoundDTO> findAll() {

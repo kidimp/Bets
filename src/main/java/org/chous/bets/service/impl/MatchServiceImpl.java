@@ -6,7 +6,7 @@ import org.chous.bets.model.dto.MatchDTO;
 import org.chous.bets.model.entity.Match;
 import org.chous.bets.repository.BetRepository;
 import org.chous.bets.repository.MatchRepository;
-import org.chous.bets.service.MatchServiceAPI;
+import org.chous.bets.service.MatchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MatchServiceImpl implements MatchServiceAPI {
+public class MatchServiceImpl implements MatchService {
 
     private final MatchRepository matchRepository;
     private final BetRepository betRepository;

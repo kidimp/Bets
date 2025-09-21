@@ -4,7 +4,7 @@ import org.chous.bets.model.dto.StageDTO;
 
 import java.util.List;
 
-public interface StageServiceAPI {
+public interface StageService {
 
     List<StageDTO> findAll();
 

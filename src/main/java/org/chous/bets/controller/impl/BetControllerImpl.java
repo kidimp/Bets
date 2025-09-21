@@ -7,11 +7,11 @@ import org.chous.bets.mapper.BetMapper;
 import org.chous.bets.model.dto.BetDTO;
 import org.chous.bets.model.dto.MatchDTO;
 import org.chous.bets.model.entity.Bet;
-import org.chous.bets.service.BetServiceAPI;
-import org.chous.bets.service.MatchServiceAPI;
-import org.chous.bets.service.StageServiceAPI;
-import org.chous.bets.service.TeamServiceAPI;
-import org.chous.bets.service.UserServiceAPI;
+import org.chous.bets.service.BetService;
+import org.chous.bets.service.MatchService;
+import org.chous.bets.service.StageService;
+import org.chous.bets.service.TeamService;
+import org.chous.bets.service.UserService;
 import org.chous.bets.util.SecurityContextUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class BetControllerImpl implements BetControllerAPI {
 
-    private final MatchServiceAPI matchService;
-    private final BetServiceAPI betService;
-    private final UserServiceAPI userService;
-    private final StageServiceAPI stageService;
-    private final TeamServiceAPI teamService;
+    private final MatchService matchService;
+    private final BetService betService;
+    private final UserService userService;
+    private final StageService stageService;
+    private final TeamService teamService;
     private final BetMapper betMapper;
 
     @Override

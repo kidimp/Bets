@@ -16,7 +16,6 @@ public class Constants {
     public static final int THIRD_ROUND = 3;
     public static final int KNOCKOUT_STAGE = 4;
     public static final int ALL_STAGES_COMBINED = 0;
-    public static final int LEADERSHIP_TABLE = 0;
 
     public static final String TEAMS_HAVE_DUPLICATES = "В одном турнире должны быть только уникальные команды";
 }

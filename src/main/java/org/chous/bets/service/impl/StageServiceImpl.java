@@ -5,7 +5,7 @@ import org.chous.bets.mapper.StageMapper;
 import org.chous.bets.model.dto.StageDTO;
 import org.chous.bets.model.entity.Stage;
 import org.chous.bets.repository.StageRepository;
-import org.chous.bets.service.StageServiceAPI;
+import org.chous.bets.service.StageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class StageServiceImpl implements StageServiceAPI {
+public class StageServiceImpl implements StageService {
 
     private final StageRepository stageRepository;
     private final StageMapper stageMapper;

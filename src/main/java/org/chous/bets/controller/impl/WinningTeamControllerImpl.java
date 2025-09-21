@@ -5,9 +5,9 @@ import org.chous.bets.controller.WinningTeamControllerAPI;
 import org.chous.bets.model.dto.TeamDTO;
 import org.chous.bets.model.dto.WinningTeamPredictionDTO;
 import org.chous.bets.model.dto.WinningTeamTournamentDTO;
-import org.chous.bets.service.TeamServiceAPI;
-import org.chous.bets.service.UserServiceAPI;
-import org.chous.bets.service.WinningTeamServiceAPI;
+import org.chous.bets.service.TeamService;
+import org.chous.bets.service.UserService;
+import org.chous.bets.service.WinningTeamService;
 import org.chous.bets.util.SecurityContextUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WinningTeamControllerImpl implements WinningTeamControllerAPI {
 
-    private final WinningTeamServiceAPI winningTeamService;
-    private final TeamServiceAPI teamService;
-    private final UserServiceAPI userService;
+    private final WinningTeamService winningTeamService;
+    private final TeamService teamService;
+    private final UserService userService;
 
     @ModelAttribute("teamsList")
     public List<TeamDTO> getTeamsList() {

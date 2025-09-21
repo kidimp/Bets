@@ -2,7 +2,7 @@ package org.chous.bets.controller.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.PointsControllerAPI;
-import org.chous.bets.service.PointsServiceAPI;
+import org.chous.bets.service.PointsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 @PreAuthorize("hasRole('ADMIN')")
 public class PointsControllerImpl implements PointsControllerAPI {
 
-    private final PointsServiceAPI pointsService;
+    private final PointsService pointsService;
 
     @Override
     public String recalculate() {

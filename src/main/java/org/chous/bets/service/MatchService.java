@@ -4,8 +4,8 @@ import org.chous.bets.model.dto.MatchDTO;
 
 import java.util.List;
 
-public interface MatchServiceAPI {
-
+public interface MatchService {
+//todo сделать понятные названия методов
     List<MatchDTO> findAll();
 
     List<MatchDTO> findAllSortedByDateDesc();

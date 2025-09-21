@@ -3,7 +3,7 @@ package org.chous.bets.controller.impl;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.RoundControllerAPI;
 import org.chous.bets.model.dto.RoundDTO;
-import org.chous.bets.service.RoundServiceAPI;
+import org.chous.bets.service.RoundService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import org.springframework.validation.BindingResult;
 @PreAuthorize("hasRole('ADMIN')")
 public class RoundControllerImpl implements RoundControllerAPI {
 
-    private final RoundServiceAPI roundService;
+    private final RoundService roundService;
 
     @Override
     public String list(Model model) {

@@ -6,7 +6,7 @@ import org.chous.bets.model.dto.UserUpdateDTO;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserServiceAPI {
+public interface UserService {
 
     List<UserDTO> findAll();
 

@@ -11,8 +11,8 @@ import org.chous.bets.model.entity.User;
 import org.chous.bets.repository.BetRepository;
 import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.UserRepository;
-import org.chous.bets.service.BetServiceAPI;
-import org.chous.bets.service.UserServiceAPI;
+import org.chous.bets.service.BetService;
+import org.chous.bets.service.UserService;
 import org.chous.bets.util.SecurityContextUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BetServiceImpl implements BetServiceAPI {
+public class BetServiceImpl implements BetService {
 
-    private final UserServiceAPI userService;
+    private final UserService userService;
     private final BetRepository betRepository;
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;

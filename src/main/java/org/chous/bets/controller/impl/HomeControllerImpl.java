@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.HomeControllerAPI;
 import org.chous.bets.model.dto.BetDTO;
 import org.chous.bets.model.dto.MatchDTO;
-import org.chous.bets.service.BetServiceAPI;
-import org.chous.bets.service.MatchServiceAPI;
-import org.chous.bets.service.RoundServiceAPI;
-import org.chous.bets.service.StageServiceAPI;
-import org.chous.bets.service.TeamServiceAPI;
+import org.chous.bets.service.BetService;
+import org.chous.bets.service.MatchService;
+import org.chous.bets.service.RoundService;
+import org.chous.bets.service.StageService;
+import org.chous.bets.service.TeamService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -18,11 +18,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeControllerImpl implements HomeControllerAPI {
 
-    private final MatchServiceAPI matchService;
-    private final TeamServiceAPI teamService;
-    private final StageServiceAPI stageService;
-    private final RoundServiceAPI roundService;
-    private final BetServiceAPI betService;
+    private final MatchService matchService;
+    private final TeamService teamService;
+    private final StageService stageService;
+    private final RoundService roundService;
+    private final BetService betService;
 
     // todo эти данные очень редко будут меняться. Cacheable?
     private void populateReferenceData(Model model) {
