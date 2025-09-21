@@ -7,7 +7,7 @@ import org.chous.bets.model.dto.UserDTO;
 import org.chous.bets.model.dto.UserUpdateDTO;
 import org.chous.bets.model.entity.User;
 import org.chous.bets.repository.UserRepository;
-import org.chous.bets.service.UserServiceAPI;
+import org.chous.bets.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserServiceAPI, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;

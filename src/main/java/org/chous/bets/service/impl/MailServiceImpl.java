@@ -3,9 +3,7 @@ package org.chous.bets.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.chous.bets.exception.EmailSendException;
-import org.chous.bets.service.MailServiceAPI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.chous.bets.service.MailService;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -15,14 +13,13 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MailServiceImpl implements MailServiceAPI {
+public class MailServiceImpl implements MailService {
+//todo сделать мэйлер
 
 //    private final String HOST_NAME = "https://mailer.pras.by";
 //    private final String APP_NAME = "pras.by";

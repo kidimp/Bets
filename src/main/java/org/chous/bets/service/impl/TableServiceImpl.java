@@ -18,8 +18,8 @@ import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
 import org.chous.bets.repository.UserRepository;
 import org.chous.bets.repository.WinningTeamRepository;
-import org.chous.bets.service.TableServiceAPI;
-import org.chous.bets.service.TeamServiceAPI;
+import org.chous.bets.service.TableService;
+import org.chous.bets.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -50,9 +50,9 @@ import static org.chous.bets.util.Constants.TOURNAMENT_WINNING_TEAM_ID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class TableServiceImpl implements TableServiceAPI {
+public class TableServiceImpl implements TableService {
 
-    private final TeamServiceAPI teamService;
+    private final TeamService teamService;
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
     private final BetRepository betRepository;

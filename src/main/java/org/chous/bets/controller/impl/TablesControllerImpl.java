@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.TablesControllerAPI;
 import org.chous.bets.model.dto.LeaderboardTableRowDTO;
 import org.chous.bets.model.dto.TableViewDTO;
-import org.chous.bets.service.TableServiceAPI;
+import org.chous.bets.service.TableService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -20,7 +20,7 @@ import static org.chous.bets.util.Constants.THIRD_ROUND;
 @RequiredArgsConstructor
 public class TablesControllerImpl implements TablesControllerAPI {
 
-    private final TableServiceAPI tablesService;
+    private final TableService tablesService;
 
     @Override
     public String getFirstRound(Model model) {

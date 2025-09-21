@@ -6,7 +6,7 @@ import org.chous.bets.model.dto.PasswordUpdateDTO;
 import org.chous.bets.model.dto.RegistrationRequestDTO;
 import org.chous.bets.model.dto.ResetPasswordRequestDTO;
 import org.chous.bets.model.dto.UserDTO;
-import org.chous.bets.service.RegistrationServiceAPI;
+import org.chous.bets.service.RegistrationService;
 import org.chous.bets.validator.UserValidator;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RegistrationControllerImpl implements RegistrationControllerAPI {
 
-    private final RegistrationServiceAPI registrationService;
+    private final RegistrationService registrationService;
     private final UserValidator userValidator;
 
     @Override

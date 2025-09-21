@@ -11,7 +11,7 @@ import org.chous.bets.model.entity.WinningTeam;
 import org.chous.bets.repository.ExtraPointsRepository;
 import org.chous.bets.repository.TeamRepository;
 import org.chous.bets.repository.WinningTeamRepository;
-import org.chous.bets.service.WinningTeamServiceAPI;
+import org.chous.bets.service.WinningTeamService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import static org.chous.bets.util.Constants.TOURNAMENT_WINNING_TEAM_ID;
 
 @Service
 @RequiredArgsConstructor
-public class WinningTeamServiceImpl implements WinningTeamServiceAPI {
+public class WinningTeamServiceImpl implements WinningTeamService {
 
     private final ExtraPointsRepository extraPointsRepository;
     private final WinningTeamRepository winningTeamRepository;

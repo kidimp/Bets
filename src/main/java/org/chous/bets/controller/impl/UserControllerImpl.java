@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.UserControllerAPI;
 import org.chous.bets.model.dto.UserUpdateDTO;
 import org.chous.bets.model.enums.RoleEnum;
-import org.chous.bets.service.UserServiceAPI;
+import org.chous.bets.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 @PreAuthorize("hasRole('ADMIN')")
 public class UserControllerImpl implements UserControllerAPI {
 
-    private final UserServiceAPI userService;
+    private final UserService userService;
 
     @Override
     public String getUsers(Model model) {

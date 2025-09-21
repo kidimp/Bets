@@ -14,7 +14,7 @@ import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
 import org.chous.bets.repository.UserRepository;
 import org.chous.bets.repository.WinningTeamRepository;
-import org.chous.bets.service.PointsServiceAPI;
+import org.chous.bets.service.PointsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import static org.chous.bets.util.Constants.TOURNAMENT_WINNING_TEAM_ID;
 
 @Service
 @RequiredArgsConstructor
-public class PointsServiceImpl implements PointsServiceAPI {
+public class PointsServiceImpl implements PointsService {
 
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;

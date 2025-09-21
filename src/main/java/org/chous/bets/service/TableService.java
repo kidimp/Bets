@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 
-public interface TableServiceAPI {
+public interface TableService {
 
     TableViewDTO setupTable(int roundNumber, Model model);
 

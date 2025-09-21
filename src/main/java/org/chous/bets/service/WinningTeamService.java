@@ -3,7 +3,7 @@ package org.chous.bets.service;
 import org.chous.bets.model.dto.WinningTeamPredictionDTO;
 import org.chous.bets.model.dto.WinningTeamTournamentDTO;
 
-public interface WinningTeamServiceAPI {
+public interface WinningTeamService {
 
     Integer getUserWinningTeamIdPrediction(Integer userId);
 

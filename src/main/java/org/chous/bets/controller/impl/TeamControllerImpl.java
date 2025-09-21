@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.TeamControllerAPI;
 import org.chous.bets.model.dto.TeamDTO;
-import org.chous.bets.service.TeamServiceAPI;
+import org.chous.bets.service.TeamService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @PreAuthorize("hasRole('ADMIN')")
 public class TeamControllerImpl implements TeamControllerAPI {
 
-    private final TeamServiceAPI teamService;
+    private final TeamService teamService;
 
     @Override
     public String listTeams(Model model) {

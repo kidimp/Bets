@@ -21,29 +21,4 @@ public interface BetMapper {
     @Mapping(target = "scoreHomeTeam", source = "scoreHomeTeam")
     @Mapping(target = "scoreAwayTeam", source = "scoreAwayTeam")
     BetDTO toDto(Bet entity);
-
-    // Обязательно: чтобы избежать ошибок при создании пустого User/Match с нужным ID
-//    default User mapUser(Long id) {
-//        if (id == null) return null;
-//        User user = new User();
-//        user.setId(id.intValue());
-//        return user;
-//    }
-//
-//    default Match mapMatch(Long id) {
-//        if (id == null) return null;
-//        Match match = new Match();
-//        match.setId(id.intValue());
-//        return match;
-//    }
-//
-//    default Long mapUser(User user) {
-//        if (user == null) return null;
-//        return user.getId() != null ? user.getId().longValue() : null;
-//    }
-//
-//    default Long mapMatch(Match match) {
-//        if (match == null) return null;
-//        return match.getId() != null ? match.getId().longValue() : null;
-//    }
 }

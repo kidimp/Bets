@@ -9,7 +9,7 @@ import org.chous.bets.repository.ExtraPointsRepository;
 import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
 import org.chous.bets.repository.WinningTeamRepository;
-import org.chous.bets.service.TeamServiceAPI;
+import org.chous.bets.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class TeamServiceImpl implements TeamServiceAPI {
+public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
     private final MatchRepository matchRepository;
