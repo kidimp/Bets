@@ -14,7 +14,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/img/ico/favicon.ico" type="image/vnd.microsoft.icon">
-    <title>Админка. Все матчи</title>
+    <title>Админка. Все турниры</title>
 </head>
 
 <body>
@@ -32,16 +32,16 @@
                 <div class="tabs">
                     <div class="tabs__nav">
                         <ul class="list-reset tabs__list">
-                            <li class="tabs__item active"><a>Матчи</a></li>
+                            <li class="tabs__item"><a class="tabs__link" href="/admin/matches">Матчи</a></li>
                             <li class="tabs__item"><a class="tabs__link" href="/admin/teams">Команды</a></li>
                             <li class="tabs__item"><a class="tabs__link" href="/admin/stages">Стадии</a></li>
                             <li class="tabs__item"><a class="tabs__link" href="/admin/rounds">Раунды</a></li>
                             <li class="tabs__item"><a class="tabs__link" href="/admin/users">Пользователи</a></li>
                             <li class="tabs__item"><a class="tabs__link" href="/admin/winning-team">Команда-победитель</a></li>
-                            <li class="tabs__item"><a class="tabs__link" href="/admin/tournaments">Турниры</a></li>
+                            <li class="tabs__item active"><a>Турниры</a></li>
                         </ul>
                     </div>
-                    <div class="tabs__content"><a class="button button--primary admin__btn" href="/admin/matches/new">Добавить матч</a>
+                    <div class="tabs__content"><a class="button button--primary admin__btn" href="/admin/tournaments/new">Добавить турнир</a>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -65,8 +65,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <th:block th:each="match : ${matches}">
-                                    <div class="modal fade" th:id="modal-delete+${match.id }" tabindex="-1" aria-hidden="true">
+                                <th:block th:each="tournament : ${tournaments}">
+                                    <div class="modal fade" th:id="modal-delete+${tournament.id }" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -74,12 +74,12 @@
                                                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Удаляя матч, вы также удаляете все ставки пользователей, связанные с этим матчем.
+                                                    Удаляя турнир, вы также удаляете все данные, связанные с этим турниром.
                                                 </div>
                                                 <div class="modal-body"></div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Отменить</button>
-                                                    <form th:method="POST" th:action="@{/admin/matches/{id}/delete(id=${match.id})}">
+                                                    <form th:method="POST" th:action="@{/admin/tournaments/{id}/delete(id=${tournament.id})}">
                                                         <button class="btn btn-primary" type="submit">Подтвердить</button>
                                                     </form>
                                                 </div>
@@ -88,51 +88,17 @@
                                     </div>
 
                                     <tr>
-                                        <td th:text="${#temporals.format(match.dateAndTime, 'dd.MM.yyyy HH:mm')}"/>
+                                        <td th:text="${#temporals.format(tournament.start, 'dd.MM.yyyy HH:mm')}"/>
 
-                                        <td>
-                                            <th:block th:each="round : ${roundsList}">
-                                                <th:block th:if="${(match.round == round.round)}"
-                                                    th:text="${round.name}"/>
-                                            </th:block>
-                                        </td>
 
-                                        <td>
-                                            <th:block th:each="stage : ${stagesList}">
-                                                <th:block th:if="${(match.stageId == stage.id)}"
-                                                      th:text="${stage.name}"/>
-                                            </th:block>
-                                        </td>
 
-                                        <td style="text-align:right">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.homeTeamId == team.id)}">
-                                                    <span class="flag" th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>:</td>
 
-                                        <td style="text-align:left">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.awayTeamId == team.id)}">
-                                                    <span class="flag" th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>
-                                            <th:block th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</th:block>
-                                        <th:block th:if="${match.isFinished()}">
-                                            <span th:text="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam()}"></span>
-                                            <span th:if="${match.isExtraTime()}" title="Extra time">⏱️</span>
-                                            <span th:if="${match.isPenalty()}" title="Penalty shoot-out">🎯</span>
-                                        </th:block>
-                                        </td>
 
-                                        <td style="width:15%"><a th:href="@{/admin/matches/{id}/edit(id=${match.getId()})}" style="text-align: right">Редактировать</a></td>
+
+                                        <td style="width:15%"><a th:href="@{/admin/tournaments/{id}/edit(id=${tournament.getId()})}" style="text-align: right">Редактировать</a></td>
                                         <td style="width:15%">
-                                                <button class="button-remove" style="text-align: left" data-row="${match}"
-                                                        data-bs-toggle="modal" th:attr="data-bs-target='#modal-delete'+${match.getId()}">Удалить</button>
+                                            <button class="button-remove" style="text-align: left" data-row="${tournament}"
+                                                    data-bs-toggle="modal" th:attr="data-bs-target='#modal-delete'+${tournament.getId()}">Удалить</button>
                                         </td>
                                     </tr>
 
