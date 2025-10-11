@@ -38,3 +38,14 @@ logging:
   level:
     org.hibernate.orm.boot.spi.ClassInfoImpl: DEBUG
     org.hibernate.metamodel.model.domain.internal: DEBUG
+
+tournament-name: ${TOURNAMENT_NAME:}
+
+mail:
+  host-name: ${MAIL_HOST_NAME}
+  app-name: ${MAIL_APP_NAME}
+  sender: ${MAIL_SENDER}
+  password: ${MAIL_PASSWORD}
+  media-type: ${MAIL_MEDIA_TYPE:application/json; charset=utf-8}
+  call-timeout: ${CALL_TIMEOUT:10}
+  max-retries: ${MAX_RETRIES:3}
