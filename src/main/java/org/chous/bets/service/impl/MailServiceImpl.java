@@ -1,152 +1,189 @@
 package org.chous.bets.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import org.chous.bets.exception.EmailSendException;
 import org.chous.bets.service.MailService;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 @Slf4j
 @Service
-@Profile("!local")
+@RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
+//todo сделать мэйлер
 
-    @Value("${mail.host-name}")
-    private String hostName;
+//    private final String HOST_NAME = "https://mailer.pras.by";
+//    private final String APP_NAME = "pras.by";
+//    private final String SENDER = "BETS - ставки";
+//    private final String APP_PASSWORD = "PasswordPrasBy";
+//    private final String MEDIA_TYPE_UTF8 = "application/json; charset=utf-8";
+//    private volatile String token = "";
 
-    @Value("${mail.app-name}")
-    private String appName;
+//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+//
+//
+//    public void getToken() {
+//        OkHttpClient client = new OkHttpClient();
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("login", APP_NAME);
+//        jsonObject.put("password", APP_PASSWORD);
+//
+//        RequestBody body = RequestBody.create(
+//                jsonObject.toString(), MediaType.get(MEDIA_TYPE_UTF8));
+//
+//        Request request = new Request.Builder()
+//                .url(HOST_NAME +"/token")
+//                .post(body)
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                logger.error("Failed to get Token: {}", e.getMessage());
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                if (!response.isSuccessful()) {
+//                    logger.error("Failed to get Token. Unexpected code: {}", response);
+//                    throw new IOException("Unexpected code " + response);
+//                }
+//
+//                String tokenObject = response.body().string();
+//
+//                //System.out.println("Response Code: " + response.code());
+//                //System.out.println("Response Body: " + tokenObject);
+//
+//                parseToken(tokenObject);
+//                sendMessageToServer();
+//            }
+//        });
+//    }
+//
+//    public void parseToken(String tokenObject) {
+//        token = "";
+//
+//        JSONObject object = new JSONObject(tokenObject);
+//        token = object.get("accessToken").toString();
+//    }
 
-    @Value("${mail.sender}")
-    private String sender;
+//    public void sendMessageToServer() {
+//
+//    }
+//
+//    public void send(String to, String subject, String text) {
+//        CompletableFuture.runAsync(() -> {
+//
+//            token = "";
+//            getToken();
+//            //CompletableFuture.supplyAsync(() -> getToken()).thenAccept(result -> {
+//
+//            while (token.isEmpty()) {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//
+//            OkHttpClient client = new OkHttpClient();
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("clientName", APP_NAME);
+//            jsonObject.put("clientMessageId", "none");
+//            jsonObject.put("sender", SENDER);
+//            jsonObject.put("recipients", to);
+//            jsonObject.put("subject", subject);
+//            jsonObject.put("body", text);
+//
+//            JSONArray jsonArray = new JSONArray();
+//            jsonArray.put(jsonObject);
+//
+//            RequestBody body = RequestBody.create(
+//                    jsonArray.toString(), MediaType.get(MEDIA_TYPE_UTF8));
+//
+//            Request request = new Request.Builder()
+//                    .url(HOST_NAME +"/add")
+//                    .header("Authorization", "Bearer " + token)
+//                    .post(body)
+//                    .build();
+//
+//            client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Call call, IOException e) {
+//                    logger.error("Failed to send email to {}: {}", to, e.getMessage(), e);
+//                }
+//
+//                @Override
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    if (!response.isSuccessful()) {
+//                        logger.error("Failed to send email to {}: Unexpected code {}", to, response);
+//                        throw new IOException("Unexpected code " + response);
+//                    }
+//
+//                    //System.out.println("Response Code: " + response.code());
+//                    //System.out.println("Response Body: " + response.body().string());
+//                }
+//            });
+//
+//
+//        }).thenRun(() -> System.out.println("Готово!"));
+//        /* обработка результата */// });
+//    }
 
-    @Value("${mail.password}")
-    private String appPassword;
-
-    @Value("${mail.media-type:application/json; charset=utf-8}")
-    private String mediaTypeUtf8;
-
-    @Value("${mail.call-timeout}")
-    private int callTimeout;
-
-    @Value("${mail.max-retries}")
-    private int maxRetries;
-
-    private final OkHttpClient client = new OkHttpClient.Builder()
-            .callTimeout(Duration.ofSeconds(callTimeout))
-            .build();
-
-    private final ExecutorService executor = Executors.newCachedThreadPool();
-
-    /**
-     * Основной метод: получить токен и отправить письмо
-     */
+    @Override
     public void send(String to, String subject, String text) {
-        getTokenWithRetry(maxRetries)
-                .thenCompose(token -> sendMessage(token, to, subject, text))
-                .thenRun(() -> log.info("Письмо успешно отправлено на {}", to))
-                .exceptionally(ex -> {
-                    log.error("Ошибка при отправке письма: {}", ex.getMessage(), ex);
-                    return null;
-                    //todo нужно, чтобы при ошибке не появлялась страничка с надписью "письмо успешно отправлено"
-                    // а появлялась страничка, сообщающая об ошибке и предлогом попробовать ещё раз
+
+        to = "kidminsk@yandex.ru";
+        String from = "kidimpminsk@gmail.com";
+        final String username = "kidimpminsk";
+        final String password = "jgpdnhecvehsuwdm";
+
+        String host = "smtp.gmail.com";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
                 });
-    }
 
-    /**
-     * Попытка получить токен с retry
-     */
-    private CompletableFuture<String> getTokenWithRetry(int maxRetries) {
-        return CompletableFuture.supplyAsync(() -> {
-            for (int attempt = 1; attempt <= maxRetries; attempt++) {
-                try {
-                    String token = getTokenSync();
-                    log.debug("Токен успешно получен (попытка {})", attempt);
-                    return token;
-                } catch (Exception e) {
-                    log.warn("Не удалось получить токен (попытка {}): {}", attempt, e.getMessage());
-                    if (attempt == maxRetries) {
-                        throw new RuntimeException("Ошибка при получении токена после " + maxRetries + " попыток", e);
-                    }
-                    try {
-                        Thread.sleep(1000L * attempt); // постепенная задержка
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            }
-            throw new RuntimeException("Не удалось получить токен");
-        }, executor);
-    }
+        try {
+            MimeMessage message = new MimeMessage(session);
 
-    /**
-     * Получение токена (синхронно, внутри фонового потока)
-     */
-    private String getTokenSync() throws IOException {
-        JSONObject json = new JSONObject()
-                .put("login", appName)
-                .put("password", appPassword);
+            message.setFrom(new InternetAddress(from));
 
-        RequestBody body = RequestBody.create(json.toString(), MediaType.get(mediaTypeUtf8));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to));
 
-        Request request = new Request.Builder()
-                .url(hostName + "/token")
-                .post(body)
-                .build();
+            message.setSubject(subject, "UTF-8");
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Ошибка получения токена: " + response.code());
-            }
+            message.setText(text, "UTF-8");
 
-            String responseBody = response.body().string();
-            JSONObject tokenJson = new JSONObject(responseBody);
-            return tokenJson.getString("accessToken");
+            Transport.send(message);
+
+            log.info("Message was successfully sent.");
+
+        } catch (MessagingException e) {
+            throw new EmailSendException("Не удалось отправить письмо: " + e.getMessage());
         }
-    }
-
-    /**
-     * Отправка письма
-     */
-    private CompletableFuture<Void> sendMessage(String token, String to, String subject, String text) {
-        return CompletableFuture.runAsync(() -> {
-            JSONObject email = new JSONObject()
-                    .put("clientName", appName)
-                    .put("clientMessageId", "none")
-                    .put("sender", sender)
-                    .put("recipients", to)
-                    .put("subject", subject)
-                    .put("body", text);
-
-            JSONArray jsonArray = new JSONArray().put(email);
-
-            RequestBody body = RequestBody.create(jsonArray.toString(), MediaType.get(mediaTypeUtf8));
-
-            Request request = new Request.Builder()
-                    .url(hostName + "/add")
-                    .header("Authorization", "Bearer " + token)
-                    .post(body)
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Ошибка при отправке письма: " + response.code());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Не удалось отправить письмо: " + e.getMessage(), e);
-            }
-        }, executor);
     }
 }
