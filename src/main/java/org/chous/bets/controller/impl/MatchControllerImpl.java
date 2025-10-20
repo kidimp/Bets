@@ -4,15 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.MatchControllerAPI;
 import org.chous.bets.model.dto.MatchDTO;
 import org.chous.bets.service.MatchService;
-import org.chous.bets.service.RoundService;
-import org.chous.bets.service.StageService;
-import org.chous.bets.service.TeamService;
+import org.chous.bets.service.impl.ReferenceDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,21 +16,18 @@ import java.util.List;
 public class MatchControllerImpl implements MatchControllerAPI {
 
     private final MatchService matchService;
-    private final TeamService teamService;
-    private final StageService stageService;
-    private final RoundService roundService;
+    private final ReferenceDataService referenceDataService;
 
-    // todo эти данные очень редко будут меняться. Cacheable?
     private void populateReferenceData(Model model) {
-        model.addAttribute("teamsList", teamService.findAll());
-        model.addAttribute("stagesList", stageService.findAll());
-        model.addAttribute("roundsList", roundService.findAll());
+        ReferenceDataService.ReferenceData ref = referenceDataService.loadReferenceData();
+        model.addAttribute("teamsList", ref.teams());
+        model.addAttribute("stagesList", ref.stages());
+        model.addAttribute("roundsList", ref.rounds());
     }
 
     @Override
     public String getAllMatches(Model model) {
-        List<MatchDTO> matches = matchService.findAllSortedByDateDesc();
-        model.addAttribute("matches", matches);
+        model.addAttribute("matches", matchService.findAllSortedByDateDesc());
         populateReferenceData(model);
         return "matches/all";
     }
@@ -57,8 +50,7 @@ public class MatchControllerImpl implements MatchControllerAPI {
 
     @Override
     public String showEditMatchForm(Integer id, Model model) {
-        MatchDTO matchDTO = matchService.findById(id);
-        model.addAttribute("match", matchDTO);
+        model.addAttribute("match", matchService.findById(id));
         populateReferenceData(model);
         return "matches/edit";
     }

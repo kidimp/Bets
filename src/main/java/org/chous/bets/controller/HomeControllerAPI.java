@@ -8,9 +8,6 @@ public interface HomeControllerAPI {
     @GetMapping(value = "/")
     String home(Model model);
 
-    @GetMapping("/fixtures")
-    String fixtures(Model model);
-
     @GetMapping("/rules")
     String rules(Model model);
 }
