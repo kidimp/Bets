@@ -10,6 +10,7 @@ import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
 import org.chous.bets.repository.WinningTeamRepository;
 import org.chous.bets.service.TeamService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+//todo разобраться, когда над классом, а когда над методом
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
@@ -49,12 +51,14 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void create(TeamDTO teamDTO) {
         Team team = teamMapper.toEntity(teamDTO);
         teamRepository.save(team);
     }
 
     @Override
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void update(int id, TeamDTO teamDTO) {
         Team existing = teamRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Team not found with id: " + id));
@@ -64,6 +68,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void delete(int id) {
         matchRepository.deleteAllByTeamId(id);
         extraPointsRepository.deleteAllByTeamId(id);

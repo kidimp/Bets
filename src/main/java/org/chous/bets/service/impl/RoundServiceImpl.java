@@ -9,6 +9,7 @@ import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.RoundRepository;
 import org.chous.bets.service.MatchService;
 import org.chous.bets.service.RoundService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +41,14 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void save(RoundDTO roundDTO) {
         roundRepository.save(roundMapper.toEntity(roundDTO));
     }
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void update(Integer id, RoundDTO roundDTO) {
         Round existing = roundRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Раунд не найден, id = " + id));
@@ -56,6 +59,7 @@ public class RoundServiceImpl implements RoundService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void delete(Integer id) {
         List<Match> matches = matchRepository.findAllByRound(id);
         for (Match match : matches) {

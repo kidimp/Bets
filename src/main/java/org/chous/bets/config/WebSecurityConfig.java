@@ -23,7 +23,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http    // todo под анонимным юзером не открывается /fixtures
+        http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/registration", "/login", "/activate/*",
                                 "/reset/*", "/reset-password", "/reset-form/*",
