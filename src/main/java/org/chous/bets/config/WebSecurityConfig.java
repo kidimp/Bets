@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import org.chous.bets.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +24,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/registration", "/login", "/activate/*",
+                        .requestMatchers("/", "/registration", "/login", "/login**", "/activate/*",
                                 "/reset/*", "/reset-password", "/reset-form/*",
                                 "/fixtures", "/tables/**", "/rules", "/archive/**",
                                 "/css/*", "/img/**")
@@ -44,17 +43,22 @@ public class WebSecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .permitAll()
-                );
+                )
+
+                .authenticationProvider(daoAuthenticationProvider());
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(userService)
-                .passwordEncoder(passwordEncoder());
-        return authBuilder.build();
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder());
+
+        provider.setHideUserNotFoundExceptions(true);
+
+        return provider;
     }
 
     @Bean
