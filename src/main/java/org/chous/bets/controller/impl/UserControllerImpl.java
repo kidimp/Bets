@@ -20,7 +20,7 @@ public class UserControllerImpl implements UserControllerAPI {
     private final UserService userService;
 
     @Override
-    public String getUsers(Model model) {
+    public String getAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "/users/all";
     }

@@ -20,13 +20,13 @@ public class TeamControllerImpl implements TeamControllerAPI {
     private final TeamService teamService;
 
     @Override
-    public String listTeams(Model model) {
+    public String getAllTeams(Model model) {
         model.addAttribute("teams", teamService.findAll());
         return "teams/all";
     }
 
     @Override
-    public String newTeamForm(Model model) {
+    public String createTeamForm(@ModelAttribute("team") @Valid TeamDTO teamDTO, Model model) {
         model.addAttribute("team", new TeamDTO());
         return "teams/new";
     }
@@ -41,15 +41,13 @@ public class TeamControllerImpl implements TeamControllerAPI {
     }
 
     @Override
-    public String editTeamForm(@PathVariable("id") int id, Model model) {
+    public String editTeamForm(Integer id, Model model) {
         model.addAttribute("team", teamService.findById(id));
         return "teams/edit";
     }
 
     @Override
-    public String updateTeam(@PathVariable("id") int id,
-                             @ModelAttribute("team") @Valid TeamDTO teamDTO,
-                             BindingResult bindingResult) {
+    public String updateTeam(Integer id, TeamDTO teamDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "teams/edit";
         }
@@ -58,7 +56,7 @@ public class TeamControllerImpl implements TeamControllerAPI {
     }
 
     @Override
-    public String deleteTeam(@PathVariable("id") int id) {
+    public String deleteTeam(Integer id) {
         teamService.delete(id);
         return "redirect:/admin/teams";
     }

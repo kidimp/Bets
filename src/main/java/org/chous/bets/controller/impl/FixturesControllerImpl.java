@@ -18,7 +18,7 @@ public class FixturesControllerImpl implements FixturesControllerAPI {
     private final BetService betService;
 
     @Override
-    public String fixtures(Model model) {
+    public String getFixtures(Model model) {
         ReferenceDataService.ReferenceData ref = referenceDataService.loadReferenceData();
         model.addAttribute("teamsList", ref.teams());
         model.addAttribute("stagesList", ref.stages());

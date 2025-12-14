@@ -17,18 +17,18 @@ public class RoundControllerImpl implements RoundControllerAPI {
     private final RoundService roundService;
 
     @Override
-    public String list(Model model) {
+    public String getAllRounds(Model model) {
         model.addAttribute("rounds", roundService.findAll());
         return "rounds/all";
     }
 
     @Override
-    public String createForm(RoundDTO round) {
+    public String createRoundForm(RoundDTO round) {
         return "rounds/new";
     }
 
     @Override
-    public String create(RoundDTO round, BindingResult result) {
+    public String createRound(RoundDTO round, BindingResult result) {
         if (result.hasErrors()) {
             return "rounds/new";
         }
@@ -37,13 +37,13 @@ public class RoundControllerImpl implements RoundControllerAPI {
     }
 
     @Override
-    public String editForm(Integer id, Model model) {
+    public String editRoundForm(Integer id, Model model) {
         model.addAttribute("round", roundService.findById(id));
         return "rounds/edit";
     }
 
     @Override
-    public String update(Integer id, RoundDTO round, BindingResult result) {
+    public String updateRound(Integer id, RoundDTO round, BindingResult result) {
         if (result.hasErrors()) {
             return "rounds/edit";
         }
@@ -52,7 +52,7 @@ public class RoundControllerImpl implements RoundControllerAPI {
     }
 
     @Override
-    public String delete(Integer id) {
+    public String deleteRound(Integer id) {
         roundService.delete(id);
         return "redirect:/admin/rounds";
     }
