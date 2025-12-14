@@ -14,7 +14,7 @@ public class PointsControllerImpl implements PointsControllerAPI {
     private final PointsService pointsService;
 
     @Override
-    public String recalculate() {
+    public String recalculateTables() {
         pointsService.recalculatePoints();
         return "redirect:/admin/matches";
     }

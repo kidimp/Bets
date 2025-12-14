@@ -55,7 +55,7 @@ public class PointsServiceImpl implements PointsService {
                 double points = PointsCalculator.round(calculator.getPointsForMatch(), 2);
                 bet.setPoints(points);
                 betRepository.updatePoints(bet.getId(), points);
-int i = bet.getUser().getId();
+
                 updateHitStats(bet.getUser().getId(), calculator, correctScoreMap, matchResultMap);
             }
         }

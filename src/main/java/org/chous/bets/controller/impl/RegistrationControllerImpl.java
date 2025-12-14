@@ -20,6 +20,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RegistrationControllerImpl implements RegistrationControllerAPI {
 
+    private static final String MESSAGE = "message";
+
     private final RegistrationService registrationService;
     private final UserValidator userValidator;
 
@@ -52,14 +54,14 @@ public class RegistrationControllerImpl implements RegistrationControllerAPI {
     @Override
     public String activate(Model model, String code) {
         boolean isActivated = registrationService.activateUser(code);
-        model.addAttribute("message", isActivated ?
+        model.addAttribute(MESSAGE, isActivated ?
                 "Вы подтвердили email. Теперь входите :)" :
                 "Активационный код не найден или просрочен. Попробуйте восстановить пароль ещё раз");
         return "auth/login";
     }
 
     @Override
-    public String showResetPasswordForm() {
+    public String showResetPasswordRequestForm() {
         return "auth/reset-password";
     }
 
@@ -74,7 +76,7 @@ public class RegistrationControllerImpl implements RegistrationControllerAPI {
     }
 
     @Override
-    public String showResetPasswordForm(String token, Model model) {
+    public String showResetPasswordUpdateForm(String token, Model model) {
         model.addAttribute("token", token);
         return "auth/reset-form";
     }
@@ -100,9 +102,9 @@ public class RegistrationControllerImpl implements RegistrationControllerAPI {
 
         try {
             registrationService.updatePassword(user, password);
-            model.addAttribute("message", "Вы успешно сбросили пароль");
+            model.addAttribute(MESSAGE, "Вы успешно сбросили пароль");
         } catch (UsernameNotFoundException e) {
-            model.addAttribute("message", "Время действия ссылки на восстановление пароля истекло. Попробуйте ещё раз.");
+            model.addAttribute(MESSAGE, "Время действия ссылки на восстановление пароля истекло. Попробуйте ещё раз.");
         }
 
         return "auth/login";

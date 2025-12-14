@@ -26,7 +26,7 @@ public class TournamentControllerImpl implements TournamentControllerAPI {
     }
 
     @Override
-    public String showCreateTournamentForm(TournamentDTO tournamentDTO, Model model) {
+    public String createTournamentForm(TournamentDTO tournamentDTO, Model model) {
         return "";
     }
 
@@ -36,7 +36,7 @@ public class TournamentControllerImpl implements TournamentControllerAPI {
     }
 
     @Override
-    public String showEditTournamentForm(Integer id, Model model) {
+    public String editTournamentForm(Integer id, Model model) {
         return "";
     }
 

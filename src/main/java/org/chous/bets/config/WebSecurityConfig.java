@@ -27,7 +27,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/", "/registration", "/login", "/login**", "/activate/*",
                                 "/reset/*", "/reset-password", "/reset-form/*",
                                 "/fixtures", "/tables/**", "/rules", "/archive/**",
-                                "/css/*", "/img/**")
+                                "/css/*", "/img/**",
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

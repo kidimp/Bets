@@ -1,5 +1,6 @@
 package org.chous.bets.controller.impl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.StageControllerAPI;
 import org.chous.bets.model.dto.StageDTO;
@@ -8,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,19 +19,19 @@ public class StageControllerImpl implements StageControllerAPI {
     private final StageService stageService;
 
     @Override
-    public String findAll(Model model) {
+    public String getAllStages(Model model) {
         model.addAttribute("stages", stageService.findAll());
         return "stages/all";
     }
 
     @Override
-    public String createForm(Model model) {
+    public String createStageForm(@ModelAttribute("stage") @Valid StageDTO stageDTO, Model model) {
         model.addAttribute("stage", new StageDTO());
         return "stages/new";
     }
 
     @Override
-    public String create(StageDTO stageDTO, BindingResult bindingResult) {
+    public String createStage(StageDTO stageDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "stages/new";
         }
@@ -38,13 +40,13 @@ public class StageControllerImpl implements StageControllerAPI {
     }
 
     @Override
-    public String editForm(Integer id, Model model) {
+    public String editStageForm(Integer id, Model model) {
         model.addAttribute("stage", stageService.findById(id));
         return "stages/edit";
     }
 
     @Override
-    public String update(Integer id, StageDTO stageDTO, BindingResult bindingResult) {
+    public String updateStage(Integer id, StageDTO stageDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "stages/edit";
         }

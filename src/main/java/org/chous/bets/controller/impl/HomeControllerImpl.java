@@ -8,12 +8,12 @@ import org.springframework.ui.Model;
 public class HomeControllerImpl implements HomeControllerAPI {
 
     @Override
-    public String home(Model model) {
+    public String getHome(Model model) {
         return "home";
     }
 
     @Override
-    public String rules(Model model) {
+    public String getRules(Model model) {
         return "rules";
     }
 }

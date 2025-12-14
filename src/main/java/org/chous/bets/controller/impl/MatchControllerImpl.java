@@ -33,7 +33,7 @@ public class MatchControllerImpl implements MatchControllerAPI {
     }
 
     @Override
-    public String showCreateMatchForm(MatchDTO matchDTO, Model model) {
+    public String createMatchForm(MatchDTO matchDTO, Model model) {
         populateReferenceData(model);
         return "matches/new";
     }
@@ -49,7 +49,7 @@ public class MatchControllerImpl implements MatchControllerAPI {
     }
 
     @Override
-    public String showEditMatchForm(Integer id, Model model) {
+    public String editMatchForm(Integer id, Model model) {
         model.addAttribute("match", matchService.findById(id));
         populateReferenceData(model);
         return "matches/edit";

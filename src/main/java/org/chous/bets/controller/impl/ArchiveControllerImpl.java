@@ -43,6 +43,4 @@ public class ArchiveControllerImpl implements ArchiveControllerAPI {
     public String getTournamentLeaderboard(Model model) {
         return "archive/euro2024-leaderboard";
     }
-
-
 }
