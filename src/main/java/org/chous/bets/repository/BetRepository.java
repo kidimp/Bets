@@ -1,6 +1,5 @@
 package org.chous.bets.repository;
 
-import jakarta.transaction.Transactional;
 import org.chous.bets.model.entity.Bet;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,8 +27,11 @@ public interface BetRepository extends JpaRepository<Bet, Integer>, BetRepositor
 
     List<Bet> findByMatchIdIn(List<Integer> matchIds);
 
-    @Transactional
     @Modifying
     @Query("DELETE FROM Bet b WHERE b.match.id = :matchId")
-    void deleteAllByMatchId(@Param("matchId") Integer matchId);
+    void deleteByMatchId(@Param("matchId") Integer matchId);
+
+    @Modifying
+    @Query("DELETE FROM Bet b WHERE b.match.id IN :matchIds")
+    void deleteAllByMatchIds(@Param("matchIds") List<Integer> matchIds);
 }

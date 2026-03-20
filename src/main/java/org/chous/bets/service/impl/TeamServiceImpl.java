@@ -5,6 +5,7 @@ import org.chous.bets.exception.DataNotFoundException;
 import org.chous.bets.mapper.TeamMapper;
 import org.chous.bets.model.dto.TeamDTO;
 import org.chous.bets.model.entity.Team;
+import org.chous.bets.repository.BetRepository;
 import org.chous.bets.repository.ExtraPointsRepository;
 import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.TeamRepository;
@@ -29,6 +30,7 @@ public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
     private final MatchRepository matchRepository;
+    private final BetRepository betRepository;
     private final ExtraPointsRepository extraPointsRepository;
     private final WinningTeamRepository winningTeamRepository;
     private final TeamMapper teamMapper;
@@ -70,10 +72,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @CacheEvict(cacheNames = "teams-stages-rounds", allEntries = true)
     public void delete(int id) {
-        matchRepository.deleteAllByTeamId(id);
+        List<Integer> matchIds = matchRepository.getMatchIdsByTeamId(id);
+        if (!matchIds.isEmpty()) {
+            betRepository.deleteAllByMatchIds(matchIds);
+            matchRepository.deleteAllByIds(matchIds);
+        }
         extraPointsRepository.deleteAllByTeamId(id);
         winningTeamRepository.deleteAllByTeamId(id);
         teamRepository.deleteById(id);
+        // todo переделать на каскадное удаление
     }
 
     @Override

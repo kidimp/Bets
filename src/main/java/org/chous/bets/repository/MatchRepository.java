@@ -25,8 +25,10 @@ public interface MatchRepository extends JpaRepository<Match, Integer> {
 
     List<Match> findAllByRound(Integer id);
 
-    @Transactional
+    @Query("SELECT m.id FROM Match m WHERE m.homeTeamId = :teamId OR m.awayTeamId = :teamId")
+    List<Integer> getMatchIdsByTeamId(@Param("teamId") Integer teamId);
+
     @Modifying
-    @Query("DELETE FROM Match m WHERE m.homeTeamId = :teamId OR m.awayTeamId = :teamId")
-    void deleteAllByTeamId(@Param("teamId") Integer teamId);
+    @Query("DELETE FROM Match m WHERE m.id IN :ids")
+    void deleteAllByIds(@Param("ids") List<Integer> ids);
 }
