@@ -25,8 +25,7 @@ public class TeamControllerImpl implements TeamControllerAPI {
     }
 
     @Override
-    public String createTeamForm(@ModelAttribute("team") @Valid TeamDTO teamDTO, Model model) {
-        model.addAttribute("team", new TeamDTO());
+    public String createTeamForm(@ModelAttribute("team") TeamDTO teamDTO) {
         return "teams/new";
     }
 

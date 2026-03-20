@@ -31,8 +31,7 @@ public interface TeamControllerAPI {
     @GetMapping("/new")
     String createTeamForm(
             @Parameter(description = "DTO новой команды")
-            @ModelAttribute("team") TeamDTO teamDTO,
-            Model model
+            @ModelAttribute("team") TeamDTO teamDTO
     );
 
     @Operation(

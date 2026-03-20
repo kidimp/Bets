@@ -73,7 +73,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        betRepository.deleteAllByMatchId(id);
+        betRepository.deleteByMatchId(id);
         matchRepository.deleteById(id);
     }
 

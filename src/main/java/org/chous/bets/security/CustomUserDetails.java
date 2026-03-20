@@ -29,6 +29,11 @@ public class CustomUserDetails implements UserDetails {
         return user.getEmail();
     }
 
+    @Override
+    public boolean isEnabled() {
+        return user.isActive();
+    }
+
     /**
      * Данный геттер нужен для отображения на фронте в шапке никнейма авторизированного юзера
      */
