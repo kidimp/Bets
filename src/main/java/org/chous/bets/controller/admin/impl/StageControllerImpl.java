@@ -25,8 +25,7 @@ public class StageControllerImpl implements StageControllerAPI {
     }
 
     @Override
-    public String createStageForm(@ModelAttribute("stage") @Valid StageDTO stageDTO, Model model) {
-        model.addAttribute("stage", new StageDTO());
+    public String createStageForm(StageDTO stageDTO) {
         return "stages/new";
     }
 

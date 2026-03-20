@@ -31,8 +31,7 @@ public interface StageControllerAPI {
     @GetMapping("/new")
     String createStageForm(
             @Parameter(description = "DTO новой стадии")
-            @ModelAttribute("stage") StageDTO stageDTO,
-            Model model
+            @ModelAttribute("stage") StageDTO stageDTO
     );
 
     @Operation(
