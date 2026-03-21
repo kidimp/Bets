@@ -1,0 +1,62 @@
+package org.chous.bets.controller.admin.impl;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.chous.bets.controller.admin.StageControllerAPI;
+import org.chous.bets.model.dto.StageDTO;
+import org.chous.bets.service.StageService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+@Controller
+@RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
+public class StageControllerImpl implements StageControllerAPI {
+
+    private final StageService stageService;
+
+    @Override
+    public String getAllStages(Model model) {
+        model.addAttribute("stages", stageService.findAll());
+        return "stages/all";
+    }
+
+    @Override
+    public String createStageForm(StageDTO stageDTO) {
+        return "stages/new";
+    }
+
+    @Override
+    public String createStage(StageDTO stageDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "stages/new";
+        }
+        stageService.save(stageDTO);
+        return "redirect:/admin/stages";
+    }
+
+    @Override
+    public String editStageForm(Integer id, Model model) {
+        model.addAttribute("stage", stageService.findById(id));
+        return "stages/edit";
+    }
+
+    @Override
+    public String updateStage(Integer id, StageDTO stageDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "stages/edit";
+        }
+        stageService.update(id, stageDTO);
+        return "redirect:/admin/stages";
+    }
+
+    @Override
+    public String delete(Integer id) {
+        stageService.delete(id);
+        return "redirect:/admin/stages";
+    }
+}
+

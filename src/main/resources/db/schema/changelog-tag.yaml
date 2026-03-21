@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      author: chous
+      id: 1.0.0
+      changes:
+        - tagDatabase:
+            tag: 1.0
+
+  - include:
+      file: 01-create-table-users.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 02-create-table-team.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 03-create-table-stage.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 04-create-table-round.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 05-create-table-matches.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 06-create-table-bet.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 07-create-table-winning-team.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 08-create-table-extra-points.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 09-create-table-tournament.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 10-create-table-tournament_team.sql
+      relativeToChangelogFile: true

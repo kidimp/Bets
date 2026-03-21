@@ -1,30 +1,26 @@
 package org.chous.bets.service;
 
-import org.chous.bets.model.Match;
+import org.chous.bets.model.dto.MatchDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MatchService {
-    public static Match getMatchById(int matchId, List<Match> matches) {
-        for (Match match : matches) {
-            if (matchId == match.getId()) {
-                return match;
-            }
-        }
-        return null;
-    }
+public interface MatchService {
+//todo сделать понятные названия методов
+    List<MatchDTO> findAll();
 
+    List<MatchDTO> findAllSortedByDateDesc();
 
-    public static List<Match> getMatchesByRound(int round, List<Match> matches) {
-        List<Match> matchesByRound = new ArrayList<>();
-        for (Match match : matches) {
-            if (match.getRound() == round) {
-                matchesByRound.add(match);
-            }
-        }
-        return matchesByRound;
-    }
+    MatchDTO findById(Integer id);
 
+    void save(MatchDTO matchDTO);
 
+    void update(Integer id, MatchDTO matchDTO);
+
+    void delete(Integer id);
+
+    List<MatchDTO> findAllUpcomingAndStartedMatches();
+
+    List<MatchDTO> findAllFinishedMatches();
+
+    MatchDTO getMatchDTO(int matchId);
 }
