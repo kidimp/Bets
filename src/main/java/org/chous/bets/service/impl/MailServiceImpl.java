@@ -6,6 +6,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.chous.bets.exception.EmailSendingException;
+import org.chous.bets.exception.TokenReceivingException;
 import org.chous.bets.service.MailService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,15 +82,17 @@ public class MailServiceImpl implements MailService {
                 } catch (Exception e) {
                     log.warn("Не удалось получить токен (попытка {}): {}", attempt, e.getMessage());
                     if (attempt == maxRetries) {
-                        throw new RuntimeException("Ошибка при получении токена после " + maxRetries + " попыток", e);
+                        throw new TokenReceivingException("Ошибка при получении токена после " + maxRetries + " попыток");
                     }
                     try {
                         Thread.sleep(1000L * attempt); // постепенная задержка
-                    } catch (InterruptedException ignored) {
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        throw new TokenReceivingException("Поток был прерван во время ожидания получения токена. " + e.getMessage());
                     }
                 }
             }
-            throw new RuntimeException("Не удалось получить токен");
+            throw new TokenReceivingException("Не удалось получить токен");
         }, executor);
     }
 
@@ -99,11 +104,11 @@ public class MailServiceImpl implements MailService {
                 .put("login", appName)
                 .put("password", appPassword);
 
-        RequestBody body = RequestBody.create(json.toString(), MediaType.get(mediaTypeUtf8));
+        RequestBody requestBody = RequestBody.create(json.toString(), MediaType.get(mediaTypeUtf8));
 
         Request request = new Request.Builder()
                 .url(hostName + "/token")
-                .post(body)
+                .post(requestBody)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -111,7 +116,12 @@ public class MailServiceImpl implements MailService {
                 throw new IOException("Ошибка получения токена: " + response.code());
             }
 
-            String responseBody = response.body().string();
+            ResponseBody body = response.body();
+            if (body == null) {
+                throw new TokenReceivingException("Пустое тело ответа при получении токена. HTTP: " + response.code());
+            }
+
+            String responseBody = body.string();
             JSONObject tokenJson = new JSONObject(responseBody);
             return tokenJson.getString("accessToken");
         }
@@ -145,7 +155,7 @@ public class MailServiceImpl implements MailService {
                     throw new IOException("Ошибка при отправке письма: " + response.code());
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Не удалось отправить письмо: " + e.getMessage(), e);
+                throw new EmailSendingException("Не удалось отправить письмо: " + e.getMessage());
             }
         }, executor);
     }
