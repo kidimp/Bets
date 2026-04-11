@@ -7,5 +7,11 @@ databaseChangeLog:
             tag: 1.0
 
   - include:
-      file: 07-insert-data-table-winning-team.sql
+      file: 01-insert-data-table-stage.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 02-insert-data-table-round.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 03-insert-data-table-winning-team.sql
       relativeToChangelogFile: true
