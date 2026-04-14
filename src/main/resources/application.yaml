@@ -1,4 +1,10 @@
+server:
+  port: 9090
+
 spring:
+
+  config:
+    import: file:${ENV_PATH}/prod.env[.properties]
 
   application:
     name: bets
@@ -35,11 +41,16 @@ spring:
     cache: false
 
 logging:
+  file:
+    name: ./logs/bets-log.txt
   level:
     org.hibernate.orm.boot.spi.ClassInfoImpl: DEBUG
     org.hibernate.metamodel.model.domain.internal: DEBUG
+    org.chous.bets: DEBUG
 
 tournament-name: ${TOURNAMENT_NAME:}
+
+base-url: ${BASE_URL}
 
 mail:
   host-name: ${MAIL_HOST_NAME}

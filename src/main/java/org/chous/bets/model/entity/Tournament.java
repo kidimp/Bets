@@ -50,7 +50,8 @@ public class Tournament {
     private String name;
 
     // todo только один турнир может быть активным
-    private boolean active;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @NotNull
     @Column(name = "start", nullable = false)

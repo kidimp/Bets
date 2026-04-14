@@ -22,7 +22,7 @@ public class UserControllerImpl implements UserControllerAPI {
     @Override
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
-        return "/users/all";
+        return "users/all";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserControllerImpl implements UserControllerAPI {
                 .ifPresent(user -> model.addAttribute("user", user));
 
         model.addAttribute("roles", Arrays.asList(RoleEnum.values()));
-        return "/users/edit";
+        return "users/edit";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UserControllerImpl implements UserControllerAPI {
         model.addAttribute("roles", Arrays.asList(RoleEnum.values()));
 
         if (bindingResult.hasErrors()) {
-            return "/users/edit";
+            return "users/edit";
         }
 
         userService.update(username, userUpdateDTO);

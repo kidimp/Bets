@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS tournament
     id               INT PRIMARY KEY AUTO_INCREMENT,
     code             VARCHAR(20) NOT NULL,
     name             VARCHAR(30) NOT NULL,
-    start            DATETIME NOT NULL,
-    finish           DATETIME NOT NULL,
+    is_active        BOOLEAN     NOT NULL,
+    start            DATETIME    NOT NULL,
+    finish           DATETIME    NOT NULL,
     winning_team_id  INT,
     runner_up_team_id INT,
 

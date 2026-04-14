@@ -45,7 +45,9 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/login")
                         .permitAll()
                 )
-
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied")
+                )
                 .authenticationProvider(daoAuthenticationProvider());
 
         return http.build();
