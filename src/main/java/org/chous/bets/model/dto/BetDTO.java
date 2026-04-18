@@ -1,5 +1,7 @@
 package org.chous.bets.model.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,8 +20,15 @@ public class BetDTO {
     private Integer id;
     private Integer userId;
     private Integer matchId;
-    private int scoreHomeTeam;
-    private int scoreAwayTeam;
+
+    @NotNull(message = "Введите счёт")
+    @Min(value = 0, message = "Счёт не может быть отрицательным")
+    private Integer scoreHomeTeam;
+
+    @NotNull(message = "Введите счёт")
+    @Min(value = 0, message = "Счёт не может быть отрицательным")
+    private Integer scoreAwayTeam;
+
     private boolean extraTime;
     private boolean penalty;
     private double points;

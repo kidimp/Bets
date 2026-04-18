@@ -36,21 +36,12 @@ public class BetControllerImpl implements BetControllerAPI {
             String email = SecurityContextUtil.getPrincipal();
             int userId = userService.getPrincipalUserId(email);
 
-            MatchDTO matchDTO = matchService.getMatchDTO(matchId);
-
-            String homeTeamName = teamService.findById(matchDTO.getHomeTeamId()).getName();
-            String awayTeamName = teamService.findById(matchDTO.getAwayTeamId()).getName();
-
-            String stageName = stageService.findById(matchDTO.getStageId()).getName();
+            fillModel(matchId, model);
 
             Bet bet = betService.getOrCreateBetForUserAndMatch(userId, matchId);
             BetDTO betDTO = betMapper.toDto(bet);
 
             model.addAttribute("bet", betDTO);
-            model.addAttribute("match", matchDTO);
-            model.addAttribute("stage", stageName);
-            model.addAttribute("homeTeamName", homeTeamName);
-            model.addAttribute("awayTeamName", awayTeamName);
 
             return "bet";
         } catch (ResponseStatusException e) {
@@ -62,19 +53,28 @@ public class BetControllerImpl implements BetControllerAPI {
     public String makeBet(int matchId, BetDTO betDTO, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            showBetForm(matchId, model);
+            fillModel(matchId, model);
             return "bet";
         }
 
-        try {
-            String email = SecurityContextUtil.getPrincipal();
-            int userId = userService.getPrincipalUserId(email);
+        String email = SecurityContextUtil.getPrincipal();
+        int userId = userService.getPrincipalUserId(email);
 
-            betService.saveOrUpdateBet(userId, matchId, betDTO);
+        betService.saveOrUpdateBet(userId, matchId, betDTO);
 
-            return "redirect:/fixtures";
-        } catch (ResponseStatusException ex) {
-            return "redirect:/fixtures";
-        }
+        return "redirect:/fixtures";
+    }
+
+    private void fillModel(int matchId, Model model) {
+        MatchDTO matchDTO = matchService.getMatchDTO(matchId);
+
+        String homeTeamName = teamService.findById(matchDTO.getHomeTeamId()).getName();
+        String awayTeamName = teamService.findById(matchDTO.getAwayTeamId()).getName();
+        String stageName = stageService.findById(matchDTO.getStageId()).getName();
+
+        model.addAttribute("match", matchDTO);
+        model.addAttribute("stage", stageName);
+        model.addAttribute("homeTeamName", homeTeamName);
+        model.addAttribute("awayTeamName", awayTeamName);
     }
 }

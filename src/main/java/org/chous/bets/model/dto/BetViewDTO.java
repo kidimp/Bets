@@ -1,6 +1,7 @@
 package org.chous.bets.model.dto;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -10,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- *  DTO, представляющий ставку игрока в таблице.
+ * DTO, представляющий ставку игрока в таблице.
  */
 @Getter
 @Setter
@@ -25,11 +26,13 @@ public class BetViewDTO {
 
     private boolean matchFinished;
 
+    @NotNull
     @Min(value = 0, message = "Счёт не может быть отрицательным")
-    private int scoreHomeTeam;
+    private Integer scoreHomeTeam;
 
+    @NotNull
     @Min(value = 0, message = "Счёт не может быть отрицательным")
-    private int scoreAwayTeam;
+    private Integer scoreAwayTeam;
 
     private boolean extraTime;
 
