@@ -66,7 +66,7 @@ public class Match {
     @Column(name = "is_extra_time", nullable = false)
     private boolean extraTime;
 
-    //todo привести к единому виду все boolean переменные
+    //todo привести к единому виду все boolean переменные. Учесть, что используется Lombok (@Getter @Setter) и Hibernate
     @Column(name = "is_penalty", nullable = false)
     private boolean penalty;
 

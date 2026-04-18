@@ -13,7 +13,6 @@ import org.chous.bets.service.MailService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,17 +23,15 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
-@Profile("!local")
 public class MailServiceImpl implements MailService {
+
+    private static final String SENDER = "BETS - ставки - Чемпионат мира 2026";
 
     @Value("${mail.host-name}")
     private String hostName;
 
     @Value("${mail.app-name}")
     private String appName;
-
-    @Value("${mail.sender}")
-    private String sender;
 
     @Value("${mail.password}")
     private String appPassword;
@@ -135,7 +132,7 @@ public class MailServiceImpl implements MailService {
             JSONObject email = new JSONObject()
                     .put("clientName", appName)
                     .put("clientMessageId", "none")
-                    .put("sender", sender)
+                    .put("sender", SENDER)
                     .put("recipients", to)
                     .put("subject", subject)
                     .put("body", text);

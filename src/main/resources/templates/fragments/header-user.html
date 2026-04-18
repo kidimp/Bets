@@ -18,12 +18,18 @@
                             </li>
                             <li class="header__nav-item"><a class="header__nav-link" href="/winning-team">Команда-победитель</a>
                             </li>
+                            <li class="header__nav-item"><a class="header__nav-link" href="/archive">Архив турниров</a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
                 <div class="header__right">
                     <div class="header__username" sec:authorize="isAuthenticated()">
-                        <a th:text="${#authentication.principal.displayName}"></a>
+                        <a class="header__link"
+                           sec:authorize="isAuthenticated()"
+                           th:href="@{/profile}"
+                           th:text="${#authentication.principal.displayName}">
+                        </a>
                     </div>
                     <form th:action="@{~/logout}" method="POST">
                         <button class="button" type="submit">Выйти</button>

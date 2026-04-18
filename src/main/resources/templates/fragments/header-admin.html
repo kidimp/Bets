@@ -24,13 +24,23 @@
                     </nav>
                 </div>
                 <div class="header__right">
-                    <div class="header__username" sec:authorize="isAuthenticated()">
-                        <a th:text="${#authentication.principal.displayName}"></a>
-                    </div>
-                    <a class="header__admin-link" href="/admin/matches">Админка</a>
-                    <form th:action="@{~/logout}" method="POST">
+
+                    <a class="header__link"
+                       sec:authorize="isAuthenticated()"
+                       th:href="@{/profile}"
+                       th:text="${#authentication.principal.displayName}">
+                    </a>
+
+                    <a class="header__link"
+                       href="/admin/matches"
+                       sec:authorize="hasRole('ADMIN')">
+                        Админка
+                    </a>
+
+                    <form th:action="@{/logout}" method="POST">
                         <button class="button" type="submit">Выйти</button>
                     </form>
+
                 </div>
             </div>
         </div>

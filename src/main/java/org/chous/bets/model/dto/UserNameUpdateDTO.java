@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.chous.bets.model.enums.RoleEnum;
 
 @Getter
 @Setter
@@ -17,11 +16,9 @@ import org.chous.bets.model.enums.RoleEnum;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class UserUpdateDTO {
+public class UserNameUpdateDTO {
 
     @NotBlank(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 30, message = "Имя должно быть от 2 до 30 символов")
     private String username;
-
-    private RoleEnum role;
 }

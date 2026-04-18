@@ -14,4 +14,8 @@ public interface RegistrationService {
     UserDTO getByResetPasswordToken(String token);
 
     void updatePassword(UserDTO userDTO, String newPassword);
+
+    UserDTO getCurrentUser();
+
+    void updateUsername(String username, String email);
 }

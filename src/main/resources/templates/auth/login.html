@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/login-saver.js"></script>
     <link rel="icon" href="/img/ico/favicon.ico" type="image/vnd.microsoft.icon">
-    <title>Вход на Bets</title>
+    <title>Вход - Bets</title>
 </head>
 
 <body>
@@ -37,7 +37,7 @@
                         <div class="form__inputs">
 
                             <label class="input-group form__control"><span class="input-group-text" id="addon-wrapping">Email</span>
-                                <input name="email" id="email" class="form-control" type="email" placeholder="example@me.com" aria-label="Email" aria-describedby="addon-wrapping">
+                                <input name="email" id="email" class="form-control" type="email" placeholder="example@me.com" th:value="${email}" aria-label="Email" aria-describedby="addon-wrapping">
                             </label>
 
                             <label class="input-group form__control"><span class="input-group-text" id="addon-wrapping">Пароль</span>

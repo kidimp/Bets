@@ -12,7 +12,9 @@ import org.chous.bets.model.enums.RoleEnum;
 import org.chous.bets.repository.UserRepository;
 import org.chous.bets.service.MailService;
 import org.chous.bets.service.RegistrationService;
+import org.chous.bets.util.SecurityContextUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +105,24 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .orElseThrow(() -> new DataNotFoundException("Пользователь с id={} не найден", String.valueOf(userDTO.getId())));
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetPasswordToken(null);
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO getCurrentUser() {
+        String email = SecurityContextUtil.getPrincipal();
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new DataNotFoundException("Пользователь не найден"));
+    }
+
+    @Override
+    public void updateUsername(String username, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        user.setUsername(username);
+
         userRepository.save(user);
     }
 }

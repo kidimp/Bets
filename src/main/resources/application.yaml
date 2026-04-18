@@ -4,7 +4,7 @@ server:
 spring:
 
   config:
-    import: file:${ENV_PATH}/prod.env[.properties]
+    import: file:.\.env[.properties]
 
   application:
     name: bets

@@ -452,6 +452,26 @@ html {
   border-color: transparent;
 }
 
+.header__link {
+  color: #fff;
+  font-size: 1.125rem;
+  border-bottom: 1px solid transparent;
+  transition: color .2s linear, border-color .2s linear;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header__link:hover {
+  color: #dff5ff;
+  border-color: #dff5ff;
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .footer {
   background: #378ce7;
   padding: 1.25rem;

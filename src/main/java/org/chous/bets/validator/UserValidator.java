@@ -32,4 +32,11 @@ public class UserValidator {
             errors.rejectValue("password", "error.password", "Пароли не совпадают!");
         }
     }
+
+    public void validateUsernameUpdate(String username, BindingResult bindingResult) {
+        userRepository.findByUsername(username)
+                .ifPresent(user ->
+                        bindingResult.rejectValue("username", "error.user", "Этот никнейм уже занят")
+                );
+    }
 }

@@ -33,8 +33,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Size(min = 2, max = 100, message = "Имя должно содержать от 2 до 100 символов")
-    @Column(nullable = false, length = 100)
+    @Size(min = 2, max = 30, message = "Имя должно содержать от 2 до 30 символов")
+    @Column(nullable = false, length = 30)
     private String username;
 
     @Email(message = "Электронная почта должна быть действительной")

@@ -19,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final CustomUserDetailsService userService;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,7 +27,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/registration", "/login", "/login**", "/activate/*",
                                 "/reset/*", "/reset-password", "/reset-form/*",
-                                "/fixtures", "/tables/**", "/rules", "/archive/**",
+                                "/fixtures", "/tables/**", "/rules",
                                 "/css/*", "/img/**",
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
@@ -37,6 +38,7 @@ public class WebSecurityConfig {
                         .loginProcessingUrl("/process_login")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error")
+                        .failureHandler(customAuthenticationFailureHandler)
                         .usernameParameter("email")
                         .permitAll()
                 )

@@ -3,11 +3,12 @@ package org.chous.bets.controller.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.chous.bets.model.dto.PasswordUpdateDTO;
 import org.chous.bets.model.dto.RegistrationRequestDTO;
 import org.chous.bets.model.dto.ResetPasswordRequestDTO;
-import org.chous.bets.model.dto.UserDTO;
+import org.chous.bets.model.dto.UserNameUpdateDTO;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public interface RegistrationControllerAPI {
             description = "Возвращает страницу формы логина"
     )
     @GetMapping("/login")
-    String login();
+    String login(HttpSession session, Model model);
 
     @Operation(
             summary = "Страница регистрации",
@@ -107,8 +108,16 @@ public interface RegistrationControllerAPI {
             description = "Отображает страницу профиля пользователя"
     )
     @GetMapping("/profile")
-    String profilePage(
-            @Parameter(description = "Данные пользователя")
-            @ModelAttribute("user") UserDTO user
+    String profilePage(Model model);
+
+    @Operation(
+            summary = "Обновление профиля",
+            description = "Изменяет никнейм пользователя"
+    )
+    @PostMapping("/profile")
+    String updateProfile(
+            @Valid @ModelAttribute("user") UserNameUpdateDTO user,
+            BindingResult bindingResult,
+            Model model
     );
 }
