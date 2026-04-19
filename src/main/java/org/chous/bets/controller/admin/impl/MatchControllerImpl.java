@@ -3,12 +3,15 @@ package org.chous.bets.controller.admin.impl;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.admin.MatchControllerAPI;
 import org.chous.bets.model.dto.MatchDTO;
+import org.chous.bets.model.dto.TeamDTO;
 import org.chous.bets.service.MatchService;
 import org.chous.bets.service.impl.ReferenceDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
+import java.util.Comparator;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,7 +23,12 @@ public class MatchControllerImpl implements MatchControllerAPI {
 
     private void populateReferenceData(Model model) {
         ReferenceDataService.ReferenceData ref = referenceDataService.loadReferenceData();
-        model.addAttribute("teamsList", ref.teams());
+        model.addAttribute(
+                "teamsList",
+                ref.teams().stream()
+                        .sorted(Comparator.comparing(TeamDTO::getName))
+                        .toList()
+        );
         model.addAttribute("stagesList", ref.stages());
         model.addAttribute("roundsList", ref.rounds());
     }
