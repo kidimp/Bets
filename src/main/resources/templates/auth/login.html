@@ -30,7 +30,6 @@
                         <br><br>
                     </th:block>
 
-
                     <h1 class="title auth__title">Вход</h1>
                     <form class="form auth__form" name="f" method="post" th:action="@{~/process_login}" onsubmit="saveFormValues()">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -46,7 +45,18 @@
 
                             <div class="invalid-feedback" th:if="${param.error}">Неверный email или пароль</div>
 
-                            <a class="button-text auth__forgot-password" href="/reset-password">Забыли пароль?</a>
+                            <div class="auth__options">
+                                <label class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="remember-me">
+                                    <span class="form-check-label">Запомнить меня</span>
+                                </label>
+
+                                <a class="button-text auth__forgot-password" href="/reset-password">
+                                    Забыли пароль?
+                                </a>
+                            </div>
                         </div>
                         <button class="button button--primary form__submit" type="submit">Войти</button>
                     </form>

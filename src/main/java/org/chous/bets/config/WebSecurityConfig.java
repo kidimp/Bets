@@ -47,6 +47,12 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/login")
                         .permitAll()
                 )
+                .rememberMe(remember -> remember
+                        .key("secret-key")
+                        .tokenValiditySeconds(60 * 24 * 60 * 60) // 60 дней
+                        .userDetailsService(userService)
+                        .rememberMeParameter("remember-me")
+                )
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/access-denied")
                 )

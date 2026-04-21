@@ -344,6 +344,27 @@ html {
   opacity: .8;
 }
 
+.auth__options {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.form-check {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin: 0;
+}
+
+.form-check-label {
+  line-height: 1;
+}
+
+.auth__forgot-password {
+  line-height: normal;
+}
+
 .header {
   background: #5356ff;
   margin-bottom: 6.25rem;
