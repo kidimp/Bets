@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru"><head>
+<html lang="ru" xmlns:sec="http://www.w3.org/1999/xhtml"><head>
     <meta charset="utf-8">
     <meta name="description" content="descrip">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -35,7 +35,17 @@
                             </ul>
                         </nav>
                     </div>
-                    <div class="header__right"><a class="button" href="/login">Войти</a>
+                    <div class="header__right">
+                        <div class="header__username" sec:authorize="isAuthenticated()">
+                            <a class="header__link"
+                               sec:authorize="isAuthenticated()"
+                               th:href="@{/profile}"
+                               th:text="${#authentication.principal.displayName}">
+                            </a>
+                        </div>
+                        <form th:action="@{~/logout}" method="POST">
+                            <button class="button" type="submit">Выйти</button>
+                        </form>
                     </div>
                 </div>
             </div>
