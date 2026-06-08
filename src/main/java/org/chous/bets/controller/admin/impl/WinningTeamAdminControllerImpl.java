@@ -3,6 +3,7 @@ package org.chous.bets.controller.admin.impl;
 import lombok.RequiredArgsConstructor;
 import org.chous.bets.controller.admin.WinningTeamAdminControllerAPI;
 import org.chous.bets.model.dto.WinningTeamTournamentDTO;
+import org.chous.bets.service.TeamService;
 import org.chous.bets.service.WinningTeamService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,11 +16,13 @@ import org.springframework.validation.BindingResult;
 public class WinningTeamAdminControllerImpl implements WinningTeamAdminControllerAPI {
 
     private final WinningTeamService winningTeamService;
+    private final TeamService teamService;
 
     @Override
     public String showTournamentWinningTeamSetting(Model model) {
         WinningTeamTournamentDTO winningTeam = winningTeamService.getTournamentWinningTeam();
         model.addAttribute("winningTeam", winningTeam);
+        model.addAttribute("teamsList", teamService.findAll());
         return "winning-team-setting";
     }
 
