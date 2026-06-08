@@ -2,13 +2,16 @@ package org.chous.bets.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.chous.bets.exception.DataNotFoundException;
 import org.chous.bets.mapper.BetMapper;
 import org.chous.bets.model.dto.BetDTO;
 import org.chous.bets.model.entity.Bet;
+import org.chous.bets.model.entity.ExtraPoints;
 import org.chous.bets.model.entity.Match;
 import org.chous.bets.model.entity.User;
 import org.chous.bets.repository.BetRepository;
+import org.chous.bets.repository.ExtraPointsRepository;
 import org.chous.bets.repository.MatchRepository;
 import org.chous.bets.repository.UserRepository;
 import org.chous.bets.service.BetService;
@@ -22,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BetServiceImpl implements BetService {
@@ -30,6 +34,7 @@ public class BetServiceImpl implements BetService {
     private final BetRepository betRepository;
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
+    private final ExtraPointsRepository extraPointsRepository;
     private final BetMapper betMapper;
 
     @Override
@@ -79,6 +84,25 @@ public class BetServiceImpl implements BetService {
 
         existingBetOpt.ifPresent(existingBet -> bet.setId(existingBet.getId()));
 
+        // Проверяем, есть ли запись пользователя в таблице extra_points, и если нет, то создаём дефолтную
+        createDefaultExtraPointsIfAbsent(userId);
+
         betRepository.save(bet);
+    }
+
+    private void createDefaultExtraPointsIfAbsent(int userId) {
+        boolean isExtraPoints = extraPointsRepository.existsByUserId(userId);
+
+        if (!isExtraPoints) {
+
+            ExtraPoints extraPoints = new ExtraPoints();
+            extraPoints.setUserId(userId);
+            extraPoints.setWinningTeamId(0);
+            extraPoints.setNumberOfHitsOnCorrectScore(0);
+            extraPoints.setNumberOfHitsOnMatchResult(0);
+            extraPoints.setExtraPoints(0.0);
+
+            extraPointsRepository.save(extraPoints);
+        }
     }
 }

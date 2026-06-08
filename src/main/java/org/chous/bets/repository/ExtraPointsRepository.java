@@ -36,4 +36,6 @@ public interface ExtraPointsRepository extends JpaRepository<ExtraPoints, Long> 
     @Modifying
     @Query("DELETE FROM ExtraPoints ep WHERE ep.winningTeamId = :teamId")
     void deleteAllByTeamId(@Param("teamId") Integer teamId);
+
+    boolean existsByUserId(Integer userId);
 }
