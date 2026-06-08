@@ -44,8 +44,9 @@ logging:
   file:
     name: ./logs/bets-log.txt
   level:
-    org.hibernate.orm.boot.spi.ClassInfoImpl: DEBUG
-    org.hibernate.metamodel.model.domain.internal: DEBUG
+    org.hibernate.orm.boot.spi.ClassInfoImpl: WARN
+    org.hibernate.metamodel.model.domain.internal: WARN
+    org.chous.bets.aspect.ServiceLoggingAspect: WARN
     org.chous.bets: DEBUG
 
 tournament-name: ${TOURNAMENT_NAME:}
