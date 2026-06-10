@@ -1024,8 +1024,9 @@ td.fixed-column::after {
 }
 
 .bet__input .form-control {
-  max-width: 3.125rem;
+  max-width: 40px;
   text-align: center;
+  min-width: 40px;
 }
 
 .bet__input:nth-child(2) {
