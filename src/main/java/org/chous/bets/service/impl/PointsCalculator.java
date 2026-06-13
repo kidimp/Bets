@@ -83,15 +83,6 @@ public class PointsCalculator {
             }
         }
 
-        // Дополнительное время / пенальти
-        if (bet.isExtraTime()) {
-            points += match.isExtraTime() ? 5 : -2;
-        }
-
-        if (bet.isPenalty()) {
-            points += match.isPenalty() ? 5 : -3;
-        }
-
         // Множитель по рейтингу УЕФА
         if (isHitOnTheMatchResult() && homeTeam != null && awayTeam != null) {
             int potDiff = Math.abs(homeTeam.getPot() - awayTeam.getPot());
@@ -111,6 +102,15 @@ public class PointsCalculator {
             if (isDraw) {
                 points *= 1.3;
             }
+        }
+
+        // Дополнительное время / пенальти
+        if (bet.isExtraTime()) {
+            points += match.isExtraTime() ? 2 : -1;
+        }
+
+        if (bet.isPenalty()) {
+            points += match.isPenalty() ? 1.0 : -0.5;
         }
 
         return Math.max(0, points);
