@@ -58,7 +58,17 @@
                                         </svg>
                                     </button>
                                 </th>
+
+                                <th colspan="3">Команды</th>
+
+                                <th></th>
+
+                                <th>Ставка</th>
+
+                                <th>Счёт</th>
+
                                 <th>Раунд</th>
+
                                 <th>
                                     <button class="table__sort js_table-sort">Стадия
                                         <svg class="table__sort-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -69,16 +79,56 @@
                                         </svg>
                                     </button>
                                 </th>
-                                <th colspan="3">Команды</th>
-                                <th>Счёт</th>
-                                <th>Ставка</th>
-                                <th></th>
+
                             </tr>
                             </thead>
                             <tbody>
                                 <th:block th:each="match : ${upcomingAndStartedMatches}">
                                     <tr>
-                                        <td th:text="${#temporals.format(match.dateAndTime, 'dd.MM.yyyy HH:mm')}"/>
+                                        <td class="fit-column" th:text="${#temporals.format(match.dateAndTime, 'dd.MM.yyyy HH:mm')}"/>
+
+                                        <td class="fit-column" style="text-align:right">
+                                            <th:block th:each="team : ${teamsList}">
+                                                <th:block th:if="${(match.homeTeamId == team.id)}">
+                                                    <span class="flag"
+                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
+                                                    <th:block th:text="${team.name}"/>
+                                                </th:block>
+                                            </th:block>
+                                        <td>:</td>
+
+                                        <td class="fit-column" style="text-align:left">
+                                            <th:block th:each="team : ${teamsList}">
+                                                <th:block th:if="${(match.awayTeamId == team.id)}">
+                                                    <span class="flag"
+                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
+                                                    <th:block th:text="${team.name}"/>
+                                                </th:block>
+                                            </th:block>
+
+                                        <td class="fit-column">
+                                            <a th:if="${match.isStarted() == false}"
+                                               th:href="@{/bet/{matchId}(matchId=${match.getId()})}">Сделать / Изменить ставку</a>
+                                        </td>
+
+                                        <td>
+                                            <th:block th:each="bet : ${bets}">
+                                                <th:block th:if="${bet.getMatchId() == match.getId()}"
+                                                          th:utext="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() +
+                                                                        (bet.isExtraTime() ? '⏱️' : '') +
+                                                                        (bet.isPenalty() ? '🎯' : '')}">
+                                                </th:block>
+                                            </th:block>
+                                        </td>
+
+                                        <td>
+                                            <th:block th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</th:block>
+                                            <th:block th:if="${match.isFinished()}"
+                                                      th:utext="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
+                                                                (match.isExtraTime() ? '⏱️' : '') +
+                                                                (match.isPenalty() ? '🎯' : '')}">
+                                            </th:block>
+                                        </td>
 
                                         <td>
                                             <th:block th:each="round : ${roundsList}">
@@ -94,45 +144,6 @@
                                             </th:block>
                                         </td>
 
-                                        <td style="text-align:right">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.homeTeamId == team.id)}">
-                                                    <span class="flag"
-                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>:</td>
-
-                                        <td style="text-align:left">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.awayTeamId == team.id)}">
-                                                    <span class="flag"
-                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>
-                                            <th:block th:if="${(match.isFinished() == false)}" th:text="'TBA'">match</th:block>
-                                        <th:block th:if="${match.isFinished()}"
-                                                  th:utext="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
-                                                                (match.isExtraTime() ? '⏱️' : '') +
-                                                                (match.isPenalty() ? '🎯' : '')}">
-                                        </th:block>
-                                        </td>
-                                        <td>
-                                            <th:block th:each="bet : ${bets}">
-                                                <th:block th:if="${bet.getMatchId() == match.getId()}"
-                                                          th:utext="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() +
-                                                                        (bet.isExtraTime() ? '⏱️' : '') +
-                                                                        (bet.isPenalty() ? '🎯' : '')}">
-                                                </th:block>
-                                            </th:block>
-                                        </td>
-                                        <td style="width:15%">
-                                            <a th:if="${match.isStarted() == false}"
-                                                th:href="@{/bet/{matchId}(matchId=${match.getId()})}">Сделать / Изменить ставку</a>
-                                        </td>
                                 </th:block>
                             </tbody>
                         </table>
@@ -160,18 +171,61 @@
                                         </svg>
                                     </button>
                                 </th>
-                                <th>Раунд</th>
-                                <th>Стадия</th>
+
                                 <th colspan="3">Команды</th>
-                                <th>Счёт</th>
+
                                 <th>Ставка</th>
-                                <th></th>
+
+                                <th>Счёт</th>
+
+                                <th>Раунд</th>
+
+                                <th>Стадия</th>
+
                             </tr>
                             </thead>
                             <tbody>
                                 <th:block th:each="match : ${finishedMatches}">
                                     <tr>
-                                        <td th:text="${#temporals.format(match.dateAndTime, 'dd.MM.yyyy HH:mm')}"/>
+                                        <td class="fit-column" th:text="${#temporals.format(match.dateAndTime, 'dd.MM.yyyy HH:mm')}"/>
+
+                                        <td class="fit-column" style="text-align:right">
+                                            <th:block th:each="team : ${teamsList}">
+                                                <th:block th:if="${(match.homeTeamId == team.id)}">
+                                                                                    <span class="flag"
+                                                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
+                                                    <th:block th:text="${team.name}"/>
+                                                </th:block>
+                                            </th:block>
+                                        <td>:</td>
+
+                                        <td class="fit-column" style="text-align:left">
+                                            <th:block th:each="team : ${teamsList}">
+                                                <th:block th:if="${(match.awayTeamId == team.id)}">
+                                                        <span class="flag" th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
+                                                    <th:block th:text="${team.name}"/>
+                                                </th:block>
+                                            </th:block>
+
+                                        <td class="fit-column">
+                                            <th:block th:each="bet : ${bets}">
+                                                <th:block th:if="${bet.getMatchId() == match.getId()}"
+                                                          th:utext="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() +
+                                                                        (bet.isExtraTime() ? '⏱️' : '') +
+                                                                        (bet.isPenalty() ? '🎯' : '')}">
+                                                </th:block>
+                                            </th:block>
+                                        </td>
+
+                                        <td class="fit-column">
+                                            <th:block th:if="${(match.isFinished() == false)}" th:text="'TBA'">match
+                                            </th:block>
+                                        <th:block th:if="${match.isFinished()}"
+                                                  th:utext="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
+                                                                (match.isExtraTime() ? '⏱️' : '') +
+                                                                (match.isPenalty() ? '🎯' : '')}">
+                                        </th:block>
+                                        </td>
 
                                         <td>
                                             <th:block th:each="round : ${roundsList}">
@@ -184,42 +238,6 @@
                                             <th:block th:each="stage : ${stagesList}">
                                                 <th:block th:if="${(match.stageId == stage.id)}"
                                                           th:text="${stage.name}"/>
-                                            </th:block>
-                                        </td>
-
-                                        <td style="text-align:right">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.homeTeamId == team.id)}">
-                                                                                    <span class="flag"
-                                                                                          th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>:</td>
-
-                                        <td style="text-align:left">
-                                            <th:block th:each="team : ${teamsList}">
-                                                <th:block th:if="${(match.awayTeamId == team.id)}">
-                                                        <span class="flag" th:style="'background-image: url('+@{/img/png/flags/} +${team.getIsoName()} +@{.png}+');'"></span>
-                                                    <th:block th:text="${team.name}"/>
-                                                </th:block>
-                                            </th:block>
-                                        <td>
-                                            <th:block th:if="${(match.isFinished() == false)}" th:text="'TBA'">match
-                                            </th:block>
-                                        <th:block th:if="${match.isFinished()}"
-                                                  th:utext="${match.getScoreHomeTeam() + ' : ' + match.getScoreAwayTeam() +
-                                                                (match.isExtraTime() ? '⏱️' : '') +
-                                                                (match.isPenalty() ? '🎯' : '')}">
-                                        </th:block>
-                                        </td>
-                                        <td>
-                                            <th:block th:each="bet : ${bets}">
-                                                <th:block th:if="${bet.getMatchId() == match.getId()}"
-                                                          th:utext="${bet.getScoreHomeTeam() + ' : ' + bet.getScoreAwayTeam() +
-                                                                        (bet.isExtraTime() ? '⏱️' : '') +
-                                                                        (bet.isPenalty() ? '🎯' : '')}">
-                                                </th:block>
                                             </th:block>
                                         </td>
                                 </th:block>

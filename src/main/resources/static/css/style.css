@@ -946,6 +946,11 @@ td.fixed-column::after {
   background-size: contain;
 }
 
+.fit-column {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .auth__form {
   margin-bottom: 2.5rem;
 }
