@@ -182,11 +182,28 @@ function controlSort() {
     const rowsArray = Array.from(tbody.querySelectorAll('tr'));
 
     rowsArray.sort((rowA, rowB) => {
-      const cellA = rowA.children[thIndex].innerText || rowA.children[thIndex].textContent;
-      const cellB = rowB.children[thIndex].innerText || rowB.children[thIndex].textContent;
+      const cellA = (rowA.children[thIndex].innerText || rowA.children[thIndex].textContent).trim();
+      const cellB = (rowB.children[thIndex].innerText || rowB.children[thIndex].textContent).trim();
 
-      const cellAValue = isNaN(cellA) ? cellA : Number(cellA);
-      const cellBValue = isNaN(cellB) ? cellB : Number(cellB);
+      let cellAValue, cellBValue;
+
+      // Проверяем, является ли колонка датой
+      if (sortBtn.classList.contains('js_date-col')) {
+        // Функция переводит "01.12.2026 22:00" в ISO формат "2026-12-01T22:00"
+        const parseDateTime = (str) => {
+          if (!str) return 0;
+          const [datePart, timePart] = str.split(' ');
+          const [day, month, year] = datePart.split('.');
+          return Date.parse(`${year}-${month}-${day}T${timePart || '00:00'}`);
+        };
+
+        cellAValue = parseDateTime(cellA) || 0;
+        cellBValue = parseDateTime(cellB) || 0;
+      } else {
+        // Логика для чисел и обычных строк
+        cellAValue = isNaN(cellA) ? cellA : Number(cellA);
+        cellBValue = isNaN(cellB) ? cellB : Number(cellB);
+      }
 
       // Проверка, является ли это колонка "Средняя позиция в рейтингах"
       const isAverageRatingColumn = sortBtn.classList.contains('average-rating');
