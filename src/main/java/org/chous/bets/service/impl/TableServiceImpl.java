@@ -139,8 +139,13 @@ public class TableServiceImpl implements TableService {
             ));
         }
 
-        // Финальная сортировка по position и назначение индексов
-        leaderboard.sort(Comparator.comparingDouble(LeaderboardTableRowDTO::getPosition));
+        // Финальная сортировка по avgPosition -> numberOfHitsOnMatchResult -> numberOfHitsOnCorrectScore -> totalPointsAllRounds и назначение индексов
+        leaderboard.sort(
+                Comparator.comparingDouble(LeaderboardTableRowDTO::getPosition)
+                        .thenComparing(Comparator.comparingInt(LeaderboardTableRowDTO::getNumberOfHitsOnMatchResult).reversed())
+                        .thenComparing(Comparator.comparingInt(LeaderboardTableRowDTO::getNumberOfHitsOnCorrectScore).reversed())
+                        .thenComparing(Comparator.comparingDouble(LeaderboardTableRowDTO::getTotalPointsAllRounds).reversed())
+        );
 
         return leaderboard;
     }
