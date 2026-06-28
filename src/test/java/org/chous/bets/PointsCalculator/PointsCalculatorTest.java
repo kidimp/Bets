@@ -213,7 +213,31 @@ class PointsCalculatorTest {
                         createBet(2, 1, true, true),
                         createMatch(2, 1, true, false),
                         createTeam(1, 4), createTeam(2, 1),
-                        5 * 2.0 + 2 - 0.5)
+                        5 * 2.0 + 2 - 0.5),
+                //----------------------------------------------------------------------------------------------------
+                Arguments.of("Точный счёт, были Extra Time и Penalty, не угадано Extra Time и Penalty, без множителя",
+                        createBet(2, 1, false, false),
+                        createMatch(2, 1, true, true),
+                        createTeam(1, 1), createTeam(2, 1),
+                        5 + 0.0 + 0.0),
+
+                Arguments.of("Точный счёт, были Extra Time и Penalty, не угадано Extra Time и Penalty, множитель 1.3",
+                        createBet(2, 1, false, false),
+                        createMatch(2, 1, true, true),
+                        createTeam(1, 2), createTeam(2, 1),
+                        5 * 1.3 + 0.0 + 0.0),
+
+                Arguments.of("Точный счёт, были Extra Time и Penalty, не угадано Extra Time и Penalty, множитель 1.5",
+                        createBet(2, 1, false, false),
+                        createMatch(2, 1, true, true),
+                        createTeam(1, 3), createTeam(2, 1),
+                        5 * 1.5 + 0.0 + 0.0),
+
+                Arguments.of("Точный счёт, были Extra Time и Penalty, не угадано Extra Time и Penalty, множитель 2.0",
+                        createBet(2, 1, false, false),
+                        createMatch(2, 1, true, true),
+                        createTeam(1, 4), createTeam(2, 1),
+                        5 * 2.0 + 0.0 + 0.0)
         );
     }
 
